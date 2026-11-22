@@ -1,69 +1,266 @@
-import Image from "next/image";
+"use client";
+
+import React, { useState, useEffect, useCallback, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import { TopNav } from "@/components/navigation/TopNav";
+import { FloatingDock } from "@/components/navigation/FloatingDock";
+import { LeftHUD } from "@/components/navigation/LeftHUD";
+import { BlueprintRuler } from "@/components/canvas/BlueprintRuler";
+import { BackgroundParticles } from "@/components/canvas/BackgroundParticles";
+import { StoryCanvas } from "@/components/canvas/StoryCanvas";
+import { GooeyMenuButton } from "@/components/navigation/GooeyMenuButton";
+import { CustomCursor } from "@/components/navigation/CustomCursor";
+import { TelemetryDrawer } from "@/components/easter-eggs/TelemetryDrawer";
+
+import { HeroSection } from "@/components/sections/HeroSection";
+import { AboutSection } from "@/components/sections/AboutSection";
+import { WhatIDoSection } from "@/components/sections/WhatIDoSection";
+import { ProcessSection } from "@/components/sections/ProcessSection";
+import { WorkSection } from "@/components/sections/WorkSection";
+import { AppsSection } from "@/components/sections/AppsSection";
+import { ExperienceSection } from "@/components/sections/ExperienceSection";
+import { MottoSection } from "@/components/sections/MottoSection";
+import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
+import { OffTheClockSection } from "@/components/sections/OffTheClockSection";
+import { ContactSection } from "@/components/sections/ContactSection";
+import { FooterSection } from "@/components/sections/FooterSection";
+
+import { useAudioSynth } from "@/hooks/useAudioSynth";
+import { useLenisScroll } from "@/hooks/useLenisScroll";
+import { STORY_CHAPTERS } from "@/lib/constants";
+
+function PortfolioContent() {
+  const searchParams = useSearchParams();
+  const initialMode = searchParams.get("v") === "story" ? "story" : "site";
+  const [mode, setMode] = useState<"site" | "story">(initialMode);
+  const [storyChapter, setStoryChapter] = useState(0);
+  const [activeSection, setActiveSection] = useState("hero");
+  const [isCodeDrawerOpen, setIsCodeDrawerOpen] = useState(false);
+
+  const { isPlaying: isAudioPlaying, toggleAudio } = useAudioSynth();
+  const { scrollTo, stopScroll, startScroll } = useLenisScroll();
+
+  // Scroll to section helper
+  const handleNavigate = useCallback(
+    (id: string) => {
+      const el = document.getElementById(id);
+      if (el) {
+        scrollTo(el, -20);
+      }
+    },
+    [scrollTo]
+  );
+
+  // Section observer for LeftHUD
+  useEffect(() => {
+    if (mode !== "site") return;
+
+    const sectionIds = [
+      "hero",
+      "about",
+      "whatido",
+      "process",
+      "work",
+      "apps",
+      "experience",
+      "motto",
+      "testimonials",
+      "offtheclock",
+      "contact",
+      "footer",
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        }
+      },
+      { threshold: 0.3 }
+    );
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [mode]);
+
+  // Handle "Break it" physics collapse scroll lock
+  const handleBreakStateChange = useCallback(
+    (broken: boolean) => {
+      if (broken) {
+        stopScroll();
+      } else {
+        startScroll();
+      }
+    },
+    [stopScroll, startScroll]
+  );
+
+  // Story Mode: Wheel & Keyboard chapter scrubbing
+  useEffect(() => {
+    if (mode !== "story") return;
+
+    let wheelTimeout: NodeJS.Timeout | null = null;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      if (wheelTimeout) return;
+
+      if (e.deltaY > 25) {
+        setStoryChapter((prev) => Math.min(prev + 1, STORY_CHAPTERS.length - 1));
+      } else if (e.deltaY < -25) {
+        setStoryChapter((prev) => Math.max(prev - 1, 0));
+      }
+
+      wheelTimeout = setTimeout(() => {
+        wheelTimeout = null;
+      }, 400);
+    };
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        setStoryChapter((prev) => Math.min(prev + 1, STORY_CHAPTERS.length - 1));
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        setStoryChapter((prev) => Math.max(prev - 1, 0));
+      } else if (e.key === "Escape") {
+        setMode("site");
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false });
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [mode]);
+
+  return (
+    <div className="relative min-h-screen bg-[#0a0a0a] text-[#eeece8] selection:bg-[#5b5fe0] selection:text-white">
+      {/* Custom Difference Blend Cursor */}
+      <CustomCursor />
+
+      {/* Top Navigation */}
+      <TopNav
+        onNavigate={handleNavigate}
+        mode={mode}
+        onSwitchMode={(newMode) => setMode(newMode)}
+      />
+
+      {/* Mode A: Editorial "Site" Experience */}
+      {mode === "site" && (
+        <>
+          {/* Ambient Particles in Deep Space */}
+          <BackgroundParticles />
+
+          {/* Left HUD: W. Nominee badge & vertical section scroll indicator */}
+          <LeftHUD activeSection={activeSection} mode={mode} />
+
+          {/* Right Blueprint Ruler Canvas */}
+          <BlueprintRuler />
+
+          <main id="main" className="relative z-10 w-full">
+            <HeroSection
+              onStartProject={() => handleNavigate("contact")}
+              onExploreWork={() => handleNavigate("work")}
+            />
+
+            <AboutSection />
+
+            <WhatIDoSection onSkipNext={() => handleNavigate("process")} />
+
+            <ProcessSection />
+
+            <WorkSection />
+
+            <AppsSection />
+
+            <ExperienceSection />
+
+            <MottoSection
+              onBreakStateChange={handleBreakStateChange}
+              onOpenCodeDrawer={() => setIsCodeDrawerOpen(true)}
+            />
+
+            <TestimonialsSection />
+
+            <OffTheClockSection />
+
+            <ContactSection />
+
+            <FooterSection
+              onScrollToTop={() => handleNavigate("hero")}
+            />
+          </main>
+
+          {/* Gooey SVG Filter "Start a project" floating button */}
+          <GooeyMenuButton onStartProject={() => handleNavigate("contact")} />
+        </>
+      )}
+
+      {/* Mode B: 10-Chapter "Story in Particles" Scrollytelling */}
+      {mode === "story" && (
+        <main className="relative z-10 w-full h-screen overflow-hidden">
+          <StoryCanvas
+            currentChapter={storyChapter}
+            onChapterSelect={(idx) => setStoryChapter(idx)}
+          />
+
+          {/* Story Chapter Navigator Controls */}
+          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+            {STORY_CHAPTERS.map((ch, idx) => (
+              <button
+                key={ch.chapter}
+                onClick={() => setStoryChapter(idx)}
+                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
+                  idx === storyChapter
+                    ? "w-6 bg-[#5b5fe0]"
+                    : "bg-white/30 hover:bg-white/60"
+                }`}
+                aria-label={`Jump to chapter ${ch.chapter}: ${ch.title}`}
+              />
+            ))}
+          </div>
+        </main>
+      )}
+
+      {/* Persistent Floating Bottom Dock */}
+      <FloatingDock
+        mode={mode}
+        onModeChange={(newMode) => setMode(newMode)}
+        onOpenCodeDrawer={() => setIsCodeDrawerOpen(true)}
+        isAudioPlaying={isAudioPlaying}
+        onToggleAudio={toggleAudio}
+        onPrevStoryChapter={() =>
+          setStoryChapter((prev) => Math.max(prev - 1, 0))
+        }
+        onNextStoryChapter={() =>
+          setStoryChapter((prev) =>
+            Math.min(prev + 1, STORY_CHAPTERS.length - 1)
+          )
+        }
+      />
+
+      {/* Telemetry Inspector DevTools Drawer */}
+      <TelemetryDrawer
+        isOpen={isCodeDrawerOpen}
+        onClose={() => setIsCodeDrawerOpen(false)}
+      />
+    </div>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <Suspense fallback={<div className="min-h-screen bg-[#0a0a0a]" />}>
+      <PortfolioContent />
+    </Suspense>
   );
 }
