@@ -64,6 +64,15 @@ export function V2TopNav({ mode = 'site', onSwitchMode }: V2TopNavProps) {
             <li>
               <button
                 type="button"
+                onClick={() => scrollTo('achievements')}
+                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
+              >
+                Milestones
+              </button>
+            </li>
+            <li>
+              <button
+                type="button"
                 onClick={() => scrollTo('process')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >

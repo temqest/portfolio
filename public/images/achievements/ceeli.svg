@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-ceeli" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#140b24"/>
+      <stop offset="50%" stop-color="#22133d"/>
+      <stop offset="100%" stop-color="#0a0a1a"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="100%" stop-color="#9333ea"/>
+    </linearGradient>
+    <pattern id="grid-ceeli" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(192, 132, 252, 0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="500" fill="url(#bg-ceeli)"/>
+  <rect width="800" height="500" fill="url(#grid-ceeli)"/>
+  <circle cx="400" cy="210" r="140" fill="none" stroke="url(#purple)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.3"/>
+  <circle cx="400" cy="210" r="100" fill="rgba(147, 51, 234, 0.1)"/>
+
+  <!-- Award / Badge Icon -->
+  <g transform="translate(365, 165) scale(1.6)" stroke="#c084fc" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="8" r="6"/>
+    <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="400" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#c084fc" letter-spacing="4" text-anchor="middle">UNIVERSITY OF NUEVA CACERES</text>
+  <text x="400" y="385" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#ffffff" letter-spacing="1" text-anchor="middle">CEELI UNC FLIP TOP 8 FINALIST</text>
+  <text x="400" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#94a3b8" letter-spacing="0.5" text-anchor="middle">Center for Entrepreneurship &amp; Innovation · Regional Startup Demo</text>
+
+  <rect x="250" y="445" width="300" height="28" rx="6" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="400" y="463" font-family="monospace" font-size="11" fill="#64748b" text-anchor="middle">REPLACE WITH: public/images/achievements/ceeli.jpg</text>
+</svg>

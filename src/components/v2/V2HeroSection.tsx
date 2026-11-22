@@ -54,9 +54,9 @@ export function V2HeroSection() {
       <div className="wrap front-inner relative z-10 w-full pointer-events-none">
         {/* Telemetry metadata header bar */}
         <div className="front-meta border-t border-[rgba(10,18,42,0.1)] pt-[18px] mb-[28px] flex justify-between items-center text-[12px] font-mono tracking-[0.14em] uppercase text-[#5b6684]">
-          <span className="mono">Web developer</span>
-          <span className="mono hidden sm:inline">Systems for small businesses</span>
-          <span className="mono hidden md:inline">Based in the Philippines</span>
+          <span className="mono">Founder &amp; Systems Engineer</span>
+          <span className="mono hidden sm:inline">Co-founder @ UNITE · ap-silang</span>
+          <span className="mono hidden md:inline">Philippines</span>
           <span className="mono font-semibold text-[#0a122a]">{timeStr}</span>
         </div>
 
@@ -77,11 +77,11 @@ export function V2HeroSection() {
         {/* Bottom split: Editorial Tagline & Action Pills */}
         <div className="front-bottom grid grid-cols-1 md:grid-cols-[1.1fr_1fr] items-end gap-10 mt-[44px]">
           <p className="front-tagline m-0 font-light tracking-[-0.015em] text-[#0a122a] pointer-events-auto">
-            I build web{' '}
+            I engineer mission-critical{' '}
             <em className="font-serif-italic not-italic text-[#2e4fc7]">
               systems
             </em>{' '}
-            for small businesses that hold up with real users.
+            and healthcare platforms where downtime isn&apos;t an option.
           </p>
 
           <div className="front-cta flex justify-start md:justify-end items-center gap-3 pr-0 md:pr-4 pointer-events-auto">

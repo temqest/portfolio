@@ -8,62 +8,53 @@ export function V2WorkSection() {
   const projects = [
     {
       id: 1,
-      num: '01 / 05',
-      name: 'GymTrack',
-      tag: 'Gym management · Solo project',
-      desc: 'Front-desk check-ins, a live dashboard of who is on the floor, and plans the owner can edit in real time.',
-      stack: ['React', 'Vite', 'CSS', 'Node.js', 'PostgreSQL'],
-      image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=900&auto=format&fit=crop',
+      num: '01 / 02',
+      name: 'UNITE',
+      tag: 'Blood Bank Logistics Platform · Startup Co-Founder & Lead Engineer',
+      desc: 'Centralized blood unit inventory and donor mobilization platform connecting hospitals, blood centers, and volunteer donors in real time. Built in active partnership with Bicol Medical Center (BMC), the largest blood bank provider in Camarines Sur and Camarines Norte.',
+      achievements: [
+        '1st Place — SparkLAB Hackathon 2025',
+        'Partnered with Bicol Medical Center (BMC)',
+        'ADNU MAGIS TBI Incubation Graduate',
+        'CEELI UNC FLIP Startup Top 8 Finalist',
+        'Idea2Startup Naga City Semi-Finalist',
+      ],
+      stack: ['Next.js', 'React Native', 'TypeScript', 'Node.js', 'Supabase RLS', 'PostgreSQL'],
+      image: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop',
     },
     {
       id: 2,
-      num: '02 / 05',
-      name: 'Faculty Evaluation System',
-      tag: 'NwSSU · Solo Dev',
-      desc: 'Institutional analytics app evaluating instructor performance, student feedback, and departmental grade reporting.',
-      stack: ['Kotlin', 'Jetpack Compose', 'Firebase', 'Room DB'],
-      image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=900&auto=format&fit=crop',
-    },
-    {
-      id: 3,
-      num: '03 / 05',
-      name: 'Bantay POS',
-      tag: 'Point of sale & inventory · Solo project',
-      desc: 'Offline-first tablet point of sale with real-time barcode scanning, daily cash reconciliation, and stock alerts.',
-      stack: ['React Native', 'Expo', 'SQLite', 'TypeScript'],
-      image: 'https://images.unsplash.com/photo-1556740738-b6a63e27c4df?q=80&w=900&auto=format&fit=crop',
-    },
-    {
-      id: 4,
-      num: '04 / 05',
-      name: 'Appoint',
-      tag: 'Church office · Solo project',
-      desc: 'Clergy calendar and parishioner scheduling platform with automated SMS confirmations and priest availability.',
-      stack: ['React', 'Vite', 'Node.js', 'PostgreSQL'],
-      image: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=900&auto=format&fit=crop',
-    },
-    {
-      id: 5,
-      num: '05 / 05',
-      name: 'Ambitpolong',
-      tag: 'Church youth app · Solo project',
-      desc: 'Mobile-first community portal for scripture reading, prayer requests, event ticketing, and announcements.',
-      stack: ['React', 'Vite', 'Tailwind CSS', 'Supabase'],
-      image: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=900&auto=format&fit=crop',
+      num: '02 / 02',
+      name: 'ap-silang',
+      tag: 'Municipal Maternal Healthcare Platform · Capstone Lead Architect',
+      desc: 'Offline-first clinical care and maternal EMR platform serving Rural Health Units (RHU) and Barangay Health Stations (BHS). Features an in-browser & mobile sync engine that operates with zero internet, paired with an offline TEWS clinical risk triage engine.',
+      achievements: [
+        'Dexie.js + SQLite offline outbox mutation sync engine',
+        'In-browser CDSS (Targeted Early Warning Score) risk triage',
+        'Compliant with DOH 28-year records retention & RA 10173',
+        'Secure inter-clinic patient handover with PIN gateways',
+      ],
+      stack: ['React 19 PWA', 'React Native', 'Dexie.js', 'SQLite', 'Express', 'WebSockets'],
+      image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop',
     },
   ];
 
   return (
     <V2IslandPanel id="work" className="my-8">
       <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
-        <span>(03) — SELECTED WORK</span>
+        <span>(03) — FLAGSHIP SYSTEMS</span>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-16">
-        <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">
-          Systems built for <em className="font-serif-italic text-blue-400 font-normal">real</em> work.
-        </h2>
-        <span className="text-xs font-mono text-slate-400 uppercase">05 Case studies</span>
+        <div>
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">
+            Software built for <em className="font-serif-italic text-blue-400 font-normal">high-stakes</em> reality.
+          </h2>
+          <p className="text-sm md:text-base text-slate-400 font-light mt-2 max-w-xl">
+            Real systems in clinical healthcare and emergency blood logistics where downtime isn&apos;t an inconvenience—it&apos;s critical.
+          </p>
+        </div>
+        <span className="text-xs font-mono text-slate-400 uppercase">02 Flagship Deployments</span>
       </div>
 
       <div className="space-y-12">
@@ -92,15 +83,25 @@ export function V2WorkSection() {
                   <span className="text-xs font-mono text-blue-400 uppercase tracking-wider block mb-2">
                     {item.tag}
                   </span>
-                  <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mb-4 group-hover:text-blue-300 transition-colors flex items-center justify-between">
+                  <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mb-3 group-hover:text-blue-300 transition-colors flex items-center justify-between">
                     <span>{item.name}</span>
                     <span className="text-lg opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
                       ↗
                     </span>
                   </h3>
-                  <p className="text-base text-slate-300 font-light leading-relaxed mb-6">
+                  <p className="text-base text-slate-300 font-light leading-relaxed mb-5">
                     {item.desc}
                   </p>
+
+                  {/* Key Milestones / Achievements */}
+                  <div className="mb-5 space-y-1 text-xs font-mono text-slate-400">
+                    {item.achievements.slice(0, 3).map((ach) => (
+                      <div key={ach} className="flex items-center gap-2">
+                        <span className="text-blue-400">✦</span>
+                        <span>{ach}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2">

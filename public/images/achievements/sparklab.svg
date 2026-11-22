@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a122a"/>
+      <stop offset="50%" stop-color="#121d3f"/>
+      <stop offset="100%" stop-color="#1a1835"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <rect width="800" height="500" fill="url(#grid)"/>
+  <circle cx="400" cy="210" r="140" fill="none" stroke="url(#gold)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.4"/>
+  <circle cx="400" cy="210" r="100" fill="rgba(245, 158, 11, 0.08)"/>
+
+  <!-- Trophy Graphic -->
+  <g transform="translate(360, 160) scale(1.7)" stroke="#fbbf24" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/>
+    <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/>
+    <path d="M4 22h16"/>
+    <path d="M10 14.66V17c0 .55-.45.98-.98 1.2A3.99 3.99 0 0 0 6 22h12a3.99 3.99 0 0 0-3.02-3.8c-.53-.22-.98-.65-.98-1.2v-2.34"/>
+    <path d="M6 2v7a6 6 0 0 0 12 0V2Z"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="400" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#fbbf24" letter-spacing="4" text-anchor="middle">SPARKLAB HACKATHON 2025</text>
+  <text x="400" y="385" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#ffffff" letter-spacing="1" text-anchor="middle">1ST PLACE CHAMPION</text>
+  <text x="400" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#94a3b8" letter-spacing="0.5" text-anchor="middle">UNITE Real-Time Blood Inventory &amp; Emergency Dispatch</text>
+
+  <rect x="250" y="445" width="300" height="28" rx="6" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="400" y="463" font-family="monospace" font-size="11" fill="#64748b" text-anchor="middle">REPLACE WITH: public/images/achievements/sparklab.jpg</text>
+</svg>

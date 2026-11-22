@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import type { Metadata } from 'next';
 
 interface ProjectDetail {
   id: string;
@@ -21,136 +22,126 @@ interface ProjectDetail {
 const PROJECTS_DATA: Record<string, ProjectDetail> = {
   '1': {
     id: '1',
-    num: '01 / 05',
-    name: 'GymTrack',
-    category: 'Gym Management',
-    role: 'Solo Project: Architecture, UI/UX, Backend & Database',
-    platform: 'Web Application (React 19, Vite, Node.js)',
-    builtFor: 'Independent Gym Owners, Front-Desk Staff & Trainers',
-    stack: ['React', 'Vite', 'Node.js', 'PostgreSQL', 'Prisma ORM', 'Tailwind CSS'],
+    num: '01 / 02',
+    name: 'UNITE',
+    category: 'Healthcare Startup · Blood Logistics',
+    role: 'Co-Founder & Lead Systems Architect',
+    platform: 'Web Portal & Mobile Application (Next.js, React Native, Supabase)',
+    builtFor: 'Regional Blood Centers, Hospital Transfusion Units & Volunteer Donors',
+    stack: ['Next.js 16', 'React Native', 'TypeScript', 'Node.js', 'Supabase RLS', 'PostgreSQL', 'Docker'],
     summary:
-      'A full-stack fitness facility management engine engineered to replace fragmented paper logs with real-time occupancy metrics, self-service QR check-ins, and flexible membership tiers.',
+      'A centralized digital blood bank inventory and donor mobilization platform connecting hospital transfusion units, regional blood centers, and volunteer donors in real time to prevent life-threatening blood shortages.',
     problem:
-      'Peak-hour queues at the check-in desk were causing 10-15 minute delays, manual attendance ledger sheets frequently went missing, and staff had zero visibility into real-time equipment congestion.',
+      'Hospitals and regional blood banks in the Bicol region face chronic coordination delays during critical emergencies. Blood inventory is tracked on fragmented physical ledgers or disconnected sheets, resulting in delayed transfusions, emergency donor search delays, and preventable blood wastage.',
     solution:
-      'Designed an offline-resilient kiosk interface with instant sub-second QR code scanning, a synchronized live occupancy dashboard via WebSockets, and an administrative portal allowing owners to adjust tier pricing and trainer schedules in real time.',
-    impact: 'Reduced front-desk check-in time by 82% and automated membership expiration renewals with zero manual data entry.',
+      'Architected a multi-tenant operational platform featuring live blood unit inventory tracking by blood component (PRBC, FFP, Platelets), automated donor eligibility attribution, emergency dispatch broadcasts, and granular Row-Level Security (RLS) ensuring strict cross-facility data privacy. Validated through direct institutional collaboration with Bicol Medical Center (BMC), the largest blood bank provider in Camarines Sur and Camarines Norte.',
+    impact: '1st Place Winner at SparkLAB Hackathon 2025; successfully completed ADNU MAGIS TBI incubation; CEELI UNC FLIP Startup Top 8 Finalist; Idea2Startup Naga City Semi-Finalist.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop',
-        caption: '01 — Live Floor Dashboard & Occupancy Metrics',
+        url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop',
+        caption: '01 — Real-Time Multi-Tenant Blood Unit Inventory Dashboard',
       },
       {
-        url: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=1200&auto=format&fit=crop',
-        caption: '02 — Self-Service QR Kiosk & Member Roster',
+        url: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1200&auto=format&fit=crop',
+        caption: '02 — Emergency Donor Matching & Component Allocation Dispatch',
       },
       {
-        url: 'https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=1200&auto=format&fit=crop',
-        caption: '03 — Subscription Tier Editor & Automated Billing',
+        url: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=1200&auto=format&fit=crop',
+        caption: '03 — Mobile Donor Engagement & Donation Drive Management',
       },
     ],
   },
   '2': {
     id: '2',
-    num: '02 / 05',
-    name: 'Faculty Evaluation System',
-    category: 'Academic Analytics',
-    role: 'Solo Lead Developer & Database Architect',
-    platform: 'Android App & Institutional Web Dashboard',
-    builtFor: 'Northwest Samar State University (NwSSU) Faculty & Students',
-    stack: ['Kotlin', 'Jetpack Compose', 'Firebase', 'Room DB', 'Node.js'],
+    num: '02 / 02',
+    name: 'ap-silang',
+    category: 'Municipal Healthcare · Clinical EMR',
+    role: 'Capstone Lead Architect & Full-Stack Developer',
+    platform: 'Progressive Web App & Mobile Field Client (React 19, React Native, Dexie.js)',
+    builtFor: 'Municipal Rural Health Units (RHU), Barangay Health Stations (BHS) & Midwives',
+    stack: ['React 19 PWA', 'React Native', 'Dexie.js', 'SQLite', 'Express', 'Node.js', 'WebSockets', 'Tailwind CSS'],
     summary:
-      'An end-to-end evaluation suite designed to streamline student evaluations of academic instructors, computing verified composite scores and departmental grade distributions automatically.',
+      'An offline-first municipal maternal healthcare and electronic medical records (EMR) platform engineered to guarantee clinical care continuity in rural areas with volatile or zero cellular connectivity.',
     problem:
-      'Scantron sheets and manual questionnaire tallying took up to 6 weeks per semester, resulting in delayed accreditation reports and high data entry error rates.',
+      'Rural midwives and healthcare workers frequently operate in remote barangays with no internet. Traditional cloud-only EMR systems freeze and drop consultation records, leaving high-risk pregnant mothers without medical oversight and violating national DOH record-keeping requirements.',
     solution:
-      'Created a native mobile client with zero-trust token authentication ensuring each student can only evaluate enrolled subjects once, paired with automated aggregate statistics and exportable dean reports.',
-    impact: 'Processed 8,400+ student evaluations with instant compilation upon semester close.',
+      'Engineered an offline-first synchronization engine using Dexie.js on the web PWA and SQLite on mobile. All clinical vitals, pregnancy visits, and prescriptions write to a local outbox in <8ms and automatically reconcile via priority-weighted mutation queues when connectivity returns. Built an in-browser deterministic CDSS (Targeted Early Warning Score / TEWS) risk triage engine and secure PIN-gated inter-clinic referral handover gateways.',
+    impact: 'Compliant with DOH 28-year maternal record retention and Philippine Data Privacy Act (RA 10173); 100% data retention during complete network blackouts across municipal health stations.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1200&auto=format&fit=crop',
-        caption: '01 — Departmental Evaluation Summary & Composite Scoring',
+        url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop',
+        caption: '01 — Clinical Dashboard with TEWS Maternal Risk Triage Alerts',
       },
       {
-        url: 'https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=1200&auto=format&fit=crop',
-        caption: '02 — Student Mobile Assessment Workflow & Verification',
+        url: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1200&auto=format&fit=crop',
+        caption: '02 — Offline Outbox Sync Engine & In-Browser Mutation Replay',
+      },
+      {
+        url: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=1200&auto=format&fit=crop',
+        caption: '03 — Inter-Clinic Referral & Secure Handover Gateway with PIN Unlock',
       },
     ],
   },
   '3': {
     id: '3',
-    num: '03 / 05',
-    name: 'Bantay POS',
-    category: 'Retail & POS',
-    role: 'Solo Mobile & Database Engineer',
-    platform: 'Tablet POS (React Native & Expo)',
-    builtFor: 'Small Retail Shops & Micro-Enterprises',
-    stack: ['React Native', 'Expo', 'SQLite', 'TypeScript', 'Bluetooth Thermal Printing'],
-    summary:
-      'An offline-first point-of-sale terminal built for tablets, supporting fast barcode lookup, daily cash drawer reconciliation, low-stock notifications, and Bluetooth receipt printing.',
-    problem:
-      'Unreliable neighborhood internet connections caused cloud-only POS systems to freeze during customer transactions, leading to lost sales.',
-    solution:
-      'Architected a fully local SQLite cache that operates 100% offline and background-syncs delta transactions whenever an internet handshake is re-established.',
-    impact: 'Zero transaction failures during network blackouts across 12 pilot retail locations.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1556742049-0a67e557224d?q=80&w=1200&auto=format&fit=crop',
-        caption: '01 — Register Interface & Quick SKU Lookup',
-      },
-      {
-        url: 'https://images.unsplash.com/photo-1556740758-90de374c12ad?q=80&w=1200&auto=format&fit=crop',
-        caption: '02 — Daily Cash Drawer Shift Reconciliation',
-      },
-    ],
+    num: '01 / 02',
+    name: 'UNITE',
+    category: 'Healthcare Startup · Blood Logistics',
+    role: 'Co-Founder & Lead Systems Architect',
+    platform: 'Web Portal & Mobile Application',
+    builtFor: 'Regional Blood Centers & Transfusion Units',
+    stack: ['Next.js 16', 'React Native', 'TypeScript', 'Node.js', 'Supabase RLS', 'PostgreSQL'],
+    summary: 'Centralized blood bank logistics platform with real-time multi-tenant inventory tracking.',
+    problem: 'Emergency blood shortages and slow coordination between regional facilities.',
+    solution: 'Live blood component inventory with automated donor dispatch and enterprise RLS security.',
+    impact: '1st Place SparkLAB Hackathon 2025; Partnered with Bicol Medical Center (BMC).',
+    images: [{ url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop', caption: 'UNITE Platform' }],
   },
   '4': {
     id: '4',
-    num: '04 / 05',
-    name: 'Appoint',
-    category: 'Parish Administration',
-    role: 'Full-Stack Developer & Product Designer',
-    platform: 'Web App & SMS Dispatch Engine',
-    builtFor: 'Church Clergy, Office Administrators & Parishioners',
-    stack: ['React', 'Vite', 'Node.js', 'PostgreSQL', 'Twilio API'],
-    summary:
-      'A streamlined booking engine connecting parishioners with church offices for sacramental appointments, marriage counselling, and memorial services with automated SMS reminders.',
-    problem:
-      'Office volunteers were double-booking priests and relying on paper calendar notebooks that were prone to scheduling conflicts.',
-    solution:
-      'Delivered a shared real-time calendar with configurable slot limits, automated priest SMS alerts, and parishioner self-service cancellation links.',
-    impact: 'Eliminated double-bookings entirely and reduced appointment no-shows by 65%.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=1200&auto=format&fit=crop',
-        caption: '01 — Parish Master Calendar & Service Scheduling',
-      },
-    ],
+    num: '02 / 02',
+    name: 'ap-silang',
+    category: 'Municipal Healthcare · Clinical EMR',
+    role: 'Capstone Lead Architect & Developer',
+    platform: 'PWA & Mobile App',
+    builtFor: 'Rural Health Units & Barangay Stations',
+    stack: ['React 19 PWA', 'React Native', 'Dexie.js', 'SQLite', 'Express'],
+    summary: 'Offline-first municipal maternal EMR platform with CDSS TEWS risk triage.',
+    problem: 'Rural clinics with zero connectivity losing critical patient records.',
+    solution: 'Dexie.js + SQLite offline outbox mutation sync engine and deterministic risk scoring.',
+    impact: 'Compliant with DOH 28-year retention rules and RA 10173 Data Privacy Act.',
+    images: [{ url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop', caption: 'ap-silang Clinical Platform' }],
   },
   '5': {
     id: '5',
-    num: '05 / 05',
-    name: 'Ambitpolong',
-    category: 'Community Portal',
-    role: 'Solo Developer & UI Designer',
-    platform: 'Mobile Web App (PWA)',
-    builtFor: 'Regional Church Youth Community',
-    stack: ['React', 'Vite', 'Tailwind CSS', 'Supabase', 'Web Push'],
-    summary:
-      'A vibrant mobile-first youth app designed to engage young members through daily scripture reading plans, prayer request boards, event registrations, and announcements.',
-    problem:
-      'Important youth event announcements were getting buried in noisy social media group chats.',
-    solution:
-      'Created a focused progressive web app with push notifications, bookmarkable reflection notes, and ticket reservation passes for community camps.',
-    impact: 'Achieved 88% active weekly engagement among 450+ registered youth participants.',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1200&auto=format&fit=crop',
-        caption: '01 — Community Feed & Scripture Reading Streak',
-      },
-    ],
+    num: '01 / 02',
+    name: 'UNITE',
+    category: 'Healthcare Startup',
+    role: 'Co-Founder',
+    platform: 'Web & Mobile',
+    builtFor: 'Hospitals & Blood Donors',
+    stack: ['Next.js', 'React Native', 'Supabase'],
+    summary: 'Blood bank logistics platform.',
+    problem: 'Blood shortages and coordination delays.',
+    solution: 'Real-time component tracking.',
+    impact: '1st Place SparkLAB Hackathon 2025.',
+    images: [{ url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop', caption: 'UNITE' }],
   },
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const project = PROJECTS_DATA[id];
+  if (!project) return { title: 'Case Study — Patrick' };
+  return {
+    title: `${project.name} Case Study — Patrick`,
+    description: project.summary,
+  };
+}
 
 export async function generateStaticParams() {
   return [{ id: '1' }, { id: '2' }, { id: '3' }, { id: '4' }, { id: '5' }];
@@ -168,7 +159,7 @@ export default async function ProjectDetailPage({
     notFound();
   }
 
-  const nextId = String((parseInt(id, 10) % 5) + 1);
+  const nextId = id === '1' ? '2' : '1';
 
   return (
     <div className="min-h-screen bg-white text-[#0a122a] selection:bg-blue-100 selection:text-blue-900 font-sans pb-24">

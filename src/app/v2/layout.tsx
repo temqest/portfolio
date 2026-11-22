@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Patrick — Web Developer for Small Businesses',
+  title: 'Patrick — Founder & Systems Engineer',
   description:
-    'I build web systems for small businesses that hold up with real users. Full-stack React, Next.js, Node.js and PostgreSQL solutions.',
+    'Co-founder of UNITE (blood bank logistics startup) and architect of ap-silang (municipal maternal health platform). Engineering high-consequence systems that hold up.',
 };
 
 export default function V2Layout({ children }: { children: React.ReactNode }) {

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-idea" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1226"/>
+      <stop offset="50%" stop-color="#102540"/>
+      <stop offset="100%" stop-color="#071728"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <pattern id="grid-idea" width="30" height="30" patternUnits="userSpaceOnUse">
+      <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(56, 189, 248, 0.06)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  
+  <rect width="800" height="500" fill="url(#bg-idea)"/>
+  <rect width="800" height="500" fill="url(#grid-idea)"/>
+  <circle cx="400" cy="210" r="140" fill="none" stroke="url(#cyan)" stroke-width="1.5" stroke-dasharray="4 4" opacity="0.3"/>
+  <circle cx="400" cy="210" r="100" fill="rgba(2, 132, 199, 0.1)"/>
+
+  <!-- Sparkles / Star Icon -->
+  <g transform="translate(365, 165) scale(1.6)" stroke="#38bdf8" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/>
+  </g>
+
+  <!-- Typography -->
+  <text x="400" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#38bdf8" letter-spacing="4" text-anchor="middle">CITY GOVERNMENT OF NAGA</text>
+  <text x="400" y="385" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#ffffff" letter-spacing="1" text-anchor="middle">IDEA2STARTUP SEMI-FINALIST</text>
+  <text x="400" y="420" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="400" fill="#94a3b8" letter-spacing="0.5" text-anchor="middle">Naga City Startup Ecosystem Accelerator 2026</text>
+
+  <rect x="250" y="445" width="300" height="28" rx="6" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.12)"/>
+  <text x="400" y="463" font-family="monospace" font-size="11" fill="#64748b" text-anchor="middle">REPLACE WITH: public/images/achievements/idea2startup.jpg</text>
+</svg>

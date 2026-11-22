@@ -7,6 +7,7 @@ import { V2HeroSection } from '@/components/v2/V2HeroSection';
 import { V2AboutSection } from '@/components/v2/V2AboutSection';
 import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
 import { V2WorkSection } from '@/components/v2/V2WorkSection';
+import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
 import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
 import { V2ProcessSection } from '@/components/v2/V2ProcessSection';
 import { V2TestimonialsSection } from '@/components/v2/V2TestimonialsSection';
@@ -72,6 +73,7 @@ function VersionTwoContent() {
             <V2AboutSection />
             <V2ToolkitSection />
             <V2WorkSection />
+            <V2AchievementsSection />
             <V2CertificatesSection />
             <V2ProcessSection />
             <V2TestimonialsSection />
