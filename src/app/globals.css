@@ -167,7 +167,7 @@ html.lenis, html.lenis body {
 }
 
 /* ==========================================================================
-   Version 2: Tactile Systems Craftsman (Ariel Angel Inspiration) Tokens & CSS
+   Version 2: Tactile Systems Craftsman Tokens & CSS
    ========================================================================== */
 :root {
   --display: 'ougther', 'Inter Tight', system-ui, sans-serif;
@@ -294,7 +294,7 @@ html.lenis, html.lenis body {
   letter-spacing: -0.01em;
   color: var(--navy);
   justify-content: space-between;
-  font-size: clamp(4.6rem, 22.5vw, 330px);
+  font-size: clamp(3.6rem, 18.5vw, 270px);
   font-weight: 400;
   line-height: 0.8;
   display: flex;

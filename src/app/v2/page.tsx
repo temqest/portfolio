@@ -9,11 +9,10 @@ import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
 import { V2ProcessSection } from '@/components/v2/V2ProcessSection';
 import { V2TestimonialsSection } from '@/components/v2/V2TestimonialsSection';
 import { V2ContactSection } from '@/components/v2/V2ContactSection';
-import { V2PhysicsMascot } from '@/components/v2/V2PhysicsMascot';
 import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
 
 export const metadata: Metadata = {
-  title: 'Ariel Angel (Anghel) — Web Developer for Small Businesses',
+  title: 'Patrick — Web Developer for Small Businesses',
   description:
     'I build web systems for small businesses that hold up with real users. Full-stack React, Next.js, Node.js and PostgreSQL solutions.',
 };
@@ -37,7 +36,7 @@ export default function VersionTwoPage() {
       {/* Minimal Footer */}
       <footer className="site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500">
         <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>© 2026 Anghel · Built with Next.js 16 &amp; Tailwind CSS</div>
+          <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
           <div className="flex gap-6">
             <a href="https://github.com/pork-arie" target="_blank" rel="noreferrer" className="hover:text-black">GitHub</a>
             <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="hover:text-black">LinkedIn</a>
@@ -45,9 +44,6 @@ export default function VersionTwoPage() {
           </div>
         </div>
       </footer>
-
-      {/* Interactive 2D Physics Mascot Companion */}
-      <V2PhysicsMascot />
     </div>
   );
 }

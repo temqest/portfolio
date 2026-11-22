@@ -14,7 +14,7 @@ export function V2AboutSection() {
           </div>
 
           <h2 className="text-sm font-mono uppercase tracking-wider text-blue-400 mb-6">
-            HELLO! I&apos;M ARIEL ANGEL
+            HELLO! I&apos;M PATRICK
           </h2>
 
           <p className="text-2xl sm:text-3xl md:text-4xl font-light leading-relaxed tracking-tight text-white/95 mb-8">
@@ -50,12 +50,12 @@ export function V2AboutSection() {
           <div className="relative w-full max-w-sm aspect-[4/5] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-[#0f172a] group">
             <img
               src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop"
-              alt="Portrait of Ariel Angel"
+              alt="Portrait of Patrick"
               className="w-full h-full object-cover grayscale contrast-125 group-hover:scale-105 group-hover:grayscale-0 transition-all duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060a18] via-transparent to-transparent opacity-60" />
             <div className="absolute bottom-4 left-4 right-4 p-3 bg-black/60 backdrop-blur-md rounded-2xl border border-white/10 text-xs font-mono text-white/80 flex items-center justify-between">
-              <span>Ariel Angel Bangcale</span>
+              <span>Patrick</span>
               <span className="text-emerald-400">● Active</span>
             </div>
           </div>

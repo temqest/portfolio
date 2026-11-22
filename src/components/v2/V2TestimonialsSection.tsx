@@ -17,7 +17,7 @@ export function V2TestimonialsSection() {
     {
       id: 2,
       quote:
-        '“Ariel delivered our evaluation platform ahead of schedule. The administrative dashboard gave our faculty instant clarity on department performance metrics that previously took weeks of manual compilation.”',
+        '“Patrick delivered our evaluation platform ahead of schedule. The administrative dashboard gave our faculty instant clarity on department performance metrics that previously took weeks of manual compilation.”',
       author: 'Dr. Ramon C.',
       role: 'Academic Dean, NwSSU',
     },

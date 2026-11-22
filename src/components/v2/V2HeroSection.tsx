@@ -63,9 +63,9 @@ export function V2HeroSection() {
         {/* Colossal Oughter Headline */}
         <h1
           className="name select-none flex justify-between w-full m-0 uppercase pointer-events-none"
-          aria-label="ANGHEL"
+          aria-label="PATRICK"
         >
-          {['A', 'N', 'G', 'H', 'E', 'L'].map((letter, i) => (
+          {['P', 'A', 'T', 'R', 'I', 'C', 'K'].map((letter, i) => (
             <span key={i} className="mask overflow-hidden inline-block pt-[0.08em]">
               <span className="inline-block transform hover:-translate-y-2 transition-transform duration-300">
                 {letter}

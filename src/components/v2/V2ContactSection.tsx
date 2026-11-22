@@ -8,7 +8,7 @@ export function V2ContactSection() {
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
 
-  const email = 'bangcaleanghel@gmail.com';
+  const email = 'patrickkurtv@gmail.com';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(email);

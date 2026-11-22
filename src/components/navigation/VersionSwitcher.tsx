@@ -32,7 +32,7 @@ export function VersionSwitcher() {
             ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-500/25'
             : 'text-white/70 hover:text-white hover:bg-white/10'
         }`}
-        title="Version 2: The Tactile Systems Craftsman (Ariel Angel inspiration)"
+        title="Version 2: The Tactile Systems Craftsman (Patrick)"
       >
         <span>🦖</span>
         <span>v2: Tactile</span>

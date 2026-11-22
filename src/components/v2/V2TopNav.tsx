@@ -28,7 +28,7 @@ export function V2TopNav() {
           href="/v2#front"
           className="brand text-[#0a122a] hover:opacity-85 transition-opacity"
         >
-          ANGHEL
+          PATRICK
         </Link>
 
         <nav aria-label="Sections">
