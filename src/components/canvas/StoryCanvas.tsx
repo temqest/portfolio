@@ -1,14 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { STORY_CHAPTERS } from "@/lib/constants";
+import { STORY_CHAPTERS, type StoryChapter } from "@/lib/constants";
 
 interface StoryCanvasProps {
   currentChapter: number;
   onChapterSelect?: (index: number) => void;
+  chapters?: StoryChapter[];
+  accentColor?: string;
 }
 
-export function StoryCanvas({ currentChapter }: StoryCanvasProps) {
+export function StoryCanvas({
+  currentChapter,
+  chapters = STORY_CHAPTERS,
+  accentColor = "#5b5fe0",
+}: StoryCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const rotRef = useRef({ x: 0, y: 0, lastX: 0, lastY: 0 });
@@ -278,22 +284,28 @@ export function StoryCanvas({ currentChapter }: StoryCanvasProps) {
 
       <div className="absolute top-1/2 left-8 md:left-24 -translate-y-1/2 max-w-lg z-20 pointer-events-none select-none">
         <div className="flex items-center gap-3 mb-3">
-          <span className="text-[#5b5fe0] font-mono text-sm tracking-widest font-semibold">
-            {STORY_CHAPTERS[currentChapter]?.chapter}
+          <span
+            className="font-mono text-sm tracking-widest font-semibold"
+            style={{ color: accentColor }}
+          >
+            {chapters[currentChapter]?.chapter}
           </span>
           <span className="text-white/40 uppercase text-xs tracking-widest font-mono">
-            {STORY_CHAPTERS[currentChapter]?.title}
+            {chapters[currentChapter]?.title}
           </span>
         </div>
-        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4 leading-tight">
-          {STORY_CHAPTERS[currentChapter]?.lead}
+        <h1 className="text-3xl md:text-5xl font-bold tracking-tight text-white mb-4 leading-tight font-sans">
+          {chapters[currentChapter]?.lead}
         </h1>
-        <p className="text-white/70 text-base md:text-lg leading-relaxed mb-6">
-          {STORY_CHAPTERS[currentChapter]?.body}
+        <p className="text-white/70 text-base md:text-lg leading-relaxed mb-6 font-light">
+          {chapters[currentChapter]?.body}
         </p>
         <div className="inline-flex items-center gap-2 border border-white/10 rounded-full px-4 py-1.5 text-xs font-mono text-white/50 tracking-widest uppercase bg-black/40 backdrop-blur-md">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#5b5fe0] animate-pulse" />
-          {STORY_CHAPTERS[currentChapter]?.hint}
+          <span
+            className="w-1.5 h-1.5 rounded-full animate-pulse"
+            style={{ backgroundColor: accentColor }}
+          />
+          {chapters[currentChapter]?.hint}
         </div>
       </div>
     </div>

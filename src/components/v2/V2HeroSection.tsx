@@ -31,7 +31,7 @@ export function V2HeroSection() {
   return (
     <section
       id="front"
-      className="front relative min-h-[100svh] min-h-screen flex flex-col justify-end pb-14 overflow-hidden bg-white text-[#0a122a]"
+      className="front relative min-h-[100svh] min-h-screen flex flex-col justify-end pb-32 sm:pb-36 md:pb-40 lg:pb-44 overflow-hidden bg-white text-[#0a122a]"
       data-theme="light"
     >
       {/* Interactive Cursor Grid Canvas (Follows mouse, lights up squares, responds to clicks) */}
@@ -84,7 +84,7 @@ export function V2HeroSection() {
             for small businesses that hold up with real users.
           </p>
 
-          <div className="front-cta flex justify-start md:justify-end items-center gap-3 pr-0 md:pr-[150px] pointer-events-auto">
+          <div className="front-cta flex justify-start md:justify-end items-center gap-3 pr-0 md:pr-4 pointer-events-auto">
             <a
               href="#work"
               className="btn"

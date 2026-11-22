@@ -1,12 +1,9 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export function V2CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
-  const [isTextInput, setIsTextInput] = useState(false);
 
   useEffect(() => {
     // Only activate on devices with fine pointer (mouse / trackpad)
@@ -14,26 +11,22 @@ export function V2CustomCursor() {
       return;
     }
 
-    let targetX = -100;
-    let targetY = -100;
-    let currentX = -100;
-    let currentY = -100;
-    let animId = 0;
+    const dot = dotRef.current;
+    if (!dot) return;
+
     let hasMoved = false;
 
+    // Instant 1:1 direct tracking - zero latency, zero React re-renders
     const onPointerMove = (e: PointerEvent) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
+      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
 
       if (!hasMoved) {
         hasMoved = true;
-        currentX = e.clientX;
-        currentY = e.clientY;
-        setIsVisible(true);
+        dot.style.opacity = '1';
         document.documentElement.classList.add('has-cursor');
       }
 
-      // Check element under pointer
+      // Check element under pointer directly in DOM without React setState
       const target = e.target as HTMLElement | null;
       if (target) {
         const isInput =
@@ -41,7 +34,12 @@ export function V2CustomCursor() {
           target.tagName === 'TEXTAREA' ||
           target.tagName === 'SELECT' ||
           target.isContentEditable;
-        setIsTextInput(Boolean(isInput));
+
+        if (isInput) {
+          dot.classList.add('is-hidden');
+        } else {
+          dot.classList.remove('is-hidden');
+        }
 
         const isClickable =
           target.tagName === 'BUTTON' ||
@@ -50,38 +48,29 @@ export function V2CustomCursor() {
           target.closest('a') ||
           target.getAttribute('role') === 'button' ||
           target.classList.contains('btn');
-        setIsHovering(Boolean(isClickable));
+
+        if (isClickable && !isInput) {
+          dot.classList.add('is-hovering');
+        } else {
+          dot.classList.remove('is-hovering');
+        }
       }
     };
 
     const onPointerLeave = () => {
-      setIsVisible(false);
+      dot.style.opacity = '0';
       document.documentElement.classList.remove('has-cursor');
     };
 
     const onPointerEnter = (e: PointerEvent) => {
-      targetX = e.clientX;
-      targetY = e.clientY;
-      currentX = e.clientX;
-      currentY = e.clientY;
-      setIsVisible(true);
+      dot.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
+      dot.style.opacity = '1';
       document.documentElement.classList.add('has-cursor');
     };
 
     const onWindowBlur = () => {
-      setIsVisible(false);
+      dot.style.opacity = '0';
       document.documentElement.classList.remove('has-cursor');
-    };
-
-    const loop = () => {
-      // Direct high-responsiveness spring lerp (0.55 gives instant snap with slight fluid spring)
-      currentX += (targetX - currentX) * 0.55;
-      currentY += (targetY - currentY) * 0.55;
-
-      if (dotRef.current) {
-        dotRef.current.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
-      }
-      animId = requestAnimationFrame(loop);
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -89,10 +78,7 @@ export function V2CustomCursor() {
     document.addEventListener('pointerenter', onPointerEnter);
     window.addEventListener('blur', onWindowBlur);
 
-    animId = requestAnimationFrame(loop);
-
     return () => {
-      cancelAnimationFrame(animId);
       window.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('pointerenter', onPointerEnter);
@@ -104,9 +90,7 @@ export function V2CustomCursor() {
   return (
     <div
       ref={dotRef}
-      className={`cursor pointer-events-none fixed top-0 left-0 z-[10001] rounded-full grid place-items-center transition-[width,height,margin,background,border,opacity,transform] duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        isHovering ? 'is-hovering' : ''
-      } ${!isVisible || isTextInput ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+      className="cursor pointer-events-none fixed top-0 left-0 z-[10001] rounded-full grid place-items-center opacity-0"
       style={{
         transform: 'translate3d(-100px, -100px, 0)',
         willChange: 'transform',

@@ -487,3 +487,76 @@ export const STORY_CHAPTERS: StoryChapter[] = [
     hint: "READY TO START",
   },
 ];
+
+export const PATRICK_STORY_CHAPTERS: StoryChapter[] = [
+  {
+    chapter: "00",
+    title: "A Story in Systems",
+    lead: "Most portfolios are static resumes.",
+    body: "Scroll to explore how I build web systems. Made to survive messy real-world data, unhandled edge cases, and high-traffic users.",
+    hint: "SCROLL · DRAG TO ROTATE PARTICLES",
+  },
+  {
+    chapter: "01",
+    title: "Philippines · The Spark",
+    lead: "Where curiosity met discipline.",
+    body: "Writing my first lines of code as an IT student in the Philippines. Discovering that clean logic, structured state, and solid database schemas create software that endures.",
+    hint: "CONTINUE SCROLLING OR USE ARROWS",
+  },
+  {
+    chapter: "02",
+    title: "The 2 A.M. Philosophy",
+    lead: "Most of what I know came from shipping real systems.",
+    body: "Then debugging them at 2 a.m. Theoretical clean architecture only matters when it holds up under real load with actual humans clicking unpredictably.",
+    hint: "EXPLORING THE ARCHITECTURE",
+  },
+  {
+    chapter: "03",
+    title: "The Stack",
+    lead: "Modern full-stack engineering with zero bloat.",
+    body: "React 19, Next.js 16, TypeScript, Node.js, and PostgreSQL. Paired with Tailwind CSS, spring physics, and headless service integrations.",
+    hint: "REACT · NEXT.JS · NODE · POSTGRES",
+  },
+  {
+    chapter: "04",
+    title: "Tactile Craft",
+    lead: "Physical feedback in a digital medium.",
+    body: "Micro-interactions, fluid typographic scales, and spring physics. Elevating business tools from clunky dashboards into tactile, enjoyable instruments.",
+    hint: "SPRING PHYSICS & MICRO-INTERACTIONS",
+  },
+  {
+    chapter: "05",
+    title: "Systems Shipped",
+    lead: "Real solutions deployed for real operations.",
+    body: "From zero-friction gym member check-ins to academic faculty evaluation analytics, offline-first POS terminals, and church community event hubs.",
+    hint: "SOLVING OPERATIONAL BOTTLENECKS",
+  },
+  {
+    chapter: "06",
+    title: "Offline-First Resilience",
+    lead: "Zero transaction drops during blackouts.",
+    body: "Designing client-side caching, Bluetooth thermal printing, and optimistic updates so businesses keep running seamlessly even when the internet drops.",
+    hint: "RESILIENT PERSISTENT CACHING",
+  },
+  {
+    chapter: "07",
+    title: "Continuous Mastery",
+    lead: "Always learning, always testing.",
+    body: "Holding 6+ industry certifications across HackerRank, Google, HubSpot, Make, and freeCodeCamp to stay at the cutting edge of web architecture.",
+    hint: "CERTIFIED TECHNICAL EXCELLENCE",
+  },
+  {
+    chapter: "08",
+    title: "Hello, I'm Patrick",
+    lead: "Web developer & systems craftsman.",
+    body: "Based in the Philippines, available for select freelance client builds and ambitious full-stack software development.",
+    hint: "BASED IN MANILA · UTC+8",
+  },
+  {
+    chapter: "09",
+    title: "Your Turn",
+    lead: "Let's build something enduring.",
+    body: "Have a messy operational challenge, web system, or high-conversion digital product? Let's discuss your timeline and build it right.",
+    hint: "PRESS ESC OR CLICK 'SEE SITE' TO RETURN",
+  },
+];

@@ -11,30 +11,28 @@ export function VersionSwitcher() {
   return (
     <aside
       aria-label="Portfolio Version Switcher"
-      className="fixed bottom-4 left-4 z-[9990] flex items-center gap-1.5 p-1.5 bg-black/80 backdrop-blur-md border border-white/20 rounded-full shadow-2xl text-[11px] font-mono transition-all duration-300 hover:border-white/40 opacity-85 hover:opacity-100"
+      className="fixed bottom-4 left-4 z-30 hidden lg:flex items-center gap-1 p-1 bg-white/85 backdrop-blur-md border border-black/10 rounded-full shadow-md text-[11px] font-mono transition-all duration-300 opacity-65 hover:opacity-100"
     >
       <Link
         href="/"
-        className={`px-3.5 py-1.5 rounded-full transition-all duration-300 flex items-center gap-1.5 ${
+        className={`px-2.5 py-1 rounded-full transition-all duration-200 flex items-center gap-1 ${
           !isV2
-            ? 'bg-white text-black font-semibold shadow-md'
-            : 'text-white/70 hover:text-white hover:bg-white/10'
+            ? 'bg-[#0a122a] text-white font-medium shadow-xs'
+            : 'text-slate-500 hover:text-black hover:bg-black/5'
         }`}
-        title="Version 1: The Cyber-Editorial Engineer (Inacio Nakiti inspiration)"
+        title="Version 1: The Cyber-Editorial Engineer"
       >
-        <span>✦</span>
         <span>v1: Cyber</span>
       </Link>
       <Link
         href="/v2"
-        className={`px-3.5 py-1.5 rounded-full transition-all duration-300 flex items-center gap-1.5 ${
+        className={`px-2.5 py-1 rounded-full transition-all duration-200 flex items-center gap-1 ${
           isV2
-            ? 'bg-blue-600 text-white font-semibold shadow-md shadow-blue-500/25'
-            : 'text-white/70 hover:text-white hover:bg-white/10'
+            ? 'bg-[#0a122a] text-white font-medium shadow-xs'
+            : 'text-slate-500 hover:text-black hover:bg-black/5'
         }`}
-        title="Version 2: The Tactile Systems Craftsman (Patrick)"
+        title="Version 2: The Tactile Systems Craftsman"
       >
-        <span>🦖</span>
         <span>v2: Tactile</span>
       </Link>
     </aside>
