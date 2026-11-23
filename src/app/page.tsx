@@ -1,265 +1,175 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useCallback, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
-import { TopNav } from "@/components/navigation/TopNav";
-import { FloatingDock } from "@/components/navigation/FloatingDock";
-import { LeftHUD } from "@/components/navigation/LeftHUD";
-import { BlueprintRuler } from "@/components/canvas/BlueprintRuler";
-import { BackgroundParticles } from "@/components/canvas/BackgroundParticles";
-import { StoryCanvas } from "@/components/canvas/StoryCanvas";
-import { GooeyMenuButton } from "@/components/navigation/GooeyMenuButton";
-import { CustomCursor } from "@/components/navigation/CustomCursor";
-import { TelemetryDrawer } from "@/components/easter-eggs/TelemetryDrawer";
-
-import { HeroSection } from "@/components/sections/HeroSection";
-import { AboutSection } from "@/components/sections/AboutSection";
-import { WhatIDoSection } from "@/components/sections/WhatIDoSection";
-import { ProcessSection } from "@/components/sections/ProcessSection";
-import { WorkSection } from "@/components/sections/WorkSection";
-import { AppsSection } from "@/components/sections/AppsSection";
-import { ExperienceSection } from "@/components/sections/ExperienceSection";
-import { MottoSection } from "@/components/sections/MottoSection";
-import { TestimonialsSection } from "@/components/sections/TestimonialsSection";
-import { OffTheClockSection } from "@/components/sections/OffTheClockSection";
-import { ContactSection } from "@/components/sections/ContactSection";
-import { FooterSection } from "@/components/sections/FooterSection";
-
-import { useAudioSynth } from "@/hooks/useAudioSynth";
-import { useLenisScroll } from "@/hooks/useLenisScroll";
-import { STORY_CHAPTERS } from "@/lib/constants";
+import React, { useState, useEffect, Suspense, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { V2TopNav } from '@/components/v2/V2TopNav';
+import { V2HeroSection } from '@/components/v2/V2HeroSection';
+import { V2AboutSection } from '@/components/v2/V2AboutSection';
+import { V2WorkSection } from '@/components/v2/V2WorkSection';
+import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
+import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
+import { V2ExperienceSection } from '@/components/v2/V2ExperienceSection';
+import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
+import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
+import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
+import { V2ContactSection } from '@/components/v2/V2ContactSection';
+import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
+import { V2FloatingDock } from '@/components/v2/V2FloatingDock';
+import { V2TactileStoryExperience } from '@/components/v2/V2TactileStoryExperience';
+import { TelemetryDrawer } from '@/components/easter-eggs/TelemetryDrawer';
+import { useAudioSynth } from '@/hooks/useAudioSynth';
+import { useLenisScroll } from '@/hooks/useLenisScroll';
 
 function PortfolioContent() {
   const searchParams = useSearchParams();
-  const initialMode = searchParams.get("v") === "story" ? "story" : "site";
-  const [mode, setMode] = useState<"site" | "story">(initialMode);
-  const [storyChapter, setStoryChapter] = useState(0);
-  const [activeSection, setActiveSection] = useState("hero");
-  const [isCodeDrawerOpen, setIsCodeDrawerOpen] = useState(false);
+  const paramMode = searchParams.get('v') || searchParams.get('mode');
+  const [mode, setMode] = useState<'site' | 'story'>(paramMode === 'story' ? 'story' : 'site');
+  const [isTelemetryOpen, setIsTelemetryOpen] = useState(false);
 
   const { isPlaying: isAudioPlaying, toggleAudio } = useAudioSynth();
-  const { scrollTo, stopScroll, startScroll } = useLenisScroll();
+  const { stopScroll, startScroll } = useLenisScroll();
 
-  // Scroll to section helper
-  const handleNavigate = useCallback(
-    (id: string) => {
-      const el = document.getElementById(id);
-      if (el) {
-        scrollTo(el, -20);
-      }
-    },
-    [scrollTo]
-  );
-
-  // Section observer for LeftHUD
-  useEffect(() => {
-    if (mode !== "site") return;
-
-    const sectionIds = [
-      "hero",
-      "about",
-      "whatido",
-      "process",
-      "work",
-      "apps",
-      "experience",
-      "motto",
-      "testimonials",
-      "offtheclock",
-      "contact",
-      "footer",
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [mode]);
-
-  // Handle "Break it" physics collapse scroll lock
-  const handleBreakStateChange = useCallback(
-    (broken: boolean) => {
-      if (broken) {
+  // Mode change handler with scroll lock for Story Mode
+  const handleModeChange = useCallback(
+    (newMode: 'site' | 'story') => {
+      setMode(newMode);
+      if (newMode === 'story') {
         stopScroll();
+        if (typeof window !== 'undefined') {
+          window.history.replaceState(null, '', '/?v=story');
+        }
       } else {
         startScroll();
+        if (typeof window !== 'undefined') {
+          window.history.replaceState(null, '', '/');
+        }
       }
     },
     [stopScroll, startScroll]
   );
 
-  // Story Mode: Wheel & Keyboard chapter scrubbing
+  // Sync scroll on initial mount based on mode
   useEffect(() => {
-    if (mode !== "story") return;
-
-    let wheelTimeout: NodeJS.Timeout | null = null;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (wheelTimeout) return;
-
-      if (e.deltaY > 25) {
-        setStoryChapter((prev) => Math.min(prev + 1, STORY_CHAPTERS.length - 1));
-      } else if (e.deltaY < -25) {
-        setStoryChapter((prev) => Math.max(prev - 1, 0));
-      }
-
-      wheelTimeout = setTimeout(() => {
-        wheelTimeout = null;
-      }, 400);
-    };
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown" || e.key === "ArrowRight" || e.key === " ") {
-        e.preventDefault();
-        setStoryChapter((prev) => Math.min(prev + 1, STORY_CHAPTERS.length - 1));
-      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-        e.preventDefault();
-        setStoryChapter((prev) => Math.max(prev - 1, 0));
-      } else if (e.key === "Escape") {
-        setMode("site");
-      }
-    };
-
-    window.addEventListener("wheel", onWheel, { passive: false });
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("wheel", onWheel);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [mode]);
+    if (mode === 'story') {
+      stopScroll();
+    } else {
+      startScroll();
+    }
+  }, [mode, stopScroll, startScroll]);
 
   return (
-    <div className="relative min-h-screen bg-[#0a0a0a] text-[#eeece8] selection:bg-[#5b5fe0] selection:text-white">
-      {/* Custom Difference Blend Cursor */}
-      <CustomCursor />
+    <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-white text-[#0a122a]">
+      {/* Precision Difference-Blend Cursor */}
+      <V2CustomCursor />
 
-      {/* Top Navigation */}
-      <TopNav
-        onNavigate={handleNavigate}
-        mode={mode}
-        onSwitchMode={(newMode) => setMode(newMode)}
-      />
+      {/* Top Header (only visible in site mode; story mode has its monograph header) */}
+      <V2TopNav mode={mode} onSwitchMode={handleModeChange} />
 
-      {/* Mode A: Editorial "Site" Experience */}
-      {mode === "site" && (
+      {/* Modality A: Full-featured Tactile Editorial Site */}
+      {mode === 'site' && (
         <>
-          {/* Ambient Particles in Deep Space */}
-          <BackgroundParticles />
+          <main>
+            {/* 1. Hero Section */}
+            <V2HeroSection />
 
-          {/* Left HUD: W. Nominee badge & vertical section scroll indicator */}
-          <LeftHUD activeSection={activeSection} mode={mode} />
+            {/* 2. About Me */}
+            <V2AboutSection />
 
-          {/* Right Blueprint Ruler Canvas */}
-          <BlueprintRuler />
+            {/* 3. Projects */}
+            <V2WorkSection />
 
-          <main id="main" className="relative z-10 w-full">
-            <HeroSection
-              onStartProject={() => handleNavigate("contact")}
-              onExploreWork={() => handleNavigate("work")}
-            />
+            {/* 4. Skills & Disciplines */}
+            <V2ToolkitSection />
 
-            <AboutSection />
+            {/* 5. Work Experience */}
+            <V2ExperienceSection />
 
-            <WhatIDoSection onSkipNext={() => handleNavigate("process")} />
+            {/* 6. Achievements & Milestones */}
+            <V2AchievementsSection />
 
-            <ProcessSection />
+            {/* 7. Certifications */}
+            <V2CertificatesSection />
 
-            <WorkSection />
+            {/* 8. Technical Arsenal & Stack */}
+            <V2TechStackSection />
 
-            <AppsSection />
+            {/* 9. Work & Internship Availability */}
+            <V2AvailabilitySection />
 
-            <ExperienceSection />
-
-            <MottoSection
-              onBreakStateChange={handleBreakStateChange}
-              onOpenCodeDrawer={() => setIsCodeDrawerOpen(true)}
-            />
-
-            <TestimonialsSection />
-
-            <OffTheClockSection />
-
-            <ContactSection />
-
-            <FooterSection
-              onScrollToTop={() => handleNavigate("hero")}
-            />
+            {/* 10. Direct Contact */}
+            <V2ContactSection />
           </main>
 
-          {/* Gooey SVG Filter "Start a project" floating button */}
-          <GooeyMenuButton onStartProject={() => handleNavigate("contact")} />
+          {/* Minimal Editorial Footer */}
+          <footer className="site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
+            <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
+              <div className="flex gap-6">
+                <a
+                  href="https://github.com/temqest"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  GitHub
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  LinkedIn
+                </a>
+                <a
+                  href="https://www.facebook.com/patrick.kurt.127"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  Facebook
+                </a>
+                <a href="#front" className="hover:text-blue-600">
+                  Back to top ↑
+                </a>
+              </div>
+            </div>
+          </footer>
         </>
       )}
 
-      {/* Mode B: 10-Chapter "Story in Particles" Scrollytelling */}
-      {mode === "story" && (
-        <main className="relative z-10 w-full h-screen overflow-hidden">
-          <StoryCanvas
-            currentChapter={storyChapter}
-            onChapterSelect={(idx) => setStoryChapter(idx)}
-          />
-
-          {/* Story Chapter Navigator Controls */}
-          <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-            {STORY_CHAPTERS.map((ch, idx) => (
-              <button
-                key={ch.chapter}
-                onClick={() => setStoryChapter(idx)}
-                className={`w-2 h-2 rounded-full transition-all cursor-pointer ${
-                  idx === storyChapter
-                    ? "w-6 bg-[#5b5fe0]"
-                    : "bg-white/30 hover:bg-white/60"
-                }`}
-                aria-label={`Jump to chapter ${ch.chapter}: ${ch.title}`}
-              />
-            ))}
-          </div>
-        </main>
+      {/* Modality B: Tactile Monograph Story Experience */}
+      {mode === 'story' && (
+        <V2TactileStoryExperience onExit={() => handleModeChange('site')} />
       )}
 
-      {/* Persistent Floating Bottom Dock */}
-      <FloatingDock
+      {/* Tactile Floating Navigation Dock */}
+      <V2FloatingDock
         mode={mode}
-        onModeChange={(newMode) => setMode(newMode)}
-        onOpenCodeDrawer={() => setIsCodeDrawerOpen(true)}
+        onModeChange={handleModeChange}
         isAudioPlaying={isAudioPlaying}
         onToggleAudio={toggleAudio}
-        onPrevStoryChapter={() =>
-          setStoryChapter((prev) => Math.max(prev - 1, 0))
-        }
-        onNextStoryChapter={() =>
-          setStoryChapter((prev) =>
-            Math.min(prev + 1, STORY_CHAPTERS.length - 1)
-          )
-        }
+        onOpenTelemetry={() => setIsTelemetryOpen(true)}
       />
 
-      {/* Telemetry Inspector DevTools Drawer */}
+      {/* Developer Architecture & Performance Telemetry Drawer */}
       <TelemetryDrawer
-        isOpen={isCodeDrawerOpen}
-        onClose={() => setIsCodeDrawerOpen(false)}
+        isOpen={isTelemetryOpen}
+        onClose={() => setIsTelemetryOpen(false)}
       />
     </div>
   );
 }
 
-export default function Home() {
+export default function PortfolioPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#0a0a0a]" />}>
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-white text-[#0a122a] flex items-center justify-center font-mono text-xs">
+          Loading tactile experience...
+        </div>
+      }
+    >
       <PortfolioContent />
     </Suspense>
   );

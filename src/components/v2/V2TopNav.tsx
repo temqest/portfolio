@@ -36,7 +36,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
     <header className={`topbar ${scrolled ? 'scrolled' : ''}`} data-on="light">
       <div className="wrap">
         <Link
-          href="/v2#front"
+          href="/#front"
           className="brand text-[#0a122a] hover:opacity-85 transition-opacity"
         >
           PATRICK

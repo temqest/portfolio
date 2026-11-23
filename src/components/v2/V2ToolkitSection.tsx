@@ -261,13 +261,6 @@ export function V2ToolkitSection() {
                 const isActive = idx === activeTabIdx;
                 const isPast = idx < activeTabIdx;
 
-                // Tab progress fill percentage (0% to 100%) for smooth visual scroll feedback
-                const tabSegment = 1 / DISCIPLINES.length;
-                const tabLocalProgress = Math.max(
-                  0,
-                  Math.min(1, (scrollProgress - idx * tabSegment) / tabSegment)
-                );
-
                 return (
                   <button
                     key={tab.id}

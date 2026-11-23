@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useState } from 'react';
 
 export interface KineticGridCanvasProps {
   activeTab: number;
@@ -9,6 +9,67 @@ export interface KineticGridCanvasProps {
 }
 
 const PARTICLE_COUNT = 5200;
+
+function createInitialBuffers() {
+  const liveX = new Float32Array(PARTICLE_COUNT);
+  const liveY = new Float32Array(PARTICLE_COUNT);
+  const originX = new Float32Array(PARTICLE_COUNT);
+  const originY = new Float32Array(PARTICLE_COUNT);
+  const targetX = new Float32Array(PARTICLE_COUNT);
+  const targetY = new Float32Array(PARTICLE_COUNT);
+  const scatterDx = new Float32Array(PARTICLE_COUNT);
+  const scatterDy = new Float32Array(PARTICLE_COUNT);
+  const originR = new Float32Array(PARTICLE_COUNT);
+  const originG = new Float32Array(PARTICLE_COUNT);
+  const originB = new Float32Array(PARTICLE_COUNT);
+  const targetR = new Float32Array(PARTICLE_COUNT);
+  const targetG = new Float32Array(PARTICLE_COUNT);
+  const targetB = new Float32Array(PARTICLE_COUNT);
+  const originAlpha = new Float32Array(PARTICLE_COUNT);
+  const targetAlpha = new Float32Array(PARTICLE_COUNT);
+  const originSize = new Float32Array(PARTICLE_COUNT);
+  const targetSize = new Float32Array(PARTICLE_COUNT);
+
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 40 + Math.random() * 85;
+    scatterDx[i] = Math.cos(angle) * speed;
+    scatterDy[i] = Math.sin(angle) * speed;
+
+    originR[i] = 0.04;
+    originG[i] = 0.07;
+    originB[i] = 0.16;
+    targetR[i] = 0.04;
+    targetG[i] = 0.07;
+    targetB[i] = 0.16;
+
+    originAlpha[i] = 0.95;
+    targetAlpha[i] = 0.95;
+    originSize[i] = 2.4;
+    targetSize[i] = 2.4;
+  }
+
+  return {
+    liveX,
+    liveY,
+    originX,
+    originY,
+    targetX,
+    targetY,
+    scatterDx,
+    scatterDy,
+    originR,
+    originG,
+    originB,
+    targetR,
+    targetG,
+    targetB,
+    originAlpha,
+    targetAlpha,
+    originSize,
+    targetSize,
+  };
+}
 
 export function KineticGridCanvas({
   activeTab,
@@ -39,88 +100,8 @@ export function KineticGridCanvas({
   });
 
   // Typed Arrays for particle buffers (Zero GC overhead, 60fps)
-  const buffersRef = useRef<{
-    liveX: Float32Array;
-    liveY: Float32Array;
-    originX: Float32Array;
-    originY: Float32Array;
-    targetX: Float32Array;
-    targetY: Float32Array;
-    scatterDx: Float32Array;
-    scatterDy: Float32Array;
-    originR: Float32Array;
-    originG: Float32Array;
-    originB: Float32Array;
-    targetR: Float32Array;
-    targetG: Float32Array;
-    targetB: Float32Array;
-    originAlpha: Float32Array;
-    targetAlpha: Float32Array;
-    originSize: Float32Array;
-    targetSize: Float32Array;
-  } | null>(null);
-
-  // Defensive buffer initialization guarding against Fast Refresh / Hot Reload stale ref schemas
-  if (!buffersRef.current || !('targetR' in buffersRef.current) || !buffersRef.current.targetR) {
-    const liveX = new Float32Array(PARTICLE_COUNT);
-    const liveY = new Float32Array(PARTICLE_COUNT);
-    const originX = new Float32Array(PARTICLE_COUNT);
-    const originY = new Float32Array(PARTICLE_COUNT);
-    const targetX = new Float32Array(PARTICLE_COUNT);
-    const targetY = new Float32Array(PARTICLE_COUNT);
-    const scatterDx = new Float32Array(PARTICLE_COUNT);
-    const scatterDy = new Float32Array(PARTICLE_COUNT);
-    const originR = new Float32Array(PARTICLE_COUNT);
-    const originG = new Float32Array(PARTICLE_COUNT);
-    const originB = new Float32Array(PARTICLE_COUNT);
-    const targetR = new Float32Array(PARTICLE_COUNT);
-    const targetG = new Float32Array(PARTICLE_COUNT);
-    const targetB = new Float32Array(PARTICLE_COUNT);
-    const originAlpha = new Float32Array(PARTICLE_COUNT);
-    const targetAlpha = new Float32Array(PARTICLE_COUNT);
-    const originSize = new Float32Array(PARTICLE_COUNT);
-    const targetSize = new Float32Array(PARTICLE_COUNT);
-
-    for (let i = 0; i < PARTICLE_COUNT; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 40 + Math.random() * 85;
-      scatterDx[i] = Math.cos(angle) * speed;
-      scatterDy[i] = Math.sin(angle) * speed;
-
-      originR[i] = 0.04;
-      originG[i] = 0.07;
-      originB[i] = 0.16;
-      targetR[i] = 0.04;
-      targetG[i] = 0.07;
-      targetB[i] = 0.16;
-
-      originAlpha[i] = 0.95;
-      targetAlpha[i] = 0.95;
-      originSize[i] = 2.4;
-      targetSize[i] = 2.4;
-    }
-
-    buffersRef.current = {
-      liveX,
-      liveY,
-      originX,
-      originY,
-      targetX,
-      targetY,
-      scatterDx,
-      scatterDy,
-      originR,
-      originG,
-      originB,
-      targetR,
-      targetG,
-      targetB,
-      originAlpha,
-      targetAlpha,
-      originSize,
-      targetSize,
-    };
-  }
+  const [buffers] = useState(createInitialBuffers);
+  const buffersRef = useRef(buffers);
 
   // Generate coordinates for shape according to active discipline tab
   const generateShape = useCallback(

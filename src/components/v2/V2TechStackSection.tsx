@@ -25,7 +25,7 @@ import {
   JestIcon,
   CypressIcon,
 } from './TechIcons';
-import { ArrowUpRight, CheckCircle2, Sparkles, Terminal } from 'lucide-react';
+
 
 interface TechLogoItem {
   id: string;

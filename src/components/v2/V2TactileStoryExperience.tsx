@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CursorGridCanvas } from './CursorGridCanvas';
 import { ArrowLeft, ArrowRight, Check, Copy } from 'lucide-react';
 
@@ -343,7 +343,7 @@ export function V2TactileStoryExperience({ onExit }: V2TactileStoryExperiencePro
                   <div className="p-4 rounded-2xl bg-slate-900 text-slate-200 font-mono text-xs leading-relaxed overflow-x-auto border border-black/10">
                     {reliabilityView === 'defensive' ? (
                       <div>
-                        <span className="text-emerald-400">// Handled edge case &amp; retry</span>
+                        <span className="text-emerald-400">{'// Handled edge case & retry'}</span>
                         <br />
                         <span className="text-blue-400">try</span> &#123;
                         <br />
@@ -357,13 +357,13 @@ export function V2TactileStoryExperience({ onExit }: V2TactileStoryExperiencePro
                       </div>
                     ) : (
                       <div>
-                        <span className="text-rose-400">// Uncaught crash at 2 a.m.</span>
+                        <span className="text-rose-400">{'// Uncaught crash at 2 a.m.'}</span>
                         <br />
                         <span className="text-slate-400">const</span> res = <span className="text-slate-400">await</span> fetch(url);
                         <br />
                         <span className="text-slate-400">const</span> data = <span className="text-slate-400">await</span> res.json();
                         <br />
-                        <span className="text-rose-400">// TypeError: data.user is undefined!</span>
+                        <span className="text-rose-400">{'// TypeError: data.user is undefined!'}</span>
                       </div>
                     )}
                   </div>

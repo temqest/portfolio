@@ -9,8 +9,6 @@ import {
   Award,
   Sparkles,
   ArrowUpRight,
-  ShieldCheck,
-  X,
   Camera,
 } from 'lucide-react';
 

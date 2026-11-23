@@ -167,7 +167,7 @@ export default async function ProjectDetailPage({
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-black/5 px-6 md:px-12 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Link
-            href="/v2#work"
+            href="/#work"
             className="text-xs font-mono uppercase tracking-wider text-slate-600 hover:text-blue-600 transition-colors flex items-center gap-1.5"
           >
             <span>←</span>
@@ -288,7 +288,7 @@ export default async function ProjectDetailPage({
         {/* Next Case Study Navigation */}
         <div className="mt-20 pt-12 border-t border-black/10 flex items-center justify-between">
           <Link
-            href="/v2#work"
+            href="/#work"
             className="text-xs font-mono uppercase tracking-wider text-slate-500 hover:text-blue-600"
           >
             ← Back to all projects

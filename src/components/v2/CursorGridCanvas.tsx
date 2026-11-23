@@ -66,21 +66,23 @@ export function CursorGridCanvas({
     pulseSpeed,
   });
 
-  propsRef.current = {
-    cellSize,
-    color,
-    radius,
-    falloff,
-    holdTime,
-    fadeDuration,
-    lineWidth,
-    maxOpacity,
-    fillOpacity,
-    gridOpacity,
-    cellRadius,
-    clickPulse,
-    pulseSpeed,
-  };
+  useEffect(() => {
+    propsRef.current = {
+      cellSize,
+      color,
+      radius,
+      falloff,
+      holdTime,
+      fadeDuration,
+      lineWidth,
+      maxOpacity,
+      fillOpacity,
+      gridOpacity,
+      cellRadius,
+      clickPulse,
+      pulseSpeed,
+    };
+  });
 
   useEffect(() => {
     const container = containerRef.current;
