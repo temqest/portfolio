@@ -198,7 +198,7 @@ export function V2ToolkitSection() {
           {/* Top Header Eyebrow Bar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs font-mono tracking-widest uppercase text-black/50 border-b border-black/10 pb-3 gap-2">
             <div className="flex items-center gap-2">
-              <span>(04) SKILLS &amp; DISCIPLINES</span>
+              <span>(03) SKILLS &amp; DISCIPLINES</span>
               <span className="text-black/25">/</span>
               <span className="text-blue-600 font-medium">ENGINEERING BLUEPRINTS</span>
             </div>

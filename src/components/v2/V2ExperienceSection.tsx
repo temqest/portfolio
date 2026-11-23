@@ -222,7 +222,7 @@ export function V2ExperienceSection() {
         {/* Top Header Eyebrow Bar */}
         <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-slate-400 border-b border-white/10 pb-4 mb-10">
           <div className="flex items-center gap-3">
-            <span className="text-blue-400">(05)</span>
+            <span className="text-blue-400">(04)</span>
             <span>EXPERIENCE</span>
           </div>
           <span className="text-slate-500">Since 2022</span>

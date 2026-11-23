@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { V2IslandPanel } from './V2IslandPanel';
 
 interface Certificate {
   id: number;
@@ -60,27 +61,39 @@ export function V2CertificatesSection() {
   ];
 
   return (
-    <section id="certs" className="py-24 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a] relative">
+    <V2IslandPanel id="certs" className="my-8">
       <div id="certifications" className="relative -top-24" />
-      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+
+      {/* ============================================================== */}
+      {/* SECTION HEADER (Dark Island Theme)                             */}
+      {/* ============================================================== */}
+      <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
         <span>(06) — CERTIFICATIONS</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14">
-        <h2 className="text-3xl md:text-5xl font-light tracking-tight text-[#0a122a]">
-          Always <em className="font-serif-italic text-blue-600 font-normal">learning.</em>
-        </h2>
-        <span className="text-xs font-mono text-slate-500 uppercase">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14 border-b border-white/10 pb-8">
+        <div>
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white leading-tight">
+            Always <em className="font-serif-italic text-blue-400 font-normal">learning.</em>
+          </h2>
+          <p className="text-sm md:text-base text-slate-300 font-light mt-2 max-w-2xl leading-relaxed">
+            Continuous industry upskilling across frontend architecture, digital automation, and analytical measurement.
+          </p>
+        </div>
+        <span className="text-xs font-mono text-slate-400 uppercase shrink-0">
           {certificates.length} certificates · hover to preview
         </span>
       </div>
 
-      <div className="divide-y divide-black/10 border-t border-b border-black/10">
+      {/* ============================================================== */}
+      {/* TABLE FORMAT (Dark Theme Editorial Rows)                       */}
+      {/* ============================================================== */}
+      <div className="divide-y divide-white/10 border-t border-b border-white/10">
         {certificates.map((cert) => (
           <button
             key={cert.id}
             type="button"
-            className="w-full py-8 text-left grid grid-cols-12 items-center gap-4 group transition-all duration-300 hover:px-6 hover:bg-slate-50 relative cursor-pointer"
+            className="w-full py-8 text-left grid grid-cols-12 items-center gap-4 group transition-all duration-300 hover:px-6 hover:bg-white/[0.04] relative cursor-pointer"
             onMouseEnter={() => setHovered(cert)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setSelected(cert)}
@@ -88,14 +101,14 @@ export function V2CertificatesSection() {
             <span className="col-span-2 sm:col-span-1 font-mono text-slate-400 text-sm">
               {cert.num}
             </span>
-            <span className="col-span-6 sm:col-span-7 text-xl sm:text-2xl md:text-3xl font-normal tracking-tight text-[#0a122a] group-hover:text-blue-600 transition-colors">
+            <span className="col-span-6 sm:col-span-7 text-xl sm:text-2xl md:text-3xl font-normal tracking-tight text-white group-hover:text-blue-400 transition-colors">
               {cert.name}
             </span>
-            <span className="col-span-2 sm:col-span-3 text-slate-500 text-xs sm:text-sm font-mono text-right sm:text-left">
+            <span className="col-span-2 sm:col-span-3 text-slate-400 text-xs sm:text-sm font-mono text-right sm:text-left">
               {cert.issuer}
             </span>
             <span className="col-span-2 sm:col-span-1 text-right">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-black/10 group-hover:bg-[#0a122a] group-hover:text-white group-hover:rotate-45 transition-all text-xs">
+              <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/10 group-hover:bg-white group-hover:text-[#060a18] group-hover:rotate-45 transition-all text-xs text-white">
                 ↗
               </span>
             </span>
@@ -103,23 +116,29 @@ export function V2CertificatesSection() {
         ))}
       </div>
 
-      {/* Floating Hover Tilt Preview Card */}
+      {/* ============================================================== */}
+      {/* FLOATING HOVER PREVIEW CARD (Dark Theme)                       */}
+      {/* ============================================================== */}
       {hovered && (
         <div
-          className="fixed pointer-events-none z-50 w-72 md:w-80 rounded-2xl overflow-hidden shadow-2xl border border-black/15 bg-white transition-opacity duration-300 hidden md:block"
+          className="fixed pointer-events-none z-50 w-72 md:w-80 rounded-2xl overflow-hidden shadow-2xl border border-white/20 bg-[#0a122a] text-white transition-opacity duration-300 hidden md:block"
           style={{ top: '35%', right: '12%' }}
         >
-          <img src={hovered.image} alt={hovered.name} className="w-full h-44 object-cover" />
-          <div className="p-4 bg-white">
-            <span className="text-[10px] font-mono text-blue-600 uppercase tracking-widest block">
+          <div className="w-full h-44 bg-[#060a18] relative overflow-hidden border-b border-white/10">
+            <img src={hovered.image} alt={hovered.name} className="w-full h-full object-cover" />
+          </div>
+          <div className="p-4 bg-[#0a122a]">
+            <span className="text-[10px] font-mono text-blue-400 uppercase tracking-widest block mb-1">
               {hovered.issuer}
             </span>
-            <h4 className="text-sm font-semibold text-[#0a122a]">{hovered.name}</h4>
+            <h4 className="text-sm font-semibold text-white">{hovered.name}</h4>
           </div>
         </div>
       )}
 
-      {/* Lightbox Modal */}
+      {/* ============================================================== */}
+      {/* LIGHTBOX MODAL (Dark Theme)                                    */}
+      {/* ============================================================== */}
       {selected && (
         <div
           className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-6"
@@ -128,18 +147,18 @@ export function V2CertificatesSection() {
           aria-label={selected.name}
         >
           <div
-            className="max-w-2xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl p-6 relative border border-white/20"
+            className="max-w-2xl w-full bg-[#0a122a] rounded-3xl overflow-hidden shadow-2xl p-6 relative border border-white/20 text-white"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
               <div>
-                <span className="text-xs font-mono text-blue-600 uppercase">{selected.issuer}</span>
-                <h3 className="text-xl font-bold text-[#0a122a]">{selected.name}</h3>
+                <span className="text-xs font-mono text-blue-400 uppercase">{selected.issuer}</span>
+                <h3 className="text-xl font-bold text-white">{selected.name}</h3>
               </div>
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-mono text-slate-700 transition-colors"
+                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer"
               >
                 Close ✕
               </button>
@@ -147,11 +166,11 @@ export function V2CertificatesSection() {
             <img
               src={selected.image}
               alt={selected.name}
-              className="w-full h-80 object-cover rounded-2xl border border-black/10"
+              className="w-full h-80 object-cover rounded-2xl border border-white/10"
             />
           </div>
         </div>
       )}
-    </section>
+    </V2IslandPanel>
   );
 }

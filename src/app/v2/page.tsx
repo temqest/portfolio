@@ -79,14 +79,14 @@ function VersionTwoContent() {
             {/* 3. Projects */}
             <V2WorkSection />
 
-            {/* 4. Achievements & Milestones */}
-            <V2AchievementsSection />
-
-            {/* 5. Skills & Disciplines */}
+            {/* 4. Skills & Disciplines */}
             <V2ToolkitSection />
 
-            {/* 6. Work Experience */}
+            {/* 5. Work Experience */}
             <V2ExperienceSection />
+
+            {/* 6. Achievements & Milestones */}
+            <V2AchievementsSection />
 
             {/* 7. Certifications */}
             <V2CertificatesSection />
