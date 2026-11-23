@@ -1,12 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+import { FaGithub, FaLinkedin, FaFilePdf } from 'react-icons/fa6';
 
 export function V2ContactSection() {
   const [copied, setCopied] = useState(false);
-  const [selectedService, setSelectedService] = useState('Website');
+  const [selectedRoleType, setSelectedRoleType] = useState('SWE Internship');
   const [submitted, setSubmitted] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
 
   const email = 'patrickkurtv@gmail.com';
 
@@ -33,22 +35,22 @@ export function V2ContactSection() {
       />
 
       <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
-        <span>(09) — CONTACT</span>
+        <span>(09) — CONTACT &amp; HIRING</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-        {/* Left Column: Headline, Direct Email & Offerings */}
+        {/* Left Column: Direct Intent, Email & Engineering Competencies */}
         <div className="lg:col-span-5">
           <h2 className="text-4xl md:text-6xl font-light tracking-tight text-[#0a122a] mb-6">
-            Let&apos;s build <em className="font-serif-italic text-blue-600 font-normal">something.</em>
+            Let&apos;s start a <em className="font-serif-italic text-blue-600 font-normal">conversation.</em>
           </h2>
 
           <p className="text-base text-slate-600 font-light leading-relaxed mb-8">
-            Tell me what you need. I reply within 24 hours with questions, a rough plan and a timeline.
+            Whether you&apos;re hiring for an internship, open developer role, or want to discuss an engineering challenge, my inbox is open.
           </p>
 
           {/* Email Box with One-Click Copy */}
-          <div className="inline-flex items-center gap-2 p-1.5 pl-4 rounded-full border border-black/10 bg-slate-50 mb-12 shadow-sm">
+          <div className="inline-flex items-center gap-2 p-1.5 pl-4 rounded-full border border-black/10 bg-slate-50 mb-8 shadow-sm">
             <span className="text-xs sm:text-sm font-mono text-[#0a122a]">{email}</span>
             <button
               type="button"
@@ -63,27 +65,69 @@ export function V2ContactSection() {
             </button>
           </div>
 
+          {/* Social Profiles & Resume Access */}
+          <div className="flex flex-wrap items-center gap-3 mb-10 text-xs font-mono">
+            <a
+              href="https://github.com/temqest"
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-600 hover:text-black flex items-center gap-1.5 underline underline-offset-4"
+            >
+              <FaGithub className="w-3.5 h-3.5" />
+              <span>GitHub Codebase</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+            <span className="text-slate-300">·</span>
+            <a
+              href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
+              target="_blank"
+              rel="noreferrer"
+              className="text-slate-600 hover:text-black flex items-center gap-1.5 underline underline-offset-4"
+            >
+              <FaLinkedin className="w-3.5 h-3.5" />
+              <span>LinkedIn Profile</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+            <span className="text-slate-300">·</span>
+            <a
+              href="/cv.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="text-blue-600 hover:text-blue-800 flex items-center gap-1.5 underline underline-offset-4 font-medium"
+            >
+              <FaFilePdf className="w-3.5 h-3.5" />
+              <span>View &amp; Download CV</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </a>
+          </div>
+
           <div>
             <h3 className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-4">
-              What I offer
+              Core Technical Competencies
             </h3>
             <ul className="space-y-2.5 text-sm font-normal text-slate-700">
-              {['React & Next.js development', 'Responsive UI / UX Design', 'Full-stack integration', 'API & Database architecture', 'Smooth motion & physics'].map((item) => (
-                <li key={item} className="flex items-center gap-2">
-                  <span className="text-blue-600 font-bold">↗</span>
-                  <span>{item}</span>
+              {[
+                'Offline-first synchronization & local SQLite outboxes',
+                'Strict full-stack TypeScript & Next.js 16 App Router',
+                'Relational database architecture & Row-Level Security',
+                'Defensive error boundaries & resilient API contracts',
+                'Autonomous AI pair-engineering & telemetry workflows',
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2">
+                  <span className="text-blue-600 font-bold shrink-0">↗</span>
+                  <span className="leading-snug">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        {/* Right Column: Inquiry Form with Service Chips */}
+        {/* Right Column: Hiring Inquiry Form */}
         <div className="lg:col-span-7">
           <div className="p-8 md:p-12 rounded-3xl border border-black/10 bg-white shadow-2xl relative">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-6 pb-4 border-b border-black/5">
-              <span>NEW INQUIRY</span>
-              <span className="text-emerald-600">REPLY IN ~24H</span>
+              <span>GET IN TOUCH</span>
+              <span className="text-emerald-600">REPLY WITHIN ~24H</span>
             </div>
 
             {submitted ? (
@@ -91,15 +135,15 @@ export function V2ContactSection() {
                 <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-2xl font-bold mb-4">
                   ✓
                 </div>
-                <h3 className="text-2xl font-semibold text-[#0a122a] mb-2">Message sent.</h3>
-                <p className="text-sm text-slate-600 mb-6">
-                  Thanks for reaching out! I will review your project details and get back to you shortly.
+                <h3 className="text-2xl font-semibold text-[#0a122a] mb-2">Message received.</h3>
+                <p className="text-sm text-slate-600 mb-6 max-w-sm mx-auto">
+                  Thank you for reaching out! I check my inbox daily and will get back to you shortly.
                 </p>
                 <button
                   type="button"
                   onClick={() => {
                     setSubmitted(false);
-                    setFormData({ name: '', email: '', message: '' });
+                    setFormData({ name: '', email: '', company: '', message: '' });
                   }}
                   className="px-6 py-2 rounded-full border border-black/15 text-xs font-mono uppercase text-slate-700 hover:bg-slate-50 transition-colors"
                 >
@@ -108,25 +152,25 @@ export function V2ContactSection() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Service Selector Chips */}
+                {/* Role / Opportunity Selector */}
                 <div>
                   <label className="text-xs font-mono uppercase tracking-wider text-slate-500 block mb-3">
-                    I need help with
+                    Regarding
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {['Website', 'Web system', 'Landing page', 'UI design', 'Something else'].map(
-                      (service) => (
+                    {['SWE Internship', 'Junior Developer', 'Backend / Systems', 'Technical Chat'].map(
+                      (roleType) => (
                         <button
-                          key={service}
+                          key={roleType}
                           type="button"
-                          onClick={() => setSelectedService(service)}
+                          onClick={() => setSelectedRoleType(roleType)}
                           className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all cursor-pointer ${
-                            selectedService === service
+                            selectedRoleType === roleType
                               ? 'bg-[#0a122a] text-white font-medium shadow-sm'
                               : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                           }`}
                         >
-                          {service}
+                          {roleType}
                         </button>
                       )
                     )}
@@ -163,15 +207,29 @@ export function V2ContactSection() {
                   </div>
                 </div>
 
-                {/* Message */}
+                {/* Company / Team Name */}
                 <div>
                   <label className="text-xs font-mono uppercase tracking-wider text-slate-500 block mb-1">
-                    Project details (goal, timeline, features)
+                    Company or team (optional)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Engineering Team, Startup, or Research Lab"
+                    value={formData.company}
+                    onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+                    className="w-full px-4 py-3 rounded-xl border border-black/10 focus:border-blue-600 focus:outline-none text-sm transition-colors"
+                  />
+                </div>
+
+                {/* Opportunity Details */}
+                <div>
+                  <label className="text-xs font-mono uppercase tracking-wider text-slate-500 block mb-1">
+                    Opportunity or inquiry details
                   </label>
                   <textarea
                     rows={4}
                     required
-                    placeholder="Tell me about your project, timeline and what you're looking to build..."
+                    placeholder="Tell me about your team, tech stack, or the role you are looking to fill..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-black/10 focus:border-blue-600 focus:outline-none text-sm transition-colors resize-none"
@@ -183,7 +241,7 @@ export function V2ContactSection() {
                   type="submit"
                   className="w-full py-4 rounded-2xl bg-[#ff7a45] text-white font-medium text-sm hover:bg-[#ff6426] shadow-lg shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Send message</span>
+                  <span>Send Message</span>
                   <span>→</span>
                 </button>
               </form>

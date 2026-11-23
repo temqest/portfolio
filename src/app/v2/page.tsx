@@ -10,8 +10,8 @@ import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
 import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
 import { V2ExperienceSection } from '@/components/v2/V2ExperienceSection';
 import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
-import { V2ProcessSection } from '@/components/v2/V2ProcessSection';
-import { V2TestimonialsSection } from '@/components/v2/V2TestimonialsSection';
+import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
+import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
 import { V2ContactSection } from '@/components/v2/V2ContactSection';
 import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
 import { V2FloatingDock } from '@/components/v2/V2FloatingDock';
@@ -91,9 +91,13 @@ function VersionTwoContent() {
             {/* 7. Certifications */}
             <V2CertificatesSection />
 
-            {/* 8. Rest of the other sections */}
-            <V2ProcessSection />
-            <V2TestimonialsSection />
+            {/* 8. Technical Arsenal & Stack */}
+            <V2TechStackSection />
+
+            {/* 9. Work & Internship Availability */}
+            <V2AvailabilitySection />
+
+            {/* 10. Direct Contact */}
             <V2ContactSection />
           </main>
 
@@ -103,7 +107,7 @@ function VersionTwoContent() {
               <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
               <div className="flex gap-6">
                 <a
-                  href="https://github.com/pork-arie"
+                  href="https://github.com/temqest"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-black"
@@ -111,12 +115,20 @@ function VersionTwoContent() {
                   GitHub
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
                   target="_blank"
                   rel="noreferrer"
                   className="hover:text-black"
                 >
                   LinkedIn
+                </a>
+                <a
+                  href="https://www.facebook.com/patrick.kurt.127"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-black"
+                >
+                  Facebook
                 </a>
                 <a href="#front" className="hover:text-blue-600">
                   Back to top ↑

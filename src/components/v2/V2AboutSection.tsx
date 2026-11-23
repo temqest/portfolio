@@ -1,7 +1,36 @@
 'use client';
 
 import React from 'react';
+import { FaGithub, FaLinkedin, FaFacebook, FaFilePdf, FaEnvelope } from 'react-icons/fa6';
 import { V2IslandPanel } from './V2IslandPanel';
+
+const SOCIAL_LINKS = [
+  {
+    label: 'GitHub',
+    href: 'https://github.com/temqest',
+    icon: FaGithub,
+  },
+  {
+    label: 'LinkedIn',
+    href: 'https://www.linkedin.com/in/patrick-villamer-15267b36a',
+    icon: FaLinkedin,
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/patrick.kurt.127',
+    icon: FaFacebook,
+  },
+  {
+    label: 'CV / Resume',
+    href: '/cv.pdf',
+    icon: FaFilePdf,
+  },
+  {
+    label: 'Email',
+    href: 'mailto:patrickkurtv@gmail.com',
+    icon: FaEnvelope,
+  },
+];
 
 export function V2AboutSection() {
   return (
@@ -25,22 +54,21 @@ export function V2AboutSection() {
             I engineer reliable software for environments where failure isn&apos;t an inconvenience—it&apos;s critical.
           </p>
 
-          {/* Social Links */}
-          <div className="flex flex-wrap gap-3">
-            {[
-              { label: 'GitHub', href: 'https://github.com/pork-arie' },
-              { label: 'LinkedIn', href: 'https://linkedin.com' },
-              { label: 'Instagram', href: 'https://instagram.com' },
-              { label: 'Facebook', href: 'https://facebook.com' },
-            ].map((link) => (
+          {/* Social Links with Official Brand Icons */}
+          <div className="flex flex-wrap gap-2.5 sm:gap-3">
+            {SOCIAL_LINKS.map(({ label, href, icon: Icon }) => (
               <a
-                key={link.label}
-                href={link.href}
+                key={label}
+                href={href}
                 target="_blank"
                 rel="noreferrer"
-                className="px-4 py-2 rounded-full border border-white/15 text-xs font-mono uppercase tracking-wider text-white/80 hover:text-white hover:border-white/40 hover:bg-white/5 transition-all flex items-center gap-1"
+                className="group px-3.5 py-2 rounded-full border border-white/15 bg-white/[0.03] text-xs font-mono uppercase tracking-wider text-white/80 hover:text-white hover:border-white/40 hover:bg-white/10 transition-all flex items-center gap-2 shadow-xs"
               >
-                {link.label} <span>↗</span>
+                <Icon className="w-3.5 h-3.5 text-white/60 group-hover:text-blue-400 group-hover:scale-110 transition-all duration-200" />
+                <span>{label}</span>
+                <span className="text-white/40 group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform text-[11px]">
+                  ↗
+                </span>
               </a>
             ))}
           </div>
@@ -55,9 +83,17 @@ export function V2AboutSection() {
               className="w-full h-full object-cover object-top contrast-105 group-hover:scale-105 transition-all duration-700"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-[#060a18] via-transparent to-transparent opacity-60" />
-            <div className="absolute bottom-4 left-4 right-4 p-3 bg-black/60 backdrop-blur-md rounded-2xl border border-white/10 text-xs font-mono text-white/80 flex items-center justify-between">
-              <span>Patrick</span>
-              <span className="text-emerald-400">● Active</span>
+            {/* Availability Banner */}
+            <div className="absolute bottom-3.5 inset-x-3.5 px-3.5 py-2.5 bg-black/65 backdrop-blur-md rounded-xl border border-white/10 flex items-center justify-between transition-colors group-hover:border-white/20">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                <span className="text-white/90 font-mono text-[11px] tracking-tight">
+                  Open for work &amp; internship
+                </span>
+              </div>
+              <span className="text-white/45 font-mono text-[10px] tracking-wider uppercase">
+                Available now
+              </span>
             </div>
           </div>
         </div>

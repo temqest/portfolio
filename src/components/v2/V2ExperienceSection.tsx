@@ -242,7 +242,7 @@ export function V2ExperienceSection() {
             {/* Direct Action Links */}
             <div className="flex flex-wrap items-center gap-4">
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white transition-colors border-b border-white/20 hover:border-white pb-0.5"
