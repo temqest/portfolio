@@ -33,7 +33,7 @@ export function V2ContactSection() {
       />
 
       <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
-        <span>(07) — CONTACT</span>
+        <span>(09) — CONTACT</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">

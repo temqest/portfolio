@@ -10,7 +10,7 @@ export function V2AboutSection() {
         {/* Left Column: Narrative & Links */}
         <div className="lg:col-span-7">
           <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
-            <span>(01) — ABOUT</span>
+            <span>(01) — ABOUT ME</span>
           </div>
 
           <h2 className="text-sm font-mono uppercase tracking-wider text-blue-400 mb-6">

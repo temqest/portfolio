@@ -24,7 +24,7 @@ export function V2ProcessSection() {
   return (
     <section id="process" className="py-24 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a]">
       <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
-        <span>(06) — HOW WE&apos;LL WORK TOGETHER</span>
+        <span>(07) — HOW WE&apos;LL WORK TOGETHER</span>
       </div>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-16">

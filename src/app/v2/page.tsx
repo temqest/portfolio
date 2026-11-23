@@ -5,9 +5,10 @@ import { useSearchParams } from 'next/navigation';
 import { V2TopNav } from '@/components/v2/V2TopNav';
 import { V2HeroSection } from '@/components/v2/V2HeroSection';
 import { V2AboutSection } from '@/components/v2/V2AboutSection';
-import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
 import { V2WorkSection } from '@/components/v2/V2WorkSection';
 import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
+import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
+import { V2ExperienceSection } from '@/components/v2/V2ExperienceSection';
 import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
 import { V2ProcessSection } from '@/components/v2/V2ProcessSection';
 import { V2TestimonialsSection } from '@/components/v2/V2TestimonialsSection';
@@ -69,12 +70,28 @@ function VersionTwoContent() {
       {mode === 'site' && (
         <>
           <main>
+            {/* 1. Hero Section */}
             <V2HeroSection />
+
+            {/* 2. About Me */}
             <V2AboutSection />
-            <V2ToolkitSection />
+
+            {/* 3. Projects */}
             <V2WorkSection />
+
+            {/* 4. Achievements & Milestones */}
             <V2AchievementsSection />
+
+            {/* 5. Skills & Disciplines */}
+            <V2ToolkitSection />
+
+            {/* 6. Work Experience */}
+            <V2ExperienceSection />
+
+            {/* 7. Certifications */}
             <V2CertificatesSection />
+
+            {/* 8. Rest of the other sections */}
             <V2ProcessSection />
             <V2TestimonialsSection />
             <V2ContactSection />

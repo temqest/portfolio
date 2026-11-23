@@ -58,7 +58,7 @@ export function V2TopNav({ mode = 'site', onSwitchMode }: V2TopNavProps) {
                 onClick={() => scrollTo('work')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >
-                Work
+                Projects
               </button>
             </li>
             <li>
@@ -70,13 +70,22 @@ export function V2TopNav({ mode = 'site', onSwitchMode }: V2TopNavProps) {
                 Milestones
               </button>
             </li>
-            <li>
+            <li className="hidden md:inline-block">
               <button
                 type="button"
-                onClick={() => scrollTo('process')}
+                onClick={() => scrollTo('skills')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >
-                Process
+                Skills
+              </button>
+            </li>
+            <li className="hidden sm:inline-block">
+              <button
+                type="button"
+                onClick={() => scrollTo('experience')}
+                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
+              >
+                Experience
               </button>
             </li>
             <li>

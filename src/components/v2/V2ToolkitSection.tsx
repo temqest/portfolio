@@ -184,22 +184,23 @@ export function V2ToolkitSection() {
   return (
     // Outer scroll track: 420vh creates generous scroll travel distance for 6 disciplines
     <section
-      id="stack"
+      id="skills"
       ref={outerTrackRef}
       onKeyDown={handleKeyDown}
       tabIndex={0}
-      className="relative w-full outline-none select-none bg-[#eeece8]"
+      className="relative w-full outline-none select-none bg-white"
       style={{ height: '420vh' }}
     >
+      <div id="stack" className="absolute top-0 pointer-events-none" />
       {/* Pinned Sticky Viewport: Remains locked to the screen while scrolling */}
-      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-[#eeece8] text-[#0a122a] px-6 md:px-12 lg:px-16 border-t border-black/10">
+      <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-white text-[#0a122a] px-6 md:px-12 lg:px-16 border-t border-black/10">
         <div className="max-w-7xl mx-auto w-full py-6 sm:py-8 space-y-8 sm:space-y-12">
           {/* Top Header Eyebrow Bar */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs font-mono tracking-widest uppercase text-black/50 border-b border-black/10 pb-3 gap-2">
             <div className="flex items-center gap-2">
-              <span>(02) WHAT I DO</span>
+              <span>(04) SKILLS &amp; DISCIPLINES</span>
               <span className="text-black/25">/</span>
-              <span className="text-blue-600 font-medium">DISCIPLINE SPECIFICATION</span>
+              <span className="text-blue-600 font-medium">ENGINEERING BLUEPRINTS</span>
             </div>
             <div className="flex items-center gap-3 text-black/40">
               <span className="hidden sm:inline">Scroll down to explore</span>

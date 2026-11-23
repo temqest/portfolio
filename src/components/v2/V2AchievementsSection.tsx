@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Trophy, Building2, Landmark, Award, Sparkles, X, Maximize2, ExternalLink, Camera } from 'lucide-react';
+import { Trophy, Building2, Landmark, Award, Sparkles, X, Maximize2, Camera } from 'lucide-react';
+import { V2IslandPanel } from './V2IslandPanel';
 
 interface Achievement {
   id: string;
@@ -24,7 +25,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'sparklab',
     year: '2025',
     badge: '1ST PLACE CHAMPION',
-    badgeColor: 'text-amber-600 bg-amber-50 border-amber-200/80',
+    badgeColor: 'text-amber-300 bg-amber-500/20 border-amber-400/40',
     title: 'SparkLAB Hackathon 2025',
     organization: 'SparkLAB Innovation & Startup Hackathon',
     description:
@@ -40,7 +41,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'bmc',
     year: '2025 – 2026',
     badge: 'INSTITUTIONAL PARTNERSHIP',
-    badgeColor: 'text-emerald-700 bg-emerald-50 border-emerald-200/80',
+    badgeColor: 'text-emerald-300 bg-emerald-500/20 border-emerald-400/40',
     title: 'Bicol Medical Center (BMC) Collaboration',
     organization: 'Largest Blood Bank Provider in Camarines Sur & Camarines Norte',
     description:
@@ -56,7 +57,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'magis-tbi',
     year: '2025',
     badge: 'INCUBATION GRADUATE',
-    badgeColor: 'text-blue-700 bg-blue-50 border-blue-200/80',
+    badgeColor: 'text-blue-300 bg-blue-500/20 border-blue-400/40',
     title: 'ADNU MAGIS TBI Incubation',
     organization: 'Ateneo de Naga University — Technology Business Incubator',
     description:
@@ -72,7 +73,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'ceeli-unc',
     year: '2025',
     badge: 'TOP 8 FINALIST',
-    badgeColor: 'text-purple-700 bg-purple-50 border-purple-200/80',
+    badgeColor: 'text-purple-300 bg-purple-500/20 border-purple-400/40',
     title: 'CEELI UNC FLIP Startup Competition',
     organization: 'Center for Entrepreneurship & Innovation (UNC)',
     description:
@@ -88,7 +89,7 @@ const ACHIEVEMENTS: Achievement[] = [
     id: 'idea2startup',
     year: '2026',
     badge: 'SEMI-FINALIST',
-    badgeColor: 'text-indigo-700 bg-indigo-50 border-indigo-200/80',
+    badgeColor: 'text-indigo-300 bg-indigo-500/20 border-indigo-400/40',
     title: 'Idea2Startup Naga City',
     organization: 'City Government of Naga & Startup Ecosystem Partners',
     description:
@@ -117,7 +118,7 @@ function AchievementCardImage({
   const [hasError, setHasError] = useState(false);
 
   return (
-    <div className={`relative overflow-hidden bg-slate-900 ${className}`}>
+    <div className={`relative overflow-hidden bg-[#060a18] ${className}`}>
       <img
         src={hasError ? item.fallbackSvg : imgSrc}
         alt={item.title}
@@ -145,18 +146,18 @@ export function V2AchievementsSection() {
   const secondary = ACHIEVEMENTS.slice(2);
 
   return (
-    <section id="achievements" className="py-24 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a]">
+    <V2IslandPanel id="achievements" className="my-8">
       {/* Section Eyebrow & Header */}
-      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
-        <span>(04) — MILESTONES &amp; RECOGNITION</span>
+      <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
+        <span>(03) — ACHIEVEMENTS &amp; MILESTONES</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14 border-b border-black/10 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14 border-b border-white/10 pb-8">
         <div>
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-[#0a122a] leading-tight">
-            Validated by <em className="font-serif-italic text-blue-600 font-normal">institutions</em> and competition.
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white leading-tight">
+            Validated by <em className="font-serif-italic text-blue-400 font-normal">institutions</em> and competition.
           </h2>
-          <p className="text-sm md:text-base text-slate-600 font-light mt-2 max-w-2xl">
+          <p className="text-sm md:text-base text-slate-300 font-light mt-2 max-w-2xl">
             Real startup traction, clinical partnerships, and hackathon championships backing my engineering. Click any card to inspect the evidence.
           </p>
         </div>
@@ -173,49 +174,49 @@ export function V2AchievementsSection() {
             <div
               key={item.id}
               onClick={() => setSelectedAchievement(item)}
-              className="bg-white rounded-3xl border border-black/10 overflow-hidden shadow-sm hover:shadow-xl hover:border-black/25 transition-all group cursor-pointer flex flex-col justify-between"
+              className="bg-white/[0.04] rounded-3xl border border-white/10 overflow-hidden shadow-sm hover:shadow-2xl hover:border-white/25 hover:bg-white/[0.07] transition-all group cursor-pointer flex flex-col justify-between"
             >
               <div>
                 {/* Image Container with 16:10 aspect */}
-                <div className="aspect-[16/10] w-full border-b border-black/5 relative">
+                <div className="aspect-[16/10] w-full border-b border-white/10 relative">
                   <AchievementCardImage item={item} className="w-full h-full" />
                   <div className="absolute top-4 left-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono tracking-wider border font-medium bg-white/95 backdrop-blur-md shadow-sm ${item.badgeColor}`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono tracking-wider border font-medium bg-black/80 backdrop-blur-md shadow-sm ${item.badgeColor}`}
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
                       <span>{item.badge}</span>
                     </span>
                   </div>
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md text-white px-2.5 py-1 rounded-full text-xs font-mono">
+                  <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-md text-white/90 px-2.5 py-1 rounded-full text-xs font-mono border border-white/10">
                     {item.year}
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6 md:p-8">
-                  <div className="text-xs font-mono text-blue-600 uppercase tracking-wider mb-2">
+                  <div className="text-xs font-mono text-blue-400 uppercase tracking-wider mb-2">
                     {item.organization}
                   </div>
-                  <h3 className="text-2xl font-semibold text-[#0a122a] tracking-tight mb-3 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-2xl font-semibold text-white tracking-tight mb-3 group-hover:text-blue-300 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-sm text-slate-600 font-light leading-relaxed mb-4">
+                  <p className="text-sm text-slate-300 font-light leading-relaxed mb-4">
                     {item.description}
                   </p>
-                  <div className="p-3.5 rounded-xl bg-slate-50 border border-black/5 text-xs text-slate-600 italic">
+                  <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-xs text-slate-300 italic">
                     &ldquo;{item.impactQuote}&rdquo;
                   </div>
                 </div>
               </div>
 
               {/* Card Footer */}
-              <div className="px-6 md:px-8 py-4 border-t border-black/5 flex items-center justify-between text-xs font-mono text-slate-500">
+              <div className="px-6 md:px-8 py-4 border-t border-white/10 flex items-center justify-between text-xs font-mono text-slate-400">
                 <span className="flex items-center gap-1.5">
-                  <span className="text-slate-400">Platform:</span>
-                  <strong className="text-[#0a122a] font-semibold">{item.project}</strong>
+                  <span className="text-slate-500">Platform:</span>
+                  <strong className="text-white font-semibold">{item.project}</strong>
                 </span>
-                <span className="text-blue-600 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <span className="text-blue-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                   Inspect evidence <Maximize2 className="w-3.5 h-3.5" />
                 </span>
               </div>
@@ -232,43 +233,43 @@ export function V2AchievementsSection() {
             <div
               key={item.id}
               onClick={() => setSelectedAchievement(item)}
-              className="bg-white rounded-3xl border border-black/10 overflow-hidden shadow-sm hover:shadow-lg hover:border-black/25 transition-all group cursor-pointer flex flex-col justify-between"
+              className="bg-white/[0.04] rounded-3xl border border-white/10 overflow-hidden shadow-sm hover:shadow-xl hover:border-white/25 hover:bg-white/[0.07] transition-all group cursor-pointer flex flex-col justify-between"
             >
               <div>
                 {/* Image Container */}
-                <div className="aspect-[16/10] w-full border-b border-black/5 relative">
+                <div className="aspect-[16/10] w-full border-b border-white/10 relative">
                   <AchievementCardImage item={item} className="w-full h-full" />
                   <div className="absolute top-3 left-3">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider border font-medium bg-white/95 backdrop-blur-md shadow-sm ${item.badgeColor}`}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono tracking-wider border font-medium bg-black/80 backdrop-blur-md shadow-sm ${item.badgeColor}`}
                     >
                       <Icon className="w-3 h-3 shrink-0" />
                       <span>{item.badge}</span>
                     </span>
                   </div>
-                  <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-md text-white px-2 py-0.5 rounded-full text-[11px] font-mono">
+                  <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md text-white/90 px-2 py-0.5 rounded-full text-[11px] font-mono border border-white/10">
                     {item.year}
                   </div>
                 </div>
 
                 {/* Content */}
                 <div className="p-6">
-                  <div className="text-[11px] font-mono text-slate-500 uppercase tracking-wider mb-1 truncate">
+                  <div className="text-[11px] font-mono text-blue-400 uppercase tracking-wider mb-1 truncate">
                     {item.organization}
                   </div>
-                  <h3 className="text-lg font-semibold text-[#0a122a] tracking-tight mb-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-lg font-semibold text-white tracking-tight mb-2 group-hover:text-blue-300 transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-slate-600 font-light leading-relaxed line-clamp-3">
+                  <p className="text-xs text-slate-300 font-light leading-relaxed line-clamp-3">
                     {item.description}
                   </p>
                 </div>
               </div>
 
               {/* Card Footer */}
-              <div className="px-6 py-3.5 border-t border-black/5 flex items-center justify-between text-[11px] font-mono text-slate-500">
+              <div className="px-6 py-3.5 border-t border-white/10 flex items-center justify-between text-[11px] font-mono text-slate-400">
                 <span>{item.project}</span>
-                <span className="text-blue-600 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
+                <span className="text-blue-400 flex items-center gap-1 group-hover:translate-x-0.5 transition-transform">
                   View <Maximize2 className="w-3 h-3" />
                 </span>
               </div>
@@ -280,27 +281,28 @@ export function V2AchievementsSection() {
       {/* Lightbox / Evidence Inspection Modal */}
       {selectedAchievement && (
         <div
-          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 md:p-8 animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-fade-in"
           onClick={() => setSelectedAchievement(null)}
         >
           <div
-            className="bg-white rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-white/20 relative"
+            className="bg-[#060a18] rounded-3xl max-w-2xl w-full overflow-hidden shadow-2xl border border-white/20 relative text-white"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Close Button */}
+            {/* Modal Header Bar with Close Button */}
             <button
               onClick={() => setSelectedAchievement(null)}
-              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 text-white hover:bg-black/80 flex items-center justify-center cursor-pointer transition-colors"
+              className="absolute top-4 right-4 z-20 w-9 h-9 rounded-full bg-black/60 text-white/80 hover:text-white hover:bg-black/80 transition-colors flex items-center justify-center cursor-pointer border border-white/10"
+              aria-label="Close modal"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
 
-            {/* Modal Image Frame */}
-            <div className="aspect-[16/10] w-full bg-slate-900 relative">
+            {/* Modal Image Display */}
+            <div className="aspect-[16/10] w-full bg-[#060a18] relative border-b border-white/10">
               <AchievementCardImage item={selectedAchievement} className="w-full h-full" />
               <div className="absolute top-4 left-4">
                 <span
-                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono tracking-wider border font-medium bg-white/95 backdrop-blur-md shadow-sm ${selectedAchievement.badgeColor}`}
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono tracking-wider border font-medium bg-black/80 backdrop-blur-md shadow-sm ${selectedAchievement.badgeColor}`}
                 >
                   <span>{selectedAchievement.badge}</span>
                 </span>
@@ -309,29 +311,29 @@ export function V2AchievementsSection() {
 
             {/* Modal Details */}
             <div className="p-6 md:p-8">
-              <div className="flex items-center justify-between text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">
+              <div className="flex items-center justify-between text-xs font-mono text-blue-400 uppercase tracking-widest mb-2">
                 <span>{selectedAchievement.organization}</span>
-                <span>{selectedAchievement.year}</span>
+                <span className="text-slate-400">{selectedAchievement.year}</span>
               </div>
-              <h3 className="text-2xl font-semibold text-[#0a122a] tracking-tight mb-3">
+              <h3 className="text-2xl font-semibold text-white tracking-tight mb-3">
                 {selectedAchievement.title}
               </h3>
-              <p className="text-sm text-slate-600 font-light leading-relaxed mb-6">
+              <p className="text-sm text-slate-300 font-light leading-relaxed mb-6">
                 {selectedAchievement.description}
               </p>
 
-              <div className="p-4 rounded-2xl bg-blue-50/60 border border-blue-200/50 text-xs text-blue-900 leading-relaxed mb-6">
-                <strong className="font-semibold block mb-1">Impact &amp; Verification:</strong>
+              <div className="p-4 rounded-2xl bg-blue-950/40 border border-blue-500/30 text-xs text-blue-200 leading-relaxed mb-6">
+                <strong className="font-semibold block mb-1 text-blue-300">Impact &amp; Verification:</strong>
                 {selectedAchievement.impactQuote}
               </div>
 
-              <div className="pt-4 border-t border-black/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono text-slate-500">
+              <div className="pt-4 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs font-mono text-slate-400">
                 <div>
-                  Replace image asset: <code className="text-blue-600">{selectedAchievement.imageHint}</code>
+                  Replace image asset: <code className="text-blue-400">{selectedAchievement.imageHint}</code>
                 </div>
                 <button
                   onClick={() => setSelectedAchievement(null)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#0a122a] font-medium transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white font-medium transition-colors cursor-pointer"
                 >
                   Done
                 </button>
@@ -340,6 +342,6 @@ export function V2AchievementsSection() {
           </div>
         </div>
       )}
-    </section>
+    </V2IslandPanel>
   );
 }

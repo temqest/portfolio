@@ -26,7 +26,7 @@ export function V2TestimonialsSection() {
   return (
     <V2IslandPanel id="testimonials" className="my-8">
       <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
-        <span>(06) — KIND WORDS</span>
+        <span>(08) — KIND WORDS</span>
       </div>
 
       <div className="max-w-4xl">

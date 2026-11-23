@@ -2,7 +2,6 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { V2IslandPanel } from './V2IslandPanel';
 
 export function V2WorkSection() {
   const projects = [
@@ -40,17 +39,18 @@ export function V2WorkSection() {
   ];
 
   return (
-    <V2IslandPanel id="work" className="my-8">
-      <div className="flex items-center gap-2 text-xs font-mono text-blue-400 uppercase tracking-widest mb-4">
-        <span>(03) — FLAGSHIP SYSTEMS</span>
+    <section id="work" className="py-24 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a] relative">
+      <div id="projects" className="relative -top-24" />
+      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+        <span>(02) — FLAGSHIP PROJECTS</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-16">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-16 border-b border-black/10 pb-8">
         <div>
-          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white">
-            Software built for <em className="font-serif-italic text-blue-400 font-normal">high-stakes</em> reality.
+          <h2 className="text-3xl md:text-5xl font-light tracking-tight text-[#0a122a]">
+            Software built for <em className="font-serif-italic text-blue-600 font-normal">high-stakes</em> reality.
           </h2>
-          <p className="text-sm md:text-base text-slate-400 font-light mt-2 max-w-xl">
+          <p className="text-sm md:text-base text-slate-600 font-light mt-2 max-w-xl">
             Real systems in clinical healthcare and emergency blood logistics where downtime isn&apos;t an inconvenience—it&apos;s critical.
           </p>
         </div>
@@ -62,17 +62,17 @@ export function V2WorkSection() {
           <Link
             key={item.id}
             href={`/detail/${item.id}`}
-            className="block group p-6 sm:p-8 rounded-3xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.07] hover:border-white/20 transition-all duration-300"
+            className="block group p-6 sm:p-8 rounded-3xl border border-black/10 bg-white hover:border-black/25 hover:shadow-xl transition-all duration-300 shadow-sm"
           >
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Preview Thumbnail */}
-              <div className="lg:col-span-5 relative aspect-[16/10] rounded-2xl overflow-hidden bg-black/40 border border-white/10">
+              <div className="lg:col-span-5 relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 border border-black/10">
                 <img
                   src={item.image}
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-[10px] font-mono text-white/90">
+                <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-black/75 backdrop-blur-md text-[10px] font-mono text-white">
                   {item.num}
                 </span>
               </div>
@@ -80,24 +80,24 @@ export function V2WorkSection() {
               {/* Details */}
               <div className="lg:col-span-7 flex flex-col justify-between">
                 <div>
-                  <span className="text-xs font-mono text-blue-400 uppercase tracking-wider block mb-2">
+                  <span className="text-xs font-mono text-blue-600 uppercase tracking-wider block mb-2">
                     {item.tag}
                   </span>
-                  <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-white mb-3 group-hover:text-blue-300 transition-colors flex items-center justify-between">
+                  <h3 className="text-3xl md:text-4xl font-semibold tracking-tight text-[#0a122a] mb-3 group-hover:text-blue-600 transition-colors flex items-center justify-between">
                     <span>{item.name}</span>
                     <span className="text-lg opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all">
                       ↗
                     </span>
                   </h3>
-                  <p className="text-base text-slate-300 font-light leading-relaxed mb-5">
+                  <p className="text-base text-slate-600 font-light leading-relaxed mb-5">
                     {item.desc}
                   </p>
 
                   {/* Key Milestones / Achievements */}
-                  <div className="mb-5 space-y-1 text-xs font-mono text-slate-400">
+                  <div className="mb-5 space-y-1.5 text-xs font-mono text-slate-600">
                     {item.achievements.slice(0, 3).map((ach) => (
                       <div key={ach} className="flex items-center gap-2">
-                        <span className="text-blue-400">✦</span>
+                        <span className="text-blue-600">✦</span>
                         <span>{ach}</span>
                       </div>
                     ))}
@@ -108,7 +108,7 @@ export function V2WorkSection() {
                   {item.stack.map((t) => (
                     <span
                       key={t}
-                      className="px-2.5 py-1 rounded-full bg-white/10 text-xs font-mono text-white/80"
+                      className="px-3 py-1 rounded-full bg-slate-100 border border-black/5 text-xs font-mono text-slate-700 font-medium"
                     >
                       {t}
                     </span>
@@ -119,6 +119,6 @@ export function V2WorkSection() {
           </Link>
         ))}
       </div>
-    </V2IslandPanel>
+    </section>
   );
 }
