@@ -8,7 +8,7 @@ export interface KineticGridCanvasProps {
   accentColor?: string;
 }
 
-const PARTICLE_COUNT = 3400;
+const PARTICLE_COUNT = 5200;
 
 export function KineticGridCanvas({
   activeTab,
@@ -22,7 +22,7 @@ export function KineticGridCanvas({
     fromTab: activeTab,
     toTab: activeTab,
     progress: 1, // 0 = start, 1 = complete
-    duration: 300, // snappy 300ms duration
+    duration: 320, // Snappy 320ms morph duration
     startTime: 0,
   });
 
@@ -38,7 +38,7 @@ export function KineticGridCanvas({
     maxRadius: 150,
   });
 
-  // Typed Arrays for particle buffers (Zero GC overhead)
+  // Typed Arrays for particle buffers (Zero GC overhead, 60fps)
   const buffersRef = useRef<{
     liveX: Float32Array;
     liveY: Float32Array;
@@ -48,15 +48,20 @@ export function KineticGridCanvas({
     targetY: Float32Array;
     scatterDx: Float32Array;
     scatterDy: Float32Array;
-    colorR: Float32Array;
-    colorG: Float32Array;
-    colorB: Float32Array;
-    alpha: Float32Array;
-    size: Float32Array;
+    originR: Float32Array;
+    originG: Float32Array;
+    originB: Float32Array;
+    targetR: Float32Array;
+    targetG: Float32Array;
+    targetB: Float32Array;
+    originAlpha: Float32Array;
+    targetAlpha: Float32Array;
+    originSize: Float32Array;
+    targetSize: Float32Array;
   } | null>(null);
 
-  // Initialize particle buffers once
-  if (!buffersRef.current) {
+  // Defensive buffer initialization guarding against Fast Refresh / Hot Reload stale ref schemas
+  if (!buffersRef.current || !('targetR' in buffersRef.current) || !buffersRef.current.targetR) {
     const liveX = new Float32Array(PARTICLE_COUNT);
     const liveY = new Float32Array(PARTICLE_COUNT);
     const originX = new Float32Array(PARTICLE_COUNT);
@@ -65,25 +70,34 @@ export function KineticGridCanvas({
     const targetY = new Float32Array(PARTICLE_COUNT);
     const scatterDx = new Float32Array(PARTICLE_COUNT);
     const scatterDy = new Float32Array(PARTICLE_COUNT);
-    const colorR = new Float32Array(PARTICLE_COUNT);
-    const colorG = new Float32Array(PARTICLE_COUNT);
-    const colorB = new Float32Array(PARTICLE_COUNT);
-    const alpha = new Float32Array(PARTICLE_COUNT);
-    const size = new Float32Array(PARTICLE_COUNT);
+    const originR = new Float32Array(PARTICLE_COUNT);
+    const originG = new Float32Array(PARTICLE_COUNT);
+    const originB = new Float32Array(PARTICLE_COUNT);
+    const targetR = new Float32Array(PARTICLE_COUNT);
+    const targetG = new Float32Array(PARTICLE_COUNT);
+    const targetB = new Float32Array(PARTICLE_COUNT);
+    const originAlpha = new Float32Array(PARTICLE_COUNT);
+    const targetAlpha = new Float32Array(PARTICLE_COUNT);
+    const originSize = new Float32Array(PARTICLE_COUNT);
+    const targetSize = new Float32Array(PARTICLE_COUNT);
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
-      // Moderate radial scatter trajectories
       const angle = Math.random() * Math.PI * 2;
-      const speed = 40 + Math.random() * 90;
+      const speed = 40 + Math.random() * 85;
       scatterDx[i] = Math.cos(angle) * speed;
       scatterDy[i] = Math.sin(angle) * speed;
 
-      // Default charcoal
-      colorR[i] = 0.08;
-      colorG[i] = 0.1;
-      colorB[i] = 0.16;
-      alpha[i] = 0.65;
-      size[i] = 1.1;
+      originR[i] = 0.04;
+      originG[i] = 0.07;
+      originB[i] = 0.16;
+      targetR[i] = 0.04;
+      targetG[i] = 0.07;
+      targetB[i] = 0.16;
+
+      originAlpha[i] = 0.95;
+      targetAlpha[i] = 0.95;
+      originSize[i] = 2.4;
+      targetSize[i] = 2.4;
     }
 
     buffersRef.current = {
@@ -95,11 +109,16 @@ export function KineticGridCanvas({
       targetY,
       scatterDx,
       scatterDy,
-      colorR,
-      colorG,
-      colorB,
-      alpha,
-      size,
+      originR,
+      originG,
+      originB,
+      targetR,
+      targetG,
+      targetB,
+      originAlpha,
+      targetAlpha,
+      originSize,
+      targetSize,
     };
   }
 
@@ -113,10 +132,13 @@ export function KineticGridCanvas({
       outY: Float32Array,
       outR: Float32Array,
       outG: Float32Array,
-      outB: Float32Array
+      outB: Float32Array,
+      outAlpha: Float32Array,
+      outSize: Float32Array
     ) => {
-      const padX = width * 0.08;
-      const padY = height * 0.08;
+      // Full canvas architectural scale (occupies ~88% width and ~84% height)
+      const padX = width * 0.06;
+      const padY = height * 0.06;
       const boxW = width - padX * 2;
       const boxH = height - padY * 2;
       const cx = width / 2;
@@ -124,321 +146,680 @@ export function KineticGridCanvas({
 
       let pIdx = 0;
 
-      // Helper: sample points along a line segment with stippling jitter
-      const addLine = (
+      // Color Presets (High-contrast, elegant drafting palette matching Image 2)
+      const DARK_R = 0.04;
+      const DARK_G = 0.06;
+      const DARK_B = 0.12; // Solid charcoal black
+
+      const SLATE_R = 0.32;
+      const SLATE_G = 0.36;
+      const SLATE_B = 0.44; // Blueprint graphite
+
+      const BLUE_R = 0.22;
+      const BLUE_G = 0.38;
+      const BLUE_B = 0.96; // Luminous Royal Cobalt Blue (#3861f5)
+
+      const LIGHT_BLUE_R = 0.45;
+      const LIGHT_BLUE_G = 0.65;
+      const LIGHT_BLUE_B = 0.98;
+
+      const WHITE_R = 0.96;
+      const WHITE_G = 0.97;
+      const WHITE_B = 0.99;
+
+      // Helper 1: Stippled Line with Multi-Strand Jitter Envelope
+      const addDenseLine = (
         x1: number,
         y1: number,
         x2: number,
         y2: number,
         count: number,
-        r = 0.1,
-        g = 0.12,
-        b = 0.18
+        thickness = 2.2,
+        r = DARK_R,
+        g = DARK_G,
+        b = DARK_B,
+        alpha = 0.95,
+        size = 2.5
       ) => {
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        const len = Math.hypot(dx, dy) || 1;
+        const nx = -dy / len;
+        const ny = dx / len;
+
         for (let k = 0; k < count && pIdx < PARTICLE_COUNT; k++) {
           const t = k / count;
-          // Clean subtle micro-stippling jitter (0.8px max)
-          const jitX = (Math.random() - 0.5) * 0.9;
-          const jitY = (Math.random() - 0.5) * 0.9;
-          outX[pIdx] = x1 + (x2 - x1) * t + jitX;
-          outY[pIdx] = y1 + (y2 - y1) * t + jitY;
+          const strand = (Math.random() - 0.5) * thickness;
+          const alongJit = (Math.random() - 0.5) * 0.8;
+          outX[pIdx] = x1 + dx * t + nx * strand + (dx / len) * alongJit;
+          outY[pIdx] = y1 + dy * t + ny * strand + (dy / len) * alongJit;
           outR[pIdx] = r;
           outG[pIdx] = g;
           outB[pIdx] = b;
+          outAlpha[pIdx] = alpha;
+          outSize[pIdx] = size;
           pIdx++;
         }
       };
 
-      // Helper: sample points along a cubic Bezier curve with control points
-      const addBezier = (
-        p0: [number, number],
-        p1: [number, number],
-        p2: [number, number],
-        p3: [number, number],
+      // Helper 2: Stippled Arc
+      const addDenseArc = (
+        acx: number,
+        acy: number,
+        rx: number,
+        ry: number,
+        startAng: number,
+        endAng: number,
         count: number,
-        r: number,
-        g: number,
-        b: number
+        thickness = 2.2,
+        r = DARK_R,
+        g = DARK_G,
+        b = DARK_B,
+        alpha = 0.95,
+        size = 2.5
       ) => {
         for (let k = 0; k < count && pIdx < PARTICLE_COUNT; k++) {
           const t = k / count;
-          const u = 1 - t;
-          const tt = t * t;
-          const uu = u * u;
-          const uuu = uu * u;
-          const ttt = tt * t;
-
-          const bx = uuu * p0[0] + 3 * uu * t * p1[0] + 3 * u * tt * p2[0] + ttt * p3[0];
-          const by = uuu * p0[1] + 3 * uu * t * p1[1] + 3 * u * tt * p2[1] + ttt * p3[1];
-
-          outX[pIdx] = bx + (Math.random() - 0.5) * 0.8;
-          outY[pIdx] = by + (Math.random() - 0.5) * 0.8;
+          const ang = startAng + (endAng - startAng) * t;
+          const strand = (Math.random() - 0.5) * thickness;
+          outX[pIdx] = acx + Math.cos(ang) * (rx + strand);
+          outY[pIdx] = acy + Math.sin(ang) * (ry + strand);
           outR[pIdx] = r;
           outG[pIdx] = g;
           outB[pIdx] = b;
+          outAlpha[pIdx] = alpha;
+          outSize[pIdx] = size;
           pIdx++;
         }
       };
 
-      // Helper: sample points forming a cluster / circle / box marker
-      const addMarker = (
-        mx: number,
-        my: number,
-        radius: number,
-        isSquare: boolean,
-        count: number,
-        r = 0.08,
-        g = 0.08,
-        b = 0.08
+      // Helper 3: Rounded Card with optional solid stippled texture fill
+      const addRoundedCard = (
+        cx: number,
+        cy: number,
+        cw: number,
+        ch: number,
+        radius = 14,
+        outlineCount = 140,
+        isFilled = false,
+        fillCount = 1100,
+        outlineR = DARK_R,
+        outlineG = DARK_G,
+        outlineB = DARK_B,
+        fillR = BLUE_R,
+        fillG = BLUE_G,
+        fillB = BLUE_B
       ) => {
-        for (let k = 0; k < count && pIdx < PARTICLE_COUNT; k++) {
-          let ox = 0;
-          let oy = 0;
-          if (isSquare) {
-            ox = (Math.random() - 0.5) * radius * 2;
-            oy = (Math.random() - 0.5) * radius * 2;
-          } else {
-            const ang = Math.random() * Math.PI * 2;
-            const rad = Math.sqrt(Math.random()) * radius;
-            ox = Math.cos(ang) * rad;
-            oy = Math.sin(ang) * rad;
+        const left = cx - cw / 2;
+        const right = cx + cw / 2;
+        const top = cy - ch / 2;
+        const bottom = cy + ch / 2;
+        const r = Math.min(radius, cw / 2, ch / 2);
+
+        const hCount = Math.floor(outlineCount * 0.28);
+        const vCount = Math.floor(outlineCount * 0.22);
+        const aCount = Math.floor(outlineCount * 0.12);
+
+        addDenseLine(left + r, top, right - r, top, hCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseLine(left + r, bottom, right - r, bottom, hCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseLine(left, top + r, left, bottom - r, vCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseLine(right, top + r, right, bottom - r, vCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+
+        addDenseArc(right - r, top + r, r, r, -Math.PI / 2, 0, aCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseArc(right - r, bottom - r, r, r, 0, Math.PI / 2, aCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseArc(left + r, bottom - r, r, r, Math.PI / 2, Math.PI, aCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+        addDenseArc(left + r, top + r, r, r, Math.PI, Math.PI * 1.5, aCount, 2.4, outlineR, outlineG, outlineB, 0.96, 2.5);
+
+        if (isFilled) {
+          for (let k = 0; k < fillCount && pIdx < PARTICLE_COUNT; k++) {
+            outX[pIdx] = left + 4 + Math.random() * (cw - 8);
+            outY[pIdx] = top + 4 + Math.random() * (ch - 8);
+            outR[pIdx] = fillR;
+            outG[pIdx] = fillG;
+            outB[pIdx] = fillB;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
+            pIdx++;
           }
-          outX[pIdx] = mx + ox;
-          outY[pIdx] = my + oy;
-          outR[pIdx] = r;
-          outG[pIdx] = g;
-          outB[pIdx] = b;
-          pIdx++;
         }
       };
 
+      // Helper 5: Solid Dense Text Skeleton Bar (Thick, rich rectangular ink block)
+      const addDenseSkeletonBar = (
+        bx: number,
+        by: number,
+        bw: number,
+        bh = 10,
+        r = DARK_R,
+        g = DARK_G,
+        b = DARK_B,
+        alpha = 0.96
+      ) => {
+        const rows = 2;
+        const ptsPerRow = Math.floor(bw / 1.8);
+        for (let row = 0; row < rows; row++) {
+          const rowY = by + (bh / (rows + 1)) * (row + 1);
+          for (let k = 0; k < ptsPerRow && pIdx < PARTICLE_COUNT; k++) {
+            const t = k / ptsPerRow;
+            outX[pIdx] = bx + t * bw + (Math.random() - 0.5) * 1.0;
+            outY[pIdx] = rowY + (Math.random() - 0.5) * 1.2;
+            outR[pIdx] = r;
+            outG[pIdx] = g;
+            outB[pIdx] = b;
+            outAlpha[pIdx] = alpha;
+            outSize[pIdx] = 2.6;
+            pIdx++;
+          }
+        }
+      };
+
+      // Helper 6: Classic Angled Mouse Pointer Cursor Arrow (Matching Image 2 exactly)
+      const addAngledCursor = (
+        tipX: number,
+        tipY: number,
+        scale = 1.2,
+        fillCount = 380,
+        r = DARK_R,
+        g = DARK_G,
+        b = DARK_B
+      ) => {
+        const angle = -0.42; // ~-25 degrees tilt
+        const cosA = Math.cos(angle);
+        const sinA = Math.sin(angle);
+
+        const rawPts: [number, number][] = [
+          [0, 0],
+          [0, 32 * scale],
+          [8 * scale, 24 * scale],
+          [15 * scale, 38 * scale],
+          [20 * scale, 35 * scale],
+          [13 * scale, 21 * scale],
+          [23 * scale, 21 * scale],
+        ];
+
+        const pts = rawPts.map(([px, py]) => {
+          const rx = px * cosA - py * sinA;
+          const ry = px * sinA + py * cosA;
+          return [tipX + rx, tipY + ry] as [number, number];
+        });
+
+        for (let i = 0; i < pts.length; i++) {
+          const next = (i + 1) % pts.length;
+          addDenseLine(pts[i][0], pts[i][1], pts[next][0], pts[next][1], 25, 2.4, r, g, b, 1.0, 2.7);
+        }
+
+        for (let k = 0; k < fillCount && pIdx < PARTICLE_COUNT; k++) {
+          const u = Math.random();
+          const v = Math.random();
+          if (u + v <= 1.25) {
+            const px = u * 20 * scale;
+            const py = (u * 0.3 + v * 0.7) * 32 * scale;
+            const rx = px * cosA - py * sinA;
+            const ry = px * sinA + py * cosA;
+            outX[pIdx] = tipX + rx;
+            outY[pIdx] = tipY + ry;
+            outR[pIdx] = r;
+            outG[pIdx] = g;
+            outB[pIdx] = b;
+            outAlpha[pIdx] = 1.0;
+            outSize[pIdx] = 2.6;
+            pIdx++;
+          }
+        }
+      };
+
+      // Helper 7: Right-side drafting tick marks
+      const addDraftingTicks = () => {
+        const tickX = width - padX * 0.35;
+        for (let tk = 0; tk < 5; tk++) {
+          const ty = padY + (boxH / 4) * tk;
+          addDenseLine(tickX - 8, ty, tickX, ty, 16, 1.8, SLATE_R, SLATE_G, SLATE_B, 0.45, 1.8);
+        }
+      };
+
+      addDraftingTicks();
+
+      // =========================================================================
+      // Render the 6 UNIQUE, SECTION-SPECIFIC Architectural Blueprints
+      // =========================================================================
       switch (tabIdx % 6) {
         case 0:
         default: {
-          // --- SHAPE 0: Reference Bezier Coordinate Grid (Design / Offline) ---
-          const cols = 12;
-          const rows = 8;
-          const perCol = 50;
-          const perRow = 40;
+          // =====================================================================
+          // 01. RESILIENCE: Offline-First SQLite Engine & Outbox Sync (ap-silang)
+          // =====================================================================
+          // Left Side: Monumental Local SQLite Storage Engine (Full-scale cylinder stack)
+          const cylCx = cx - boxW * 0.23;
+          const cylCy = cy;
+          const cylW = boxW * 0.38;
+          const cylH = boxH * 0.74;
+          const dw = cylW / 2;
+          const dh = 24;
 
-          for (let c = 0; c <= cols; c++) {
-            const gx = padX + (boxW / cols) * c;
-            addLine(gx, padY, gx, padY + boxH, perCol);
+          const dTopY = cylCy - cylH * 0.36;
+          const dMidY = cylCy - cylH * 0.04;
+          const dBotY = cylCy + cylH * 0.36;
+
+          // Cylinder Discs
+          addDenseArc(cylCx, dBotY, dw, dh, 0, Math.PI, 180, 2.6, DARK_R, DARK_G, DARK_B, 0.95, 2.6);
+          addDenseArc(cylCx, dMidY, dw, dh, 0, Math.PI, 180, 2.6, DARK_R, DARK_G, DARK_B, 0.95, 2.6);
+          addDenseArc(cylCx, dTopY, dw, dh, 0, Math.PI * 2, 280, 2.6, DARK_R, DARK_G, DARK_B, 0.95, 2.6);
+
+          // Vertical Cylinder Walls
+          addDenseLine(cylCx - dw, dTopY, cylCx - dw, dBotY, 180, 2.6, DARK_R, DARK_G, DARK_B, 0.95, 2.6);
+          addDenseLine(cylCx + dw, dTopY, cylCx + dw, dBotY, 180, 2.6, DARK_R, DARK_G, DARK_B, 0.95, 2.6);
+
+          // Solid Royal Blue Local Commit Stratum Fill (The middle tier commits in < 4ms)
+          const fillLeft = cylCx - dw + 4;
+          const fillW = cylW - 8;
+          const fillTop = dMidY;
+          const fillH = dBotY - dMidY - 4;
+          for (let k = 0; k < 1250 && pIdx < PARTICLE_COUNT; k++) {
+            outX[pIdx] = fillLeft + Math.random() * fillW;
+            outY[pIdx] = fillTop + Math.random() * fillH;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
+            pIdx++;
           }
-          for (let r = 0; r <= rows; r++) {
-            const gy = padY + (boxH / rows) * r;
-            addLine(padX, gy, padX + boxW, gy, perRow);
+
+          // Commit Checkmark Badge on Local Database Core
+          addDenseLine(cylCx - 16, dMidY + fillH * 0.45, cylCx - 4, dMidY + fillH * 0.65, 45, 3.2, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+          addDenseLine(cylCx - 4, dMidY + fillH * 0.65, cylCx + 20, dMidY + fillH * 0.35, 75, 3.2, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+
+          // Right Side: Mutation Outbox Buffer Queue (3 stacked data cards)
+          const qCx = cx + boxW * 0.25;
+          const qW = boxW * 0.38;
+          const qH = (cylH - 24) / 3;
+
+          for (let q = 0; q < 3; q++) {
+            const cardY = cylCy - cylH / 2 + qH / 2 + q * (qH + 12);
+            addRoundedCard(qCx, cardY, qW, qH, 10, 110, false);
+            // 2 Dense text skeleton bars in each outbox packet
+            addDenseSkeletonBar(qCx - qW * 0.42, cardY - 6, qW * 0.76, 8);
+            addDenseSkeletonBar(qCx - qW * 0.42, cardY + 8, qW * 0.46, 8);
           }
 
-          const p0: [number, number] = [padX + boxW * 0.08, padY + boxH * 0.88];
-          const p1: [number, number] = [padX + boxW * 0.28, padY + boxH * 0.15];
-          const p2: [number, number] = [padX + boxW * 0.65, padY + boxH * 0.65];
-          const p3: [number, number] = [padX + boxW * 0.92, padY + boxH * 0.18];
+          // Center Bridge: Wireless Cellular Sync Radio Waves & Conduits
+          const bridgeY = cylCy;
+          addDenseArc(cx, bridgeY - 30, 24, 18, Math.PI * 1.15, Math.PI * 1.85, 60, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.8);
+          addDenseArc(cx, bridgeY - 30, 42, 32, Math.PI * 1.18, Math.PI * 1.82, 90, 2.6, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.8);
+          addDenseArc(cx, bridgeY - 30, 60, 46, Math.PI * 1.22, Math.PI * 1.78, 120, 2.8, LIGHT_BLUE_R, LIGHT_BLUE_G, LIGHT_BLUE_B, 1.0, 3.0);
 
-          addBezier(p0, p1, p2, p3, 800, 0.36, 0.37, 0.88);
-          addLine(p0[0], p0[1], p1[0], p1[1], 120, 0.1, 0.1, 0.1);
-          addLine(p3[0], p3[1], p2[0], p2[1], 120, 0.1, 0.1, 0.1);
-          addMarker(p0[0], p0[1], 8, true, 60, 0.1, 0.1, 0.1);
-          addMarker(p3[0], p3[1], 8, true, 60, 0.1, 0.1, 0.1);
-          addMarker(p1[0], p1[1], 6, false, 60, 0.1, 0.1, 0.1);
-          addMarker(p2[0], p2[1], 6, false, 60, 0.1, 0.1, 0.1);
+          // Directional Sync Conduits connecting SQLite to Outbox Queue
+          addDenseLine(cylCx + dw, cylCy + 15, qCx - qW / 2, cylCy + 15, 60, 2.6, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.6);
+          addDenseLine(cylCx + dw, cylCy - 30, qCx - qW / 2, cylCy - 30, 60, 2.6, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.6);
           break;
         }
 
         case 1: {
-          // --- SHAPE 1: Relational Schema & Tenant Isolation Matrix (Integrity) ---
-          for (let c = 0; c <= 8; c++) {
-            const gx = padX + (boxW / 8) * c;
-            addLine(gx, padY, gx, padY + boxH, 40, 0.18, 0.2, 0.25);
+          // =====================================================================
+          // 02. SECURITY: Grand Cryptographic Vault Fortress & RLS Schemas
+          // =====================================================================
+          // Center: Monumental Cryptographic Vault Padlock Core
+          const vCx = cx;
+          const vCy = cy + 18;
+          const vW = boxW * 0.36; // Padlock body width
+          const vH = boxH * 0.52; // Padlock body height
+          const shackleR = vW * 0.34;
+          const shackleBaseY = vCy - vH / 2;
+
+          // Hardened Heavy Locking Shackle (U-arch)
+          addDenseArc(vCx, shackleBaseY, shackleR, shackleR * 1.2, Math.PI, Math.PI * 2, 280, 3.2, DARK_R, DARK_G, DARK_B, 0.96, 2.8);
+          addDenseArc(vCx, shackleBaseY, shackleR - 16, (shackleR - 16) * 1.2, Math.PI, Math.PI * 2, 220, 2.8, DARK_R, DARK_G, DARK_B, 0.96, 2.8);
+          addDenseLine(vCx - shackleR, shackleBaseY, vCx - shackleR, shackleBaseY + 24, 50, 3.0, DARK_R, DARK_G, DARK_B, 0.96, 2.8);
+          addDenseLine(vCx + shackleR, shackleBaseY, vCx + shackleR, shackleBaseY + 24, 50, 3.0, DARK_R, DARK_G, DARK_B, 0.96, 2.8);
+
+          // Padlock Body Container
+          addRoundedCard(vCx, vCy, vW, vH, 14, 180, false);
+
+          // Solid Royal Blue Vault Keyhole Core (Massive glowing core)
+          const coreW = vW * 0.72;
+          const coreH = vH * 0.68;
+          for (let k = 0; k < 1200 && pIdx < PARTICLE_COUNT; k++) {
+            outX[pIdx] = vCx - coreW / 2 + Math.random() * coreW;
+            outY[pIdx] = vCy - coreH / 2 + Math.random() * coreH;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
+            pIdx++;
           }
-          for (let r = 0; r <= 6; r++) {
-            const gy = padY + (boxH / 6) * r;
-            addLine(padX, gy, padX + boxW, gy, 40, 0.18, 0.2, 0.25);
+
+          // Vault Keyhole Silhouette in crisp white
+          addDenseArc(vCx, vCy - 12, 14, 14, 0, Math.PI * 2, 90, 2.8, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+          addDenseLine(vCx - 8, vCy - 12, vCx - 14, vCy + 26, 45, 3.0, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+          addDenseLine(vCx + 8, vCy - 12, vCx + 14, vCy + 26, 45, 3.0, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+          addDenseLine(vCx - 14, vCy + 26, vCx + 14, vCy + 26, 45, 3.0, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.0);
+
+          // Flanking Left & Right: Multi-Tenant Relational Schema Tables
+          const tW = boxW * 0.25;
+          const tH = boxH * 0.72;
+          const leftTx = cx - boxW * 0.35;
+          const rightTx = cx + boxW * 0.35;
+
+          // Left Table (Clinic 01 Isolation)
+          addRoundedCard(leftTx, cy, tW, tH, 10, 140, false);
+          for (let row = 0; row < 5; row++) {
+            const ry = cy - tH / 2 + 28 + row * 34;
+            addDenseSkeletonBar(leftTx - tW * 0.42, ry, tW * 0.84, 8);
           }
 
-          const tableW = boxW * 0.26;
-          const tableH = boxH * 0.38;
-          const centers: [number, number][] = [
-            [padX + boxW * 0.25, padY + boxH * 0.35],
-            [padX + boxW * 0.75, padY + boxH * 0.35],
-            [padX + boxW * 0.5, padY + boxH * 0.75],
-          ];
+          // Right Table (Legal Audit Matrix)
+          addRoundedCard(rightTx, cy, tW, tH, 10, 140, false);
+          for (let row = 0; row < 5; row++) {
+            const ry = cy - tH / 2 + 28 + row * 34;
+            addDenseSkeletonBar(rightTx - tW * 0.42, ry, tW * 0.84, 8);
+          }
 
-          centers.forEach(([tx, ty]) => {
-            addLine(tx - tableW / 2, ty - tableH / 2, tx + tableW / 2, ty - tableH / 2, 70, 0.1, 0.1, 0.1);
-            addLine(tx + tableW / 2, ty - tableH / 2, tx + tableW / 2, ty + tableH / 2, 70, 0.1, 0.1, 0.1);
-            addLine(tx + tableW / 2, ty + tableH / 2, tx - tableW / 2, ty + tableH / 2, 70, 0.1, 0.1, 0.1);
-            addLine(tx - tableW / 2, ty + tableH / 2, tx - tableW / 2, ty - tableH / 2, 70, 0.1, 0.1, 0.1);
-            addLine(tx - tableW / 2, ty - tableH / 2 + 20, tx + tableW / 2, ty - tableH / 2 + 20, 50, 0.1, 0.1, 0.1);
-
-            for (let row = 1; row <= 4; row++) {
-              const ry = ty - tableH / 2 + 20 + row * 16;
-              addLine(tx - tableW / 2 + 10, ry, tx + tableW / 2 - 10, ry, 35, 0.36, 0.37, 0.88);
-            }
-
-            addMarker(tx, ty - tableH / 2, 6, false, 40, 0.1, 0.1, 0.1);
-          });
-
-          addLine(centers[0][0], centers[0][1], centers[2][0], centers[2][1], 160, 0.36, 0.37, 0.88);
-          addLine(centers[1][0], centers[1][1], centers[2][0], centers[2][1], 160, 0.36, 0.37, 0.88);
+          // Primary Key / RLS Connectors
+          addDenseLine(leftTx + tW / 2, vCy, vCx - vW / 2, vCy, 60, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.6);
+          addDenseLine(rightTx - tW / 2, vCy, vCx + vW / 2, vCy, 60, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.6);
           break;
         }
 
         case 2: {
-          // --- SHAPE 2: Real-time Emergency Dispatch Mesh (Logistics) ---
-          for (let c = 0; c <= 8; c++) {
-            const gx = padX + (boxW / 8) * c;
-            addLine(gx, padY, gx, padY + boxH, 40, 0.18, 0.2, 0.25);
-          }
-          for (let r = 0; r <= 6; r++) {
-            const gy = padY + (boxH / 6) * r;
-            addLine(padX, gy, padX + boxW, gy, 40, 0.18, 0.2, 0.25);
+          // =====================================================================
+          // 03. REAL-TIME: Emergency Dispatch Radar Terminal (Bicol Medical Center)
+          // =====================================================================
+          // Center Radar Scope (Expansive 3-ring circular radar filling ~88% height)
+          const radCx = cx;
+          const radCy = cy;
+          const R3 = boxH * 0.44;
+          const R2 = boxH * 0.29;
+          const R1 = boxH * 0.15;
+
+          addDenseArc(radCx, radCy, R1, R1, 0, Math.PI * 2, 220, 2.2, DARK_R, DARK_G, DARK_B, 0.9, 2.5);
+          addDenseArc(radCx, radCy, R2, R2, 0, Math.PI * 2, 380, 2.4, DARK_R, DARK_G, DARK_B, 0.9, 2.5);
+          addDenseArc(radCx, radCy, R3, R3, 0, Math.PI * 2, 560, 2.8, DARK_R, DARK_G, DARK_B, 0.96, 2.6);
+
+          // Azimuth Calibration Ticks around Perimeter
+          for (let a = 0; a < 12; a++) {
+            const ang = (a * Math.PI) / 6;
+            const x1 = radCx + Math.cos(ang) * R3;
+            const y1 = radCy + Math.sin(ang) * R3;
+            const x2 = radCx + Math.cos(ang) * (R3 + 12);
+            const y2 = radCy + Math.sin(ang) * (R3 + 12);
+            addDenseLine(x1, y1, x2, y2, 20, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.8);
           }
 
-          const rings = [
-            { rad: boxH * 0.18, count: 280 },
-            { rad: boxH * 0.34, count: 380 },
-            { rad: boxH * 0.48, count: 480 },
+          // Coordinate Crosshairs (Dashed)
+          addDenseLine(radCx - R3 - 8, radCy, radCx + R3 + 8, radCy, 140, 1.8, SLATE_R, SLATE_G, SLATE_B, 0.5, 2.0);
+          addDenseLine(radCx, radCy - R3 - 8, radCx, radCy + R3 + 8, 140, 1.8, SLATE_R, SLATE_G, SLATE_B, 0.5, 2.0);
+
+          // Solid Royal Blue Hospital Emergency Cross Beacon Core
+          const beaconR = 38;
+          for (let k = 0; k < 1200 && pIdx < PARTICLE_COUNT; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = Math.sqrt(Math.random()) * beaconR;
+            outX[pIdx] = radCx + Math.cos(ang) * rad;
+            outY[pIdx] = radCy + Math.sin(ang) * rad;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
+            pIdx++;
+          }
+
+          // White Hospital Cross inside Beacon Core
+          addDenseLine(radCx, radCy - 20, radCx, radCy + 20, 55, 6.0, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.4);
+          addDenseLine(radCx - 20, radCy, radCx + 20, radCy, 55, 6.0, WHITE_R, WHITE_G, WHITE_B, 1.0, 3.4);
+
+          // Sweeping Radar Vector Beam (Scanning at 42°)
+          const sweepAng = 0.73;
+          const sx = radCx + Math.cos(sweepAng) * R3;
+          const sy = radCy - Math.sin(sweepAng) * R3;
+          addDenseLine(radCx, radCy, sx, sy, 150, 3.2, BLUE_R, BLUE_G, BLUE_B, 1.0, 3.0);
+
+          // Active Verified Donor & Blood Reserve Target Blips
+          const targets = [
+            [radCx + R2 * 0.78, radCy - R2 * 0.62],
+            [radCx - R2 * 0.82, radCy + R2 * 0.45],
+            [radCx + R1 * 1.35, radCy + R1 * 1.25],
+            [radCx - R3 * 0.72, radCy - R3 * 0.58],
           ];
-          rings.forEach(({ rad, count }, rIdx) => {
-            for (let k = 0; k < count && pIdx < PARTICLE_COUNT; k++) {
-              const th = (k / count) * Math.PI * 2;
-              const jit = (Math.random() - 0.5) * 0.9;
-              outX[pIdx] = cx + Math.cos(th) * (rad + jit);
-              outY[pIdx] = cy + Math.sin(th) * (rad + jit);
-              outR[pIdx] = rIdx === 1 ? 0.36 : 0.15;
-              outG[pIdx] = rIdx === 1 ? 0.37 : 0.18;
-              outB[pIdx] = rIdx === 1 ? 0.88 : 0.24;
-              pIdx++;
+          targets.forEach(([tx, ty], tIdx) => {
+            addDenseArc(tx, ty, 6, 6, 0, Math.PI * 2, 35, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 3.0);
+            addDenseArc(tx, ty, 14, 14, 0, Math.PI * 2, 45, 2.0, BLUE_R, BLUE_G, BLUE_B, 0.8, 2.4);
+            // Telemetry line to peripheral label
+            if (tIdx === 0) {
+              addDenseLine(tx, ty, tx + 40, ty - 20, 25, 2.0, BLUE_R, BLUE_G, BLUE_B, 1.0, 2.4);
+              addDenseSkeletonBar(tx + 40, ty - 24, 50, 6);
             }
           });
-
-          const beams = 8;
-          for (let b = 0; b < beams; b++) {
-            const ang = (b / beams) * Math.PI * 2 + Math.PI / 8;
-            const ex = cx + Math.cos(ang) * (boxH * 0.49);
-            const ey = cy + Math.sin(ang) * (boxH * 0.49);
-            addLine(cx, cy, ex, ey, 70, 0.36, 0.37, 0.88);
-            addMarker(ex, ey, 6, true, 30, 0.1, 0.1, 0.1);
-          }
-
-          addMarker(cx, cy, 14, false, 120, 0.36, 0.37, 0.88);
           break;
         }
 
         case 3: {
-          // --- SHAPE 3: Architecture & System Onion Layers ---
-          // Background grid: 8 cols, 6 rows
-          for (let c = 0; c <= 8; c++) {
-            const gx = padX + (boxW / 8) * c;
-            addLine(gx, padY, gx, padY + boxH, 45, 0.18, 0.2, 0.25);
-          }
-          for (let r = 0; r <= 6; r++) {
-            const gy = padY + (boxH / 6) * r;
-            addLine(padX, gy, padX + boxW, gy, 45, 0.18, 0.2, 0.25);
+          // =====================================================================
+          // 04. SYSTEMS: Grand Hexagonal Distributed Micro-Engine Network
+          // =====================================================================
+          // Center: Large Hexagonal Core State Engine Hub
+          const netCx = cx;
+          const netCy = cy;
+          const hexR = 52; // Center hub radius
+
+          // Solid Royal Blue Central Hub Fill
+          for (let k = 0; k < 1300 && pIdx < PARTICLE_COUNT; k++) {
+            const ang = Math.random() * Math.PI * 2;
+            const rad = Math.sqrt(Math.random()) * hexR;
+            outX[pIdx] = netCx + Math.cos(ang) * rad;
+            outY[pIdx] = netCy + Math.sin(ang) * rad;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
+            pIdx++;
           }
 
-          // 4 concentric onion layers with guaranteed 100% complete sides
-          const layers = 4;
-          for (let l = 1; l <= layers; l++) {
-            const lw = (boxW * 0.82 * l) / layers;
-            const lh = (boxH * 0.78 * l) / layers;
-            const pts = 110;
-            addLine(cx - lw / 2, cy - lh / 2, cx + lw / 2, cy - lh / 2, pts, 0.1, 0.12, 0.18);
-            addLine(cx + lw / 2, cy - lh / 2, cx + lw / 2, cy + lh / 2, pts, 0.1, 0.12, 0.18);
-            addLine(cx + lw / 2, cy + lh / 2, cx - lw / 2, cy + lh / 2, pts, 0.1, 0.12, 0.18);
-            addLine(cx - lw / 2, cy + lh / 2, cx - lw / 2, cy - lh / 2, pts, 0.1, 0.12, 0.18);
+          // Hexagon outline & core processor matrix
+          for (let h = 0; h < 6; h++) {
+            const a1 = (h * Math.PI) / 3;
+            const a2 = ((h + 1) * Math.PI) / 3;
+            addDenseLine(
+              netCx + Math.cos(a1) * hexR,
+              netCy + Math.sin(a1) * hexR,
+              netCx + Math.cos(a2) * hexR,
+              netCy + Math.sin(a2) * hexR,
+              55,
+              2.6,
+              WHITE_R,
+              WHITE_G,
+              WHITE_B,
+              1.0,
+              2.8
+            );
+          }
+          addDenseLine(netCx - 22, netCy, netCx + 22, netCy, 45, 2.4, WHITE_R, WHITE_G, WHITE_B, 1.0, 2.8);
+          addDenseLine(netCx, netCy - 22, netCx, netCy + 22, 45, 2.4, WHITE_R, WHITE_G, WHITE_B, 1.0, 2.8);
+
+          // 6 Satellite Service Modules (Hexagonal Constellation)
+          const R_net = boxH * 0.40;
+          const satW = boxW * 0.20;
+          const satH = boxH * 0.18;
+
+          for (let s = 0; s < 6; s++) {
+            const sAng = (s * Math.PI) / 3;
+            const sx = netCx + Math.cos(sAng) * R_net;
+            const sy = netCy + Math.sin(sAng) * R_net;
+
+            // Module card container
+            addRoundedCard(sx, sy, satW, satH, 8, 90, false);
+            addDenseSkeletonBar(sx - satW * 0.4, sy - 4, satW * 0.8, 6);
+
+            // Double-Conduit Bus Line to Central Hub
+            addDenseLine(netCx, netCy, sx, sy, 70, 2.6, BLUE_R, BLUE_G, BLUE_B, 0.95, 2.6);
+
+            // Directional Chevron pulse
+            const midX = (netCx + sx) / 2;
+            const midY = (netCy + sy) / 2;
+            addDenseArc(midX, midY, 5, 5, 0, Math.PI * 2, 20, 2.2, BLUE_R, BLUE_G, BLUE_B, 1.0, 3.0);
           }
 
-          // Crosshairs
-          addLine(cx - boxW / 2, cy, cx + boxW / 2, cy, 220, 0.36, 0.37, 0.88);
-          addLine(cx, cy - boxH / 2, cx, cy + boxH / 2, 220, 0.36, 0.37, 0.88);
+          // Fault-Domain Boundary Brackets [ ... ]
+          const brW = boxW * 0.44;
+          const brH = boxH * 0.44;
+          addDenseLine(netCx - brW, netCy - brH + 30, netCx - brW, netCy - brH, 50, 2.4, BLUE_R, BLUE_G, BLUE_B, 0.9, 2.6);
+          addDenseLine(netCx - brW, netCy - brH, netCx - brW + 30, netCy - brH, 50, 2.4, BLUE_R, BLUE_G, BLUE_B, 0.9, 2.6);
+          addDenseLine(netCx + brW, netCy + brH - 30, netCx + brW, netCy + brH, 50, 2.4, BLUE_R, BLUE_G, BLUE_B, 0.9, 2.6);
+          addDenseLine(netCx + brW, netCy + brH, netCx + brW - 30, netCy + brH, 50, 2.4, BLUE_R, BLUE_G, BLUE_B, 0.9, 2.6);
           break;
         }
 
         case 4: {
-          // --- SHAPE 4: Performance & Commit Oscilloscope ---
-          const cols = 12;
-          const rows = 8;
-          for (let c = 0; c <= cols; c++) {
-            const gx = padX + (boxW / cols) * c;
-            addLine(gx, padY, gx, padY + boxH, 50, 0.15, 0.18, 0.22);
-          }
-          for (let r = 0; r <= rows; r++) {
-            const gy = padY + (boxH / rows) * r;
-            addLine(padX, gy, padX + boxW, gy, 40, 0.15, 0.18, 0.22);
+          // =====================================================================
+          // 05. VELOCITY: Monumental 260° Tachometer & Sub-4ms Oscilloscope Wave
+          // =====================================================================
+          // Upper / Center: Grand 260° Speedometer Dial (Radius 165px)
+          const gCx = cx;
+          const gCy = cy - boxH * 0.06;
+          const R_gauge = boxH * 0.40;
+          const startRad = (140 * Math.PI) / 180;
+          const endRad = (400 * Math.PI) / 180;
+
+          // Dial Arcs
+          addDenseArc(gCx, gCy, R_gauge, R_gauge, startRad, endRad, 440, 2.8, DARK_R, DARK_G, DARK_B, 0.96, 2.8);
+          addDenseArc(gCx, gCy, R_gauge - 14, R_gauge - 14, startRad, endRad, 340, 2.0, SLATE_R, SLATE_G, SLATE_B, 0.5, 2.2);
+
+          // Major and Minor Calibration Ticks
+          for (let deg = 140; deg <= 400; deg += 15) {
+            const ang = (deg * Math.PI) / 180;
+            const isRedline = deg >= 340;
+            const tickLen = deg % 30 === 0 ? 18 : 10;
+            const x1 = gCx + Math.cos(ang) * (R_gauge - tickLen);
+            const y1 = gCy + Math.sin(ang) * (R_gauge - tickLen);
+            const x2 = gCx + Math.cos(ang) * R_gauge;
+            const y2 = gCy + Math.sin(ang) * R_gauge;
+            addDenseLine(
+              x1,
+              y1,
+              x2,
+              y2,
+              18,
+              2.4,
+              isRedline ? BLUE_R : DARK_R,
+              isRedline ? BLUE_G : DARK_G,
+              isRedline ? BLUE_B : DARK_B,
+              1.0,
+              isRedline ? 3.0 : 2.4
+            );
           }
 
-          addLine(padX, cy, padX + boxW, cy, 240, 0.18, 0.2, 0.25);
-
-          const samples = 1400;
-          for (let s = 0; s < samples && pIdx < PARTICLE_COUNT; s++) {
-            const t = s / samples;
-            const wx = padX + boxW * t;
-            const env = Math.exp(-Math.pow((t - 0.45) * 6, 2));
-            const wy = cy + Math.sin(t * Math.PI * 28) * (boxH * 0.36) * env;
-            outX[pIdx] = wx + (Math.random() - 0.5) * 0.8;
-            outY[pIdx] = wy + (Math.random() - 0.5) * 0.8;
-            outR[pIdx] = 0.36;
-            outG[pIdx] = 0.37;
-            outB[pIdx] = 0.88;
+          // Solid Royal Blue Redline Hyper-Speed Sector (from 340° to 400°)
+          for (let k = 0; k < 1000 && pIdx < PARTICLE_COUNT; k++) {
+            const ang = ((340 + Math.random() * 60) * Math.PI) / 180;
+            const rad = R_gauge - 22 + Math.random() * 28;
+            outX[pIdx] = gCx + Math.cos(ang) * rad;
+            outY[pIdx] = gCy + Math.sin(ang) * rad;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 0.98;
+            outSize[pIdx] = 2.5;
             pIdx++;
           }
+
+          // Massive Velocity Needle Pinned at Max Speed (365°)
+          const needleAng = (365 * Math.PI) / 180;
+          const tipX = gCx + Math.cos(needleAng) * (R_gauge * 0.95);
+          const tipY = gCy + Math.sin(needleAng) * (R_gauge * 0.95);
+          addDenseLine(gCx, gCy, tipX, tipY, 190, 4.0, BLUE_R, BLUE_G, BLUE_B, 1.0, 3.6);
+
+          // Solid Pivot Hub
+          addDenseArc(gCx, gCy, 16, 16, 0, Math.PI * 2, 90, 2.8, DARK_R, DARK_G, DARK_B, 1.0, 3.2);
+          addDenseArc(gCx, gCy, 7, 7, 0, Math.PI * 2, 45, 2.4, BLUE_R, BLUE_G, BLUE_B, 1.0, 3.0);
+
+          // Lower: Sub-4ms Oscilloscope Transient Waveform
+          const waveY = cy + boxH * 0.40;
+          const wLeft = cx - boxW * 0.44;
+          const burstStart = cx - boxW * 0.12;
+          const burstEnd = cx + boxW * 0.18;
+          const wRight = cx + boxW * 0.44;
+
+          addDenseLine(wLeft, waveY, burstStart, waveY, 100, 2.2, DARK_R, DARK_G, DARK_B, 0.7, 2.4);
+
+          // Transient Commit Impulse Spike
+          const burstCount = 450;
+          for (let b = 0; b < burstCount && pIdx < PARTICLE_COUNT; b++) {
+            const t = b / burstCount;
+            const bx = burstStart + t * (burstEnd - burstStart);
+            const osc = Math.sin(t * Math.PI * 18);
+            const env = Math.exp(-t * 4.2);
+            const by = waveY - osc * (boxH * 0.24) * env;
+            outX[pIdx] = bx;
+            outY[pIdx] = by;
+            outR[pIdx] = BLUE_R;
+            outG[pIdx] = BLUE_G;
+            outB[pIdx] = BLUE_B;
+            outAlpha[pIdx] = 1.0;
+            outSize[pIdx] = 2.8;
+            pIdx++;
+          }
+
+          addDenseLine(burstEnd, waveY, wRight, waveY, 100, 2.2, DARK_R, DARK_G, DARK_B, 0.7, 2.4);
           break;
         }
 
         case 5: {
-          // --- SHAPE 5: Design Systems (Nested Component Wireframes & Handles) ---
-          for (let c = 0; c <= 8; c++) {
-            const gx = padX + (boxW / 8) * c;
-            addLine(gx, padY, gx, padY + boxH, 40, 0.18, 0.2, 0.25);
+          // =====================================================================
+          // 06. DESIGN: Clean 3x2 Modular Card Grid & Solid Active Card with Cursor
+          // =====================================================================
+          // 3x2 Modular Card Grid Layout spanning full height
+          const gridTop = padY;
+          const gridH = boxH;
+          const cols = 3;
+          const rows = 2;
+          const colGap = 16;
+          const rowGap = 16;
+          const cardW = (boxW - (cols - 1) * colGap) / cols;
+          const cardH = (gridH - (rows - 1) * rowGap) / rows;
+
+          for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+              const cardCx = padX + cardW / 2 + c * (cardW + colGap);
+              const cardCy = gridTop + cardH / 2 + r * (cardH + rowGap);
+              const isActive = r === 1 && c === 1; // Center-bottom active blue card
+
+              if (!isActive) {
+                // Regular Card: Outline + 2 Dense Solid Text Skeleton Bars
+                addRoundedCard(cardCx, cardCy, cardW, cardH, 14, 160, false);
+                const barLeft = cardCx - cardW * 0.42;
+                const barY1 = cardCy + cardH * 0.12;
+                const barY2 = cardCy + cardH * 0.28;
+                addDenseSkeletonBar(barLeft, barY1, cardW * 0.76, 10);
+                addDenseSkeletonBar(barLeft, barY2, cardW * 0.44, 10);
+              } else {
+                // Active Card: SOLID FILLED ROYAL COBALT BLUE TEXTURE
+                addRoundedCard(cardCx, cardCy, cardW, cardH, 14, 160, true, 1400);
+
+                // Large crisp Classic Angled Black Mouse Pointer Cursor Arrow overlaid on active card
+                addAngledCursor(cardCx + cardW * 0.06, cardCy - cardH * 0.04, 1.35, 450);
+              }
+            }
           }
-          for (let r = 0; r <= 6; r++) {
-            const gy = padY + (boxH / 6) * r;
-            addLine(padX, gy, padX + boxW, gy, 40, 0.18, 0.2, 0.25);
-          }
-
-          const frameW = [boxW * 0.88, boxW * 0.6, boxW * 0.34];
-          const frameH = [boxH * 0.82, boxH * 0.62, boxH * 0.44];
-          frameW.forEach((fw, fIdx) => {
-            const fh = frameH[fIdx];
-            addLine(cx - fw / 2, cy - fh / 2, cx + fw / 2, cy - fh / 2, 90, 0.1, 0.1, 0.1);
-            addLine(cx + fw / 2, cy - fh / 2, cx + fw / 2, cy + fh / 2, 90, 0.1, 0.1, 0.1);
-            addLine(cx + fw / 2, cy + fh / 2, cx - fw / 2, cy + fh / 2, 90, 0.1, 0.1, 0.1);
-            addLine(cx - fw / 2, cy + fh / 2, cx - fw / 2, cy - fh / 2, 90, 0.1, 0.1, 0.1);
-
-            addMarker(cx - fw / 2, cy, 6, true, 40, 0.36, 0.37, 0.88);
-            addMarker(cx + fw / 2, cy, 6, true, 40, 0.36, 0.37, 0.88);
-          });
-
-          addLine(cx - boxW * 0.44, cy, cx + boxW * 0.44, cy, 180, 0.36, 0.37, 0.88);
-          addLine(cx, cy - boxH * 0.41, cx, cy + boxH * 0.41, 180, 0.36, 0.37, 0.88);
           break;
         }
       }
 
-      // Distribute any remaining particles evenly onto the coordinate grid (no random dust, no truncated lines)
-      const gridCols = 8;
-      const gridRows = 6;
-      let gridLine = 0;
+      // Distribute any remaining particles cleanly onto primary contours (Zero random dust)
+      let contourIdx = 0;
+      const validPoints = Math.max(1, pIdx);
       while (pIdx < PARTICLE_COUNT) {
-        const isCol = gridLine % 2 === 0;
-        const lineIdx = Math.floor(gridLine / 2);
-        const t = Math.random();
-        if (isCol) {
-          const gx = padX + (boxW / gridCols) * (lineIdx % (gridCols + 1));
-          outX[pIdx] = gx + (Math.random() - 0.5) * 0.9;
-          outY[pIdx] = padY + boxH * t;
-        } else {
-          const gy = padY + (boxH / gridRows) * (lineIdx % (gridRows + 1));
-          outX[pIdx] = padX + boxW * t;
-          outY[pIdx] = gy + (Math.random() - 0.5) * 0.9;
-        }
-        outR[pIdx] = 0.16;
-        outG[pIdx] = 0.19;
-        outB[pIdx] = 0.24;
+        const src = contourIdx % validPoints;
+        outX[pIdx] = outX[src] + (Math.random() - 0.5) * 0.8;
+        outY[pIdx] = outY[src] + (Math.random() - 0.5) * 0.8;
+        outR[pIdx] = outR[src];
+        outG[pIdx] = outG[src];
+        outB[pIdx] = outB[src];
+        outAlpha[pIdx] = outAlpha[src];
+        outSize[pIdx] = outSize[src];
         pIdx++;
-        gridLine++;
+        contourIdx++;
       }
     },
     []
@@ -455,9 +836,14 @@ export function KineticGridCanvas({
     const width = canvas.width / (window.devicePixelRatio || 1);
     const height = canvas.height / (window.devicePixelRatio || 1);
 
-    // Save actual live rendered positions as transition origins to eliminate jumping/lag
+    // Save actual live rendered positions and attributes as transition origins
     buffers.originX.set(buffers.liveX);
     buffers.originY.set(buffers.liveY);
+    buffers.originR.set(buffers.targetR);
+    buffers.originG.set(buffers.targetG);
+    buffers.originB.set(buffers.targetB);
+    buffers.originAlpha.set(buffers.targetAlpha);
+    buffers.originSize.set(buffers.targetSize);
 
     // Compute new target geometry
     generateShape(
@@ -466,17 +852,19 @@ export function KineticGridCanvas({
       height,
       buffers.targetX,
       buffers.targetY,
-      buffers.colorR,
-      buffers.colorG,
-      buffers.colorB
+      buffers.targetR,
+      buffers.targetG,
+      buffers.targetB,
+      buffers.targetAlpha,
+      buffers.targetSize
     );
 
-    // Snappy 300ms transition
+    // Snappy 320ms morph duration
     transitionRef.current = {
       fromTab: transitionRef.current.toTab,
       toTab: activeTab,
       progress: 0,
-      duration: 300,
+      duration: 320,
       startTime: performance.now(),
     };
   }, [activeTab, generateShape]);
@@ -498,21 +886,29 @@ export function KineticGridCanvas({
       ctx.scale(dpr, dpr);
 
       const buffers = buffersRef.current;
-      if (buffers) {
+      if (buffers && buffers.targetR) {
         generateShape(
           activeTab,
           rect.width,
           rect.height,
           buffers.targetX,
           buffers.targetY,
-          buffers.colorR,
-          buffers.colorG,
-          buffers.colorB
+          buffers.targetR,
+          buffers.targetG,
+          buffers.targetB,
+          buffers.targetAlpha,
+          buffers.targetSize
         );
         buffers.originX.set(buffers.targetX);
         buffers.originY.set(buffers.targetY);
         buffers.liveX.set(buffers.targetX);
         buffers.liveY.set(buffers.targetY);
+
+        buffers.originR.set(buffers.targetR);
+        buffers.originG.set(buffers.targetG);
+        buffers.originB.set(buffers.targetB);
+        buffers.originAlpha.set(buffers.targetAlpha);
+        buffers.originSize.set(buffers.targetSize);
       }
     };
 
@@ -550,7 +946,7 @@ export function KineticGridCanvas({
       const trans = transitionRef.current;
       const pointer = pointerRef.current;
 
-      // Update transition progress (Snappy 400ms duration)
+      // Update transition progress
       if (trans.progress < 1) {
         const elapsed = time - trans.startTime;
         trans.progress = Math.min(1, elapsed / trans.duration);
@@ -562,11 +958,11 @@ export function KineticGridCanvas({
       pointer.currRadius += (pointer.targetRadius - pointer.currRadius) * 0.14;
 
       const t = trans.progress;
-      // Scatter envelope: peaks at 0.5, completely vanishes to 0 at t=1
+      // Scatter envelope: peaks at mid-transition (t=0.5), completely reaches 0 at t=1
       const scatterEnvelope = t >= 1 ? 0 : Math.pow(Math.sin(Math.PI * t), 1.8);
       const easeT = t >= 1 ? 1 : t * t * (3 - 2 * t);
 
-      if (buffers) {
+      if (buffers && buffers.targetR) {
         const {
           liveX,
           liveY,
@@ -576,11 +972,16 @@ export function KineticGridCanvas({
           targetY,
           scatterDx,
           scatterDy,
-          colorR,
-          colorG,
-          colorB,
-          alpha,
-          size,
+          originR,
+          originG,
+          originB,
+          targetR,
+          targetG,
+          targetB,
+          originAlpha,
+          targetAlpha,
+          originSize,
+          targetSize,
         } = buffers;
 
         const pRadius = pointer.currRadius;
@@ -619,13 +1020,20 @@ export function KineticGridCanvas({
           liveX[i] = x;
           liveY[i] = y;
 
-          // Render stippled particle dot
-          const pAlpha = alpha[i] * (0.55 + (1 - scatterEnvelope) * 0.45);
-          const pSize = size[i];
+          // Dynamic smooth interpolation of size, alpha, and color during morph
+          const curSize = (1 - easeT) * originSize[i] + easeT * targetSize[i];
+          const curAlpha = (1 - easeT) * originAlpha[i] + easeT * targetAlpha[i];
+          const curR = (1 - easeT) * originR[i] + easeT * targetR[i];
+          const curG = (1 - easeT) * originG[i] + easeT * targetG[i];
+          const curB = (1 - easeT) * originB[i] + easeT * targetB[i];
 
-          const r = Math.round(colorR[i] * 255);
-          const g = Math.round(colorG[i] * 255);
-          const b = Math.round(colorB[i] * 255);
+          // Render stippled particle dot
+          const pAlpha = curAlpha * (0.65 + (1 - scatterEnvelope) * 0.35);
+          const pSize = curSize;
+
+          const r = Math.round(curR * 255);
+          const g = Math.round(curG * 255);
+          const b = Math.round(curB * 255);
 
           ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${pAlpha.toFixed(2)})`;
           ctx.fillRect(x - pSize / 2, y - pSize / 2, pSize, pSize);
@@ -640,7 +1048,7 @@ export function KineticGridCanvas({
 
           ctx.beginPath();
           ctx.arc(pointer.currX, pointer.currY, coreRadius, 0, Math.PI * 2);
-          ctx.strokeStyle = 'rgba(10, 18, 42, 0.12)';
+          ctx.strokeStyle = 'rgba(10, 18, 42, 0.15)';
           ctx.lineWidth = 1;
           ctx.setLineDash([3, 3]);
           ctx.stroke();
