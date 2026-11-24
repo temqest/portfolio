@@ -152,21 +152,9 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
       {/* Main Content Wrap */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-32 max-w-[1320px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 space-y-24 sm:space-y-36">
         {/* ============================================================== */}
-        {/* 2. HERO SECTION & BREADCRUMBS (Light AW Media Style)           */}
+        {/* 2. HERO SECTION (Colossal Title & Narrative)                   */}
         {/* ============================================================== */}
         <section id="hero" className="space-y-8 pt-4">
-          {/* Breadcrumb Glass Chip */}
-          <nav
-            aria-label="Breadcrumb"
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200 text-xs font-mono text-slate-600 shadow-2xs"
-          >
-            <Link href="/#work" className="hover:text-blue-600 transition-colors">
-              Work
-            </Link>
-            <span className="text-slate-300">/</span>
-            <span className="text-blue-600 font-semibold">{study.name}</span>
-          </nav>
-
           {/* Colossal Hero Title with High-Contrast Accent */}
           <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-[#0a122a] leading-[0.95] max-w-5xl">
             {study.name}
