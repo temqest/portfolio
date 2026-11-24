@@ -498,16 +498,12 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
               {/* Verified Clinical Collaboration Photo */}
               {study.testimonial.image && (
                 <div className="lg:col-span-5 flex flex-col items-center">
-                  <div className="w-full aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-100 group relative">
+                  <div className="w-full aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-100 group">
                     <img
                       src={study.testimonial.image}
                       alt="Clinical collaboration validation"
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/95 backdrop-blur-md text-[10px] font-mono text-blue-700 border border-blue-100 font-semibold shadow-xs flex items-center gap-1.5">
-                      <ShieldCheck className="w-3 h-3 text-blue-600" />
-                      <span>Verified Clinical Collaboration</span>
-                    </div>
                   </div>
                   {study.testimonial.imageCaption && (
                     <p className="text-xs text-slate-500 font-light text-center mt-2.5 px-2">
