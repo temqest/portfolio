@@ -1,15 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import {
   Trophy,
   Building2,
   Landmark,
   Award,
   Sparkles,
-  ArrowUpRight,
   Camera,
+  Medal,
 } from 'lucide-react';
 
 interface Achievement {
@@ -44,17 +43,37 @@ const ACHIEVEMENTS: Achievement[] = [
       'Awarded first place among competing regional startup teams for UNITE—pitching and demonstrating real-time blood unit inventory allocation and emergency donor dispatch under live judging.',
     project: 'UNITE',
     projectLink: '/detail/1',
-    primaryImage: '/images/achievements/sparklab.jpg',
+    primaryImage: '/assets/projects/hackaton-1.jpg',
     fallbackSvg: '/images/achievements/sparklab.svg',
-    imageHint: 'public/images/achievements/sparklab.jpg',
+    imageHint: 'public/assets/projects/hackaton#1.jpg',
     impactQuote:
       'Recognized for solving critical blood bank stockouts and reducing dispatch latency across rural and provincial hospitals.',
     quoteAuthor: 'SparkLAB 2025 Grand Jury',
     icon: Trophy,
   },
   {
-    id: 'bmc',
+    id: 'dict-psc',
     num: '02',
+    year: '2026',
+    honor: '3rd Runner Up',
+    honorColor: 'text-teal-600',
+    title: 'DICT Philippine Startup Challenge',
+    organization: 'Department of Information and Communications Technology (DICT Region V)',
+    description:
+      'Awarded 3rd Runner Up at the Regional Philippine Startup Challenge for UNITE—recognized by DICT evaluators and panel judges for innovative digital healthcare logistics and public health resilience.',
+    project: 'UNITE',
+    projectLink: '/detail/1',
+    primaryImage: '/assets/projects/startupchallengeDICT.jpg',
+    fallbackSvg: '/images/achievements/dict.svg',
+    imageHint: 'public/assets/projects/startupchallengeDICT.jpg',
+    impactQuote:
+      'Commended by DICT regional leadership for tackling vital emergency healthcare logistics through cloud and mobile systems.',
+    quoteAuthor: 'DICT Philippine Startup Challenge Regional Panel',
+    icon: Medal,
+  },
+  {
+    id: 'bmc',
+    num: '03',
     year: '2025 – 2026',
     honor: 'Institutional Partnership',
     honorColor: 'text-emerald-600',
@@ -64,9 +83,9 @@ const ACHIEVEMENTS: Achievement[] = [
       'Actively collaborating with regional transfusion medicine leaders to validate UNITE’s live blood component tracking, donor attribution pipelines, and mobile blood donation drives.',
     project: 'UNITE',
     projectLink: '/detail/1',
-    primaryImage: '/images/achievements/bmc.jpg',
+    primaryImage: '/assets/projects/bmc.png',
     fallbackSvg: '/images/achievements/bmc.svg',
-    imageHint: 'public/images/achievements/bmc.jpg',
+    imageHint: 'public/assets/projects/bmc.png',
     impactQuote:
       'Clinical workflow integration directly with transfusion staff, guaranteeing data models meet actual regional hospital requirements.',
     quoteAuthor: 'Transfusion Medicine Department · BMC',
@@ -74,8 +93,8 @@ const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'magis-tbi',
-    num: '03',
-    year: '2025',
+    num: '04',
+    year: '2025 – 2026',
     honor: 'Incubation Graduate',
     honorColor: 'text-blue-600',
     title: 'ADNU MAGIS TBI Incubation',
@@ -84,9 +103,9 @@ const ACHIEVEMENTS: Achievement[] = [
       'Completed comprehensive startup venture acceleration, customer discovery, legal governance, and technical architecture scaling under university mentors.',
     project: 'UNITE',
     projectLink: '/detail/1',
-    primaryImage: '/images/achievements/magis.jpg',
+    primaryImage: '/assets/projects/magisTBI.jpg',
     fallbackSvg: '/images/achievements/magis.svg',
-    imageHint: 'public/images/achievements/magis.jpg',
+    imageHint: 'public/assets/projects/magisTBI.jpg',
     impactQuote:
       'Refined business model viability and statutory compliance frameworks under expert university incubation leadership.',
     quoteAuthor: 'ADNU MAGIS TBI Directorate',
@@ -94,8 +113,8 @@ const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'ceeli-unc',
-    num: '04',
-    year: '2025',
+    num: '05',
+    year: '2026',
     honor: 'Top 8 Finalist',
     honorColor: 'text-purple-600',
     title: 'CEELI UNC FLIP Startup Competition',
@@ -104,9 +123,9 @@ const ACHIEVEMENTS: Achievement[] = [
       'Recognized as one of the top 8 high-potential startup ventures in the university-wide innovation program for healthtech impact in the Bicol region.',
     project: 'UNITE',
     projectLink: '/detail/1',
-    primaryImage: '/images/achievements/ceeli.jpg',
+    primaryImage: '/assets/projects/flip.jpg',
     fallbackSvg: '/images/achievements/ceeli.svg',
-    imageHint: 'public/images/achievements/ceeli.jpg',
+    imageHint: 'public/assets/projects/flip.jpg',
     impactQuote:
       'Selected from across regional collegiate and early-stage startup ventures for demonstrable social health impact.',
     quoteAuthor: 'UNC Innovation Committee',
@@ -114,7 +133,7 @@ const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'idea2startup',
-    num: '05',
+    num: '06',
     year: '2026',
     honor: 'Semi-Finalist',
     honorColor: 'text-indigo-600',
@@ -124,9 +143,9 @@ const ACHIEVEMENTS: Achievement[] = [
       'Advanced to the semi-final rounds in Naga City’s premier startup development initiative supporting high-impact technology ventures.',
     project: 'UNITE',
     projectLink: '/detail/1',
-    primaryImage: '/images/achievements/idea2startup.jpg',
+    primaryImage: '/assets/projects/idea2Startup.jpg',
     fallbackSvg: '/images/achievements/idea2startup.svg',
-    imageHint: 'public/images/achievements/idea2startup.jpg',
+    imageHint: 'public/assets/projects/idea2Startup.jpg',
     impactQuote:
       'Backed by municipal innovation programs to scale municipal blood distribution and digital health connectivity.',
     quoteAuthor: 'Naga City Startup Ecosystem Partners',
@@ -296,9 +315,9 @@ export function V2AchievementsSection() {
                 }}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute bottom-3 right-3 px-2 py-1 rounded bg-black/75 backdrop-blur-md text-[10px] font-mono text-white/70 flex items-center gap-1.5">
-                <Camera className="w-3 h-3 text-blue-400" />
-                <span>Drop photo: {selected.imageHint}</span>
+              <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded bg-black/75 backdrop-blur-md text-[10px] font-mono text-white/90 flex items-center gap-1.5 shadow-sm">
+                <Camera className="w-3 h-3 text-emerald-400" />
+                <span>Verified Milestone Photo</span>
               </div>
             </div>
 
@@ -317,16 +336,6 @@ export function V2AchievementsSection() {
               <span className="text-slate-500">
                 Platform: <strong className="text-[#0a122a]">{selected.project}</strong>
               </span>
-              {selected.projectLink && (
-                <Link
-                  href={selected.projectLink}
-                  onClick={() => setSelected(null)}
-                  className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-700 font-medium"
-                >
-                  <span>Explore Case Study</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
-                </Link>
-              )}
             </div>
           </div>
         </div>

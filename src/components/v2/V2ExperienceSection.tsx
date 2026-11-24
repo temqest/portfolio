@@ -426,18 +426,6 @@ export function V2ExperienceSection() {
                           <span className={isActive ? 'text-blue-400' : 'text-slate-500'}>
                             {item.companyType}
                           </span>
-                          {item.link && isActive && (
-                            <>
-                              <span className="text-white/20">·</span>
-                              <Link
-                                href={item.link}
-                                className="inline-flex items-center gap-0.5 text-xs font-mono text-blue-400 hover:text-blue-300 uppercase tracking-wider transition-colors ml-1"
-                              >
-                                <span>Case Study</span>
-                                <ChevronRight className="w-3 h-3" />
-                              </Link>
-                            </>
-                          )}
                         </div>
                       </div>
                     );

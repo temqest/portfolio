@@ -35,19 +35,31 @@ const PROJECTS_DATA: Record<string, ProjectDetail> = {
       'Hospitals and regional blood banks in the Bicol region face chronic coordination delays during critical emergencies. Blood inventory is tracked on fragmented physical ledgers or disconnected sheets, resulting in delayed transfusions, emergency donor search delays, and preventable blood wastage.',
     solution:
       'Architected a multi-tenant operational platform featuring live blood unit inventory tracking by blood component (PRBC, FFP, Platelets), automated donor eligibility attribution, emergency dispatch broadcasts, and granular Row-Level Security (RLS) ensuring strict cross-facility data privacy. Validated through direct institutional collaboration with Bicol Medical Center (BMC), the largest blood bank provider in Camarines Sur and Camarines Norte.',
-    impact: '1st Place Winner at SparkLAB Hackathon 2025; successfully completed ADNU MAGIS TBI incubation; CEELI UNC FLIP Startup Top 8 Finalist; Idea2Startup Naga City Semi-Finalist.',
+    impact: '1st Place Winner at SparkLAB Hackathon 2025; 3rd Runner Up at DICT Philippine Startup Challenge (PSC) Regional Finals; successfully completed ADNU MAGIS TBI incubation; CEELI UNC FLIP Startup Top 8 Finalist; Idea2Startup Naga City Semi-Finalist.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop',
+        url: '/assets/projects/unite.png',
         caption: '01 — Real-Time Multi-Tenant Blood Unit Inventory Dashboard',
       },
       {
-        url: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1200&auto=format&fit=crop',
-        caption: '02 — Emergency Donor Matching & Component Allocation Dispatch',
+        url: '/assets/projects/bmc.png',
+        caption: '02 — Institutional Transfusion Medicine Partnership with Bicol Medical Center',
       },
       {
-        url: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=1200&auto=format&fit=crop',
-        caption: '03 — Mobile Donor Engagement & Donation Drive Management',
+        url: '/assets/projects/hackaton-1.jpg',
+        caption: '03 — 1st Place Grand Champions at SparkLAB Hackathon 2025',
+      },
+      {
+        url: '/assets/projects/startupchallengeDICT.jpg',
+        caption: '04 — 3rd Runner Up at DICT Philippine Startup Challenge Regional Finals',
+      },
+      {
+        url: '/assets/projects/flip.jpg',
+        caption: '05 — CEELI UNC FLIP Startup Competition Top 8 Finalist',
+      },
+      {
+        url: '/assets/projects/idea2Startup.jpg',
+        caption: '06 — Idea2Startup Naga City Regional Cohort Pitch',
       },
     ],
   },
@@ -69,7 +81,7 @@ const PROJECTS_DATA: Record<string, ProjectDetail> = {
     impact: 'Compliant with DOH 28-year maternal record retention and Philippine Data Privacy Act (RA 10173); 100% data retention during complete network blackouts across municipal health stations.',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop',
+        url: '/assets/projects/silang.png',
         caption: '01 — Clinical Dashboard with TEWS Maternal Risk Triage Alerts',
       },
       {
@@ -95,7 +107,7 @@ const PROJECTS_DATA: Record<string, ProjectDetail> = {
     problem: 'Emergency blood shortages and slow coordination between regional facilities.',
     solution: 'Live blood component inventory with automated donor dispatch and enterprise RLS security.',
     impact: '1st Place SparkLAB Hackathon 2025; Partnered with Bicol Medical Center (BMC).',
-    images: [{ url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop', caption: 'UNITE Platform' }],
+    images: [{ url: '/assets/projects/unite.png', caption: 'UNITE Platform' }],
   },
   '4': {
     id: '4',
@@ -110,7 +122,7 @@ const PROJECTS_DATA: Record<string, ProjectDetail> = {
     problem: 'Rural clinics with zero connectivity losing critical patient records.',
     solution: 'Dexie.js + SQLite offline outbox mutation sync engine and deterministic risk scoring.',
     impact: 'Compliant with DOH 28-year retention rules and RA 10173 Data Privacy Act.',
-    images: [{ url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop', caption: 'ap-silang Clinical Platform' }],
+    images: [{ url: '/assets/projects/silang.png', caption: 'ap-silang Clinical Platform' }],
   },
   '5': {
     id: '5',
@@ -125,7 +137,7 @@ const PROJECTS_DATA: Record<string, ProjectDetail> = {
     problem: 'Blood shortages and coordination delays.',
     solution: 'Real-time component tracking.',
     impact: '1st Place SparkLAB Hackathon 2025.',
-    images: [{ url: 'https://images.unsplash.com/photo-1615461066841-6116e61058f4?q=80&w=1200&auto=format&fit=crop', caption: 'UNITE' }],
+    images: [{ url: '/assets/projects/unite.png', caption: 'UNITE' }],
   },
 };
 

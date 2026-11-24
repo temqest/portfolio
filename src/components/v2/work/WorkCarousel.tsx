@@ -32,7 +32,7 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     location: 'NAGA CITY',
     title: 'BMC Blood Drive Portal',
     tags: ['REACT NATIVE', 'SUPABASE', 'PUSH ALERTS'],
-    image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1000&auto=format&fit=crop',
+    image: '/assets/projects/unite.png',
     badge: 'LIVE',
     link: '/detail/1',
   },

@@ -26,7 +26,7 @@ const FLAGSHIP_PROJECTS: FlagshipProject[] = [
     desc: 'Centralized blood unit inventory and donor mobilization platform connecting regional hospitals, blood centers, and volunteer donors in real time. Built in active clinical collaboration with Bicol Medical Center (BMC) to eliminate emergency transfusion stockouts.',
     badge: 'LIVE',
     stack: ['Next.js 16', 'React Native', 'TypeScript', 'Supabase RLS', 'PostgreSQL'],
-    image: 'https://images.unsplash.com/photo-1579154204601-01588f351e67?q=80&w=1600&auto=format&fit=crop',
+    image: '/assets/projects/unite.png',
     link: '/detail/1',
   },
   {
@@ -37,7 +37,7 @@ const FLAGSHIP_PROJECTS: FlagshipProject[] = [
     desc: 'Offline-first municipal maternal healthcare and electronic medical records platform serving Rural Health Units and mountain barangays. Features a zero-internet Dexie.js + SQLite outbox mutation sync engine and in-browser TEWS clinical risk triage.',
     badge: 'LIVE',
     stack: ['React 19 PWA', 'React Native', 'Dexie.js', 'SQLite', 'WebSockets'],
-    image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1600&auto=format&fit=crop',
+    image: '/assets/projects/silang.png',
     link: '/detail/2',
   },
   {
