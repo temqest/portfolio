@@ -17,3 +17,27 @@ When designing, refactoring, or recommending layouts, typography, and visual con
 - **Glanceable Hierarchy**: One dominant visual focal point (a genuine photograph, clean badge, or hero metric) + one strong headline + one crisp sentence explaining the human/technical impact.
 - **Editorial Cleanliness & Breathing Room**: Prioritize generous whitespace, legible typography, and calm visual pacing over cramming every conceivable data point into the screen.
 - **Story Over Spec**: Celebrate the accomplishment as a real human milestone (e.g. *1st Place Champion at SparkLAB Hackathon for UNITE*) rather than a dry system audit.
+
+## 4. Case Study & Deep Dive Architecture (The Bento Canvas Law — Inspired by AW Media)
+When designing case study pages (`/detail/*`, `/case-study/*`, project deep dives):
+
+1. **Brand & Topbar Continuity is Mandatory:**
+   - Case studies must NEVER feel like a disconnected sub-template.
+   - Always mount or match the site's signature `.topbar` with the primary brand mark (`PATRICK`), section context, and a prominent, tactile back button (`btn` with animated arrow).
+   - Retain the atmospheric ambient background aura and interactive `CursorGridCanvas` for immediate tactile immersion.
+
+2. **Ban Sterile Single-Column Centered Text (The 40% Waste Anti-Pattern):**
+   - Do NOT center all content in a narrow 65ch reading column that leaves 40%+ of desktop viewports as empty white deserts.
+   - Use **Asymmetric Bento Grids** across the 1320px `.wrap`:
+     - **Hero Bento:** Colossal display typography on the left; interactive architecture snapshot and live status pill on the right.
+     - **Telemetry Metric Bento:** Interconnected 4-column cards with large numeric values, hover micro-elevation, and active status indicators.
+     - **Narrative Bento Units:** Split layout pairing story text (60%) with interactive code snippets, component diagrams, or context cards (40%).
+
+3. **Sticky Scrollytelling Pacing:**
+   - Split complex engineering processes into two columns: a sticky left header ("Our approach.", live rolling step reel `01`–`06`, and synced progress bar) and a scrolling right feed of narrative problem-solving steps.
+   - This provides spatial grounding so the reader never gets lost in long text.
+
+4. **Natural Aspect Ratio & Device Switchers:**
+   - Never crop ultra-wide web application screenshots with arbitrary fixed heights (e.g. `h-[450px] object-cover`).
+   - Frame visual evidence in natural aspect ratio containers (`aspect-[21/10]`, `h-auto object-contain`) with dark borders, subtle elevation, and annotated caption bars.
+   - Provide interactive `[Desktop] [Mobile]` view switchers with authentic macOS/iOS frames so recruiters can inspect multi-platform engineering versatility.
