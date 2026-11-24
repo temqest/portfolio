@@ -302,49 +302,31 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 5. OUR APPROACH: STICKY SCROLLYTELLING (Number Counter Follows) */}
+        {/* 5. OUR APPROACH: STICKY SCROLLYTELLING (Colossal Number Style)  */}
         {/* ============================================================== */}
         <section id="approach" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
           {/* Sticky Left Column: Stays Glued in Viewport as Right Column Scrolls */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a] leading-tight">
-                Our <span className="font-serif-italic text-blue-600 font-normal">approach.</span>
-              </h2>
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0a122a] leading-tight">
+              Our approach.
+            </h2>
 
-              <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
-                Every architectural decision was engineered to satisfy clinical safety, zero data loss, and sub-second regional coordination.
-              </p>
+            {/* Colossal Dynamic Number (Matching User Reference) */}
+            <div className="text-[100px] sm:text-[140px] md:text-[170px] lg:text-[190px] font-bold font-sans tracking-tighter leading-none text-[#0a122a] select-none py-1 sm:py-2">
+              {String(activeStep + 1).padStart(2, '0')}
             </div>
 
-            {/* Rolling Step Reel Card (Follows Throughout Entire Scroll) */}
-            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase tracking-widest text-slate-500 font-medium">
-                  Current Milestone
-                </span>
-                <span className="text-xs font-mono text-blue-600 font-bold">
-                  {Math.round(progressPercent)}%
-                </span>
-              </div>
-
-              <div className="flex items-baseline gap-2">
-                <span className="text-4xl font-mono font-bold text-blue-600 tracking-tight">
-                  {String(activeStep + 1).padStart(2, '0')}
-                </span>
-                <span className="text-xs font-mono uppercase tracking-widest text-slate-500">
-                  / {String(study.approachSteps.length).padStart(2, '0')} Architecture Steps
-                </span>
-              </div>
-
-              {/* Animated Step Progress Bar */}
-              <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
-                <div
-                  className="h-full bg-blue-600 transition-all duration-300 rounded-full"
-                  style={{ width: `${progressPercent}%` }}
-                />
-              </div>
+            {/* Minimalist Progress Track Line (Matching Reference) */}
+            <div className="w-48 sm:w-60 h-[3px] bg-slate-200 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-600 transition-all duration-300 rounded-full"
+                style={{ width: `${progressPercent}%` }}
+              />
             </div>
+
+            <p className="text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-xs pt-2">
+              Key engineering decisions engineered for clinical reliability, zero data loss, and sub-second regional sync.
+            </p>
           </div>
 
           {/* Right Column: Scrolling White Step Cards */}
