@@ -431,26 +431,31 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 7. WHAT WE BUILT: DELIVERABLE CHECKLIST                        */}
+        {/* 7. WHAT WE BUILT: STICKY TITLE & DELIVERABLES CARD             */}
         {/* ============================================================== */}
-        <section id="built" className="space-y-10">
-          <div className="border-b border-slate-200 pb-6">
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
-              What we <span className="font-serif-italic text-blue-600 font-normal">built.</span>
+        <section id="built" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
+          {/* Sticky Left Column: Title Stays Pinned in View as Reader Scrolls */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0a122a] leading-tight">
+              What we built.
             </h2>
-            <p className="text-sm text-slate-500 font-light mt-1">
-              Concrete architectural components, security layers, and client deliverables shipped.
+            <p className="text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-sm">
+              Concrete architectural components, security layers, and client deliverables shipped to production.
             </p>
           </div>
 
-          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-white border border-slate-200/90 shadow-sm">
-            <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 list-none m-0 p-0">
+          {/* Right Column: High-End Deliverables Checklist Card */}
+          <div className="lg:col-span-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-sm p-6 sm:p-10">
+            <ul className="divide-y divide-slate-100 list-none m-0 p-0">
               {study.whatWeBuilt.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700 font-light">
-                  <span className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
+                <li
+                  key={idx}
+                  className="py-4.5 first:pt-0 last:pb-0 flex items-start gap-4 text-sm sm:text-base text-slate-700 font-normal leading-relaxed group"
+                >
+                  <span className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-200 transition-colors shrink-0 mt-0.5">
                     <Check className="w-3.5 h-3.5" />
                   </span>
-                  <span className="leading-relaxed">{item}</span>
+                  <span className="group-hover:text-[#0a122a] transition-colors">{item}</span>
                 </li>
               ))}
             </ul>
