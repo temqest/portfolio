@@ -50,6 +50,14 @@ export interface MilestoneEvidence {
   caption: string;
 }
 
+export interface SystemView {
+  title: string;
+  category: string;
+  urlDisplay: string;
+  image: string;
+  description: string;
+}
+
 export interface CaseStudy {
   id: string;
   routeId: string;
@@ -75,6 +83,7 @@ export interface CaseStudy {
   numbers: ColossalStat[];
   testimonial: Testimonial;
   milestones?: MilestoneEvidence[];
+  systemViews?: SystemView[];
   nextStudyId: string;
   nextStudyName: string;
 }

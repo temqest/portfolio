@@ -448,7 +448,78 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 7. WHAT WE BUILT: STICKY TITLE & DELIVERABLES CARD             */}
+        {/* 7. PLATFORM INTERFACES / SYSTEM VIEWS                          */}
+        {/* ============================================================== */}
+        {study.systemViews && study.systemViews.length > 0 && (
+          <section id="views" className="space-y-10">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-6">
+              <div>
+                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+                  Platform <span className="font-serif-italic text-blue-600 font-normal">views.</span>
+                </h2>
+                <p className="text-sm text-slate-500 font-light mt-1">
+                  Core operational modules engineered for hospital transfusion technicians, municipal coordinators, and mobile donors.
+                </p>
+              </div>
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
+                0{study.systemViews.length} Production Views
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {study.systemViews.map((view, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col group"
+                >
+                  {/* macOS Chrome Header */}
+                  <div className="px-5 py-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-amber-500 inline-block" />
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" />
+                    </div>
+
+                    <div className="px-3 py-1 rounded bg-white border border-slate-200 text-[11px] font-mono text-slate-600 flex items-center gap-1.5 truncate max-w-[200px] sm:max-w-xs shadow-2xs">
+                      <Lock className="w-2.5 h-2.5 text-emerald-600 shrink-0" />
+                      <span className="truncate">{view.urlDisplay}</span>
+                    </div>
+
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-blue-600 font-semibold px-2 py-0.5 rounded bg-blue-50 border border-blue-100">
+                      {view.category}
+                    </span>
+                  </div>
+
+                  {/* High-Resolution Viewport Frame */}
+                  <div className="p-3 sm:p-5 bg-slate-50 flex items-center justify-center">
+                    <div className="w-full aspect-[16/10] overflow-hidden rounded-xl border border-slate-200 shadow-xs bg-white relative">
+                      <img
+                        src={view.image}
+                        alt={view.title}
+                        className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-500"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Card Content Footer */}
+                  <div className="p-6 border-t border-slate-100 flex-1 flex flex-col justify-between space-y-2">
+                    <div>
+                      <h3 className="text-lg font-bold text-[#0a122a] group-hover:text-blue-600 transition-colors">
+                        {view.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mt-1">
+                        {view.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* ============================================================== */}
+        {/* 8. WHAT WE BUILT: STICKY TITLE & DELIVERABLES CARD             */}
         {/* ============================================================== */}
         <section id="built" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
           {/* Sticky Left Column: Title Stays Pinned in View as Reader Scrolls */}

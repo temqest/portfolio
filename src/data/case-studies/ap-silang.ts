@@ -133,6 +133,15 @@ export const AP_SILANG_CASE_STUDY: CaseStudy = {
     role: 'Rural Health Unit Stakeholders',
     organization: 'Municipal Maternal Health Platform',
   },
+  systemViews: [
+    {
+      title: 'Maternal Clinical EMR Consultation Portal',
+      category: 'Clinical EMR',
+      urlDisplay: 'https://apsilang-emr.ph/patients',
+      image: '/assets/projects/silang.png',
+      description: 'Offline-first municipal electronic medical record interface designed for midwives to log prenatal consultations and vitals without active internet connectivity.',
+    },
+  ],
   nextStudyId: '1',
   nextStudyName: 'UNITE (Blood Logistics Platform)',
 };

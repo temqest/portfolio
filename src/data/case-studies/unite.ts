@@ -185,6 +185,36 @@ export const UNITE_CASE_STUDY: CaseStudy = {
       caption: 'Advanced to regional cohort pitch in municipal innovation initiative',
     },
   ],
+  systemViews: [
+    {
+      title: 'Hospital Operations Command Center',
+      category: 'Clinical Operations',
+      urlDisplay: 'https://unite-health.ph/dashboard',
+      image: '/assets/projects/unite-dashboard.png',
+      description: 'Central hospital administrator portal tracking daily operational focus items, critical blood threshold alerts, event schedules, and upcoming drives.',
+    },
+    {
+      title: 'Regional Donation Coverage GIS Map',
+      category: 'Geospatial Analytics',
+      urlDisplay: 'https://unite-health.ph/dashboard/coverage-map',
+      image: '/assets/projects/unite-coverage-map.jpg',
+      description: 'Interactive municipality-level boundary mapping tracking donation service coverage, target progress (e.g. Baao at 73%), and regional supply deficit zones across Camarines Sur.',
+    },
+    {
+      title: 'Real-Time Blood Component Inventory',
+      category: 'Inventory Logistics',
+      urlDisplay: 'https://unite-health.ph/dashboard/inventory',
+      image: '/assets/projects/unite-blood-inventory.png',
+      description: 'Granular component-level tracking (PRBC, FFP, Platelets) across 8 blood groups (A+, A-, B+, B-, AB+, AB-, O+, O-) with automated critical threshold warnings.',
+    },
+    {
+      title: 'Mobile Donor & Field Drive Client',
+      category: 'Mobile Application',
+      urlDisplay: 'iOS / Android Native Client',
+      image: '/assets/projects/unite-mobile-app.jpg',
+      description: 'Cross-platform mobile client for volunteer donors featuring geolocated drive discovery, proximity alerts, and instant appointment booking.',
+    },
+  ],
   nextStudyId: '2',
   nextStudyName: 'ap-silang (Municipal Maternal EMR)',
 };
