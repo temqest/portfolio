@@ -27,21 +27,21 @@ export const UNITE_CASE_STUDY: CaseStudy = {
   challenges: [
     {
       no: '01',
-      title: 'Midnight coordination delays & manual phone trees.',
+      title: 'Finding blood takes hours of manual phone calls.',
       description:
-        'When an emergency transfusion or acute postpartum hemorrhage occurs at 2:00 AM, hospital technicians have to manually telephone neighboring facilities across provinces, wasting critical hours during a life-or-death golden window.',
+        'During a midnight emergency, hospital staff must call facility after facility one by one to locate compatible blood units, wasting precious hours when every second counts.',
     },
     {
       no: '02',
-      title: 'Multi-hospital data isolation vs. public dispatch.',
+      title: "Hospitals have no way to see each other's blood stock.",
       description:
-        'Independent healthcare providers cannot expose their internal patient ledgers or private reserves to competing institutions, but still need immediate, aggregated visibility into regional emergency blood unit availability.',
+        'Each healthcare facility keeps its blood inventory locked inside private spreadsheets or paper logbooks. No one has real-time regional visibility into available units.',
     },
     {
       no: '03',
-      title: 'Component expiration & strict donor eligibility attribution.',
+      title: 'Blood units spoil quickly and donor tracking is manual.',
       description:
-        'Blood is not a single commodity: Platelets spoil in 5 days, Packed Red Blood Cells (PRBC) in 42 days, and Whole Blood donors must strictly wait 90 days between donations. Disconnected spreadsheets caused preventable expiration and donor fatigue.',
+        'Platelets expire in 5 days, while whole blood donors must wait 90 days between donations. Without automated tracking, blood units spoil and donors are called at the wrong time.',
     },
   ],
   approachSteps: [

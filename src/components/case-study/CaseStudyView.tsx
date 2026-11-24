@@ -7,16 +7,28 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  CheckCircle2,
   Lock,
-  Monitor,
-  Smartphone,
   Trophy,
   ShieldCheck,
   Building2,
-  Sparkles,
   ExternalLink,
 } from 'lucide-react';
+import StackIcon from 'tech-stack-icons';
+import {
+  TypeScriptIcon,
+  JavaScriptIcon,
+  PythonIcon,
+  PostgresIcon,
+  SqliteIcon,
+  NextjsIcon,
+  ReactIcon,
+  TailwindIcon,
+  WebSocketIcon,
+  NodeIcon,
+  SupabaseIcon,
+  DockerIcon,
+  GitIcon,
+} from '@/components/v2/TechIcons';
 import { CaseStudy } from '@/data/case-studies';
 import { CursorGridCanvas } from '@/components/v2/CursorGridCanvas';
 
@@ -24,28 +36,48 @@ interface CaseStudyViewProps {
   study: CaseStudy;
 }
 
+function getTechIcon(name: string) {
+  const lower = name.toLowerCase();
+  if (lower.includes('next')) return <NextjsIcon size={22} />;
+  if (lower.includes('react native') || lower.includes('react')) return <ReactIcon size={22} />;
+  if (lower.includes('typescript')) return <TypeScriptIcon size={22} />;
+  if (lower.includes('node') || lower.includes('express')) return <NodeIcon size={22} />;
+  if (lower.includes('supabase')) return <SupabaseIcon size={22} />;
+  if (lower.includes('postgres')) return <PostgresIcon size={22} />;
+  if (lower.includes('docker')) return <DockerIcon size={22} />;
+  if (lower.includes('tailwind')) return <TailwindIcon size={22} />;
+  if (lower.includes('sqlite') || lower.includes('dexie')) return <SqliteIcon size={22} />;
+  if (lower.includes('websocket') || lower.includes('socket')) return <WebSocketIcon size={22} />;
+  if (lower.includes('python')) return <PythonIcon size={22} />;
+  if (lower.includes('git')) return <GitIcon size={22} />;
+  try {
+    return <StackIcon name={lower.replace(/[^a-z0-9]/g, '')} style={{ width: 22, height: 22 }} />;
+  } catch {
+    return <span className="text-[10px] font-mono font-bold text-slate-700">{name.slice(0, 3)}</span>;
+  }
+}
+
 export function CaseStudyView({ study }: CaseStudyViewProps) {
-  const [deviceMode, setDeviceMode] = useState<'desktop' | 'mobile'>('desktop');
   const [activeStep, setActiveStep] = useState<number>(0);
   const stepsRef = useRef<(HTMLLIElement | null)[]>([]);
 
-  // Track active step during scroll for the sticky Approach reel
+  // Track active step during scroll for sticky Approach reel
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
 
       stepsRef.current.forEach((el, index) => {
         if (!el) return;
         const rect = el.getBoundingClientRect();
-        // Step becomes active when top enters the upper half of screen
-        if (rect.top <= windowHeight * 0.45 && rect.bottom >= windowHeight * 0.2) {
+        // Step becomes active when its top enters the upper half of screen
+        if (rect.top <= windowHeight * 0.45 && rect.bottom >= windowHeight * 0.15) {
           setActiveStep(index);
         }
       });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -55,13 +87,13 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[#060a18] text-[#f2f6fd] selection:bg-[#2e4fc7] selection:text-white font-sans relative overflow-x-hidden">
-      {/* Interactive Cursor Grid Canvas (lights up squares beneath mouse) */}
+    <div className="min-h-screen bg-[#fafbfc] text-[#0a122a] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-clip">
+      {/* Interactive Cursor Grid Canvas (subtle blue reaction on light canvas) */}
       <CursorGridCanvas
         cellSize={70}
-        color="#2e4fc7"
+        color="#2563eb"
         radius={140}
-        gridOpacity={0.07}
+        gridOpacity={0.06}
         fillOpacity={0.03}
         clickPulse={true}
         pulseSpeed={600}
@@ -69,21 +101,21 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         fadeDuration={800}
       />
 
-      {/* Atmospheric Radial Cold Sky Aura */}
+      {/* Atmospheric Subtle Cold Blue Sky Radial Aura */}
       <div
-        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_-20%,rgba(46,79,199,0.18),transparent_70%)]"
+        className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(37,99,235,0.06),transparent_70%)]"
         aria-hidden="true"
       />
 
       {/* ============================================================== */}
-      {/* 1. SIGNATURE TOPBAR (Matches Patrick's Site Identity)           */}
+      {/* 1. SIGNATURE TOPBAR (Light Theme Matching Patrick's Portfolio) */}
       {/* ============================================================== */}
-      <header className="fixed top-0 left-0 right-0 z-50 py-5 bg-[#060a18]/85 backdrop-blur-xl border-b border-white/10 transition-all">
+      <header className="fixed top-0 left-0 right-0 z-50 py-4 bg-white/85 backdrop-blur-md border-b border-slate-200/80 transition-all">
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 flex items-center justify-between">
           {/* Brand Mark */}
           <Link
             href="/#front"
-            className="text-xl sm:text-2xl font-bold tracking-tight text-white hover:text-blue-400 transition-colors uppercase"
+            className="text-xl sm:text-2xl font-bold tracking-tight text-[#0a122a] hover:text-blue-600 transition-colors uppercase"
             style={{ fontFamily: "'ougther', 'Inter Tight', system-ui, sans-serif" }}
           >
             PATRICK
@@ -93,21 +125,21 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
           <div className="flex items-center gap-3 sm:gap-6">
             <Link
               href="/#work"
-              className="px-4 py-2 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/10 hover:border-white/30 text-xs font-mono uppercase tracking-wider text-white transition-all flex items-center gap-2 group shadow-sm"
+              className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 hover:border-slate-300 text-xs font-mono uppercase tracking-wider text-slate-700 hover:text-[#0a122a] transition-all flex items-center gap-2 group shadow-xs"
             >
-              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform text-blue-400" />
+              <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform text-blue-600" />
               <span>Selected Work</span>
             </Link>
 
-            <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-400">
+            <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-slate-500">
               <span>{study.num}</span>
-              <span className="text-white/20">·</span>
-              <span className="text-white font-medium">{study.name}</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-900 font-semibold">{study.name}</span>
             </div>
 
             <Link
               href={`/detail/${study.nextStudyId}`}
-              className="px-3.5 py-2 rounded-full bg-blue-600 hover:bg-blue-500 text-xs font-mono uppercase tracking-wider text-white transition-all flex items-center gap-1.5 shadow-md"
+              className="px-4 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-xs font-mono uppercase tracking-wider text-white transition-all flex items-center gap-1.5 shadow-sm"
               title="Next case study"
             >
               <span className="hidden sm:inline">Next</span>
@@ -120,60 +152,65 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
       {/* Main Content Wrap */}
       <main className="relative z-10 pt-28 sm:pt-36 pb-32 max-w-[1320px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 space-y-24 sm:space-y-36">
         {/* ============================================================== */}
-        {/* 2. HERO SECTION & BREADCRUMBS (AW Media Style)                 */}
+        {/* 2. HERO SECTION & BREADCRUMBS (Light AW Media Style)           */}
         {/* ============================================================== */}
         <section id="hero" className="space-y-8 pt-4">
           {/* Breadcrumb Glass Chip */}
           <nav
             aria-label="Breadcrumb"
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/[0.05] border border-white/10 backdrop-blur-md text-xs font-mono text-slate-400 shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100/90 border border-slate-200 text-xs font-mono text-slate-600 shadow-2xs"
           >
-            <Link href="/#work" className="hover:text-white transition-colors">
+            <Link href="/#work" className="hover:text-blue-600 transition-colors">
               Work
             </Link>
-            <span className="text-white/30">/</span>
-            <span className="text-blue-400 font-medium">{study.name}</span>
+            <span className="text-slate-300">/</span>
+            <span className="text-blue-600 font-semibold">{study.name}</span>
           </nav>
 
-          {/* Colossal Hero Title with Metallic Accent */}
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-white leading-[0.95] max-w-5xl">
+          {/* Colossal Hero Title with High-Contrast Accent */}
+          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tight text-[#0a122a] leading-[0.95] max-w-5xl">
             {study.name}
-            <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-slate-400 mt-3 tracking-normal">
-              <em className="font-serif-italic not-italic bg-gradient-to-r from-blue-400 via-indigo-200 to-white bg-clip-text text-transparent font-normal">
+            <span className="block text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-slate-600 mt-4 tracking-normal">
+              <em className="font-serif-italic not-italic bg-gradient-to-r from-blue-600 via-indigo-600 to-slate-800 bg-clip-text text-transparent font-normal">
                 {study.tagline}
               </em>
             </span>
           </h1>
 
           {/* Deep Narrative Lead Paragraph */}
-          <p className="text-lg sm:text-2xl text-slate-300 font-light leading-relaxed max-w-4xl tracking-tight">
+          <p className="text-lg sm:text-2xl text-slate-600 font-light leading-relaxed max-w-4xl tracking-tight">
             {study.executiveSummary}
           </p>
 
-          {/* Meta Tags Glass Chips with Glowing Green Live Dot */}
-          <div className="flex flex-wrap items-center gap-2.5 pt-2">
-            <span className="px-3.5 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-medium flex items-center gap-2 shadow-xs">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>LIVE SYSTEM</span>
-            </span>
-
-            {study.meta.stack.map((tech) => (
-              <span
-                key={tech}
-                className="px-3 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs font-mono text-slate-300 backdrop-blur-md"
-              >
-                {tech}
-              </span>
-            ))}
+          {/* Technology Icons Stack (Icons Only, Tooltip on Hover) */}
+          <div className="pt-2">
+            <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-3 font-semibold">
+              Engineered With
+            </p>
+            <div className="flex flex-wrap items-center gap-2.5">
+              {study.meta.stack.map((tech) => (
+                <div
+                  key={tech}
+                  className="group relative flex items-center justify-center w-11 h-11 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-md hover:scale-105 transition-all p-2 cursor-default"
+                  title={tech}
+                >
+                  {getTechIcon(tech)}
+                  {/* Tooltip on hover */}
+                  <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-slate-900 text-[10px] font-mono text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-sm">
+                    {tech}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
         {/* ============================================================== */}
-        {/* 3. CLIENT FACTS BAR (Full-Width Glass Bar, Matching AW Media)  */}
+        {/* 3. CLIENT FACTS BAR (Full-Width Crisp Card)                    */}
         {/* ============================================================== */}
         <section id="client">
-          <div className="w-full rounded-2xl sm:rounded-3xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 backdrop-blur-xl p-6 sm:p-10 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.7)]">
-            <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-blue-400 mb-6 font-semibold">
+          <div className="w-full rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 p-6 sm:p-10 shadow-sm">
+            <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-blue-600 mb-6 font-semibold">
               Client &amp; Institutional Scope
             </p>
 
@@ -182,7 +219,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                 <dt className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5">
                   Institution / Partner
                 </dt>
-                <dd className="text-sm sm:text-base font-medium text-white leading-snug">
+                <dd className="text-sm sm:text-base font-medium text-[#0a122a] leading-snug">
                   {study.clientFacts.name}
                 </dd>
               </div>
@@ -191,7 +228,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                 <dt className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5">
                   Sector &amp; Domain
                 </dt>
-                <dd className="text-sm sm:text-base font-medium text-white leading-snug">
+                <dd className="text-sm sm:text-base font-medium text-[#0a122a] leading-snug">
                   {study.clientFacts.industry}
                 </dd>
               </div>
@@ -200,7 +237,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                 <dt className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5">
                   Regional Jurisdiction
                 </dt>
-                <dd className="text-sm sm:text-base font-medium text-white leading-snug">
+                <dd className="text-sm sm:text-base font-medium text-[#0a122a] leading-snug">
                   {study.clientFacts.location}
                 </dd>
               </div>
@@ -209,8 +246,8 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                 <dt className="text-xs font-mono text-slate-500 uppercase tracking-wider mb-1.5">
                   Platform Verification
                 </dt>
-                <dd className="text-sm sm:text-base font-medium text-blue-400 leading-snug flex items-center gap-1 group">
-                  <span className="text-white group-hover:text-blue-300 transition-colors">
+                <dd className="text-sm sm:text-base font-medium text-blue-600 leading-snug flex items-center gap-1 group">
+                  <span className="text-blue-600 group-hover:text-blue-700 transition-colors">
                     {study.clientFacts.liveUrlLabel || 'Verified Deployment'}
                   </span>
                   <span className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform">
@@ -223,15 +260,20 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 4. THE CHALLENGE (3 Glass Tiles with Perspective & Numbers)     */}
+        {/* 4. THE CHALLENGE (3 Direct Problem Cards)                      */}
         {/* ============================================================== */}
         <section id="challenge" className="space-y-10">
-          <div className="flex items-end justify-between border-b border-white/10 pb-6">
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
-              The <span className="font-serif-italic text-blue-400 font-normal">challenge.</span>
-            </h2>
-            <span className="text-xs font-mono text-slate-500 uppercase tracking-widest hidden sm:inline">
-              (03 Operational Constraints)
+          <div className="flex items-end justify-between border-b border-slate-200 pb-6">
+            <div>
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+                The <span className="font-serif-italic text-blue-600 font-normal">challenge.</span>
+              </h2>
+              <p className="text-sm text-slate-500 font-light mt-1">
+                The core operational friction points we set out to eliminate.
+              </p>
+            </div>
+            <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
+              03 Core Problems
             </span>
           </div>
 
@@ -239,17 +281,19 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
             {study.challenges.map((c) => (
               <li
                 key={c.no}
-                className="rounded-2xl sm:rounded-3xl p-8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 hover:border-white/20 transition-all duration-300 shadow-[0_24px_60px_-18px_rgba(0,0,0,0.5)] flex flex-col justify-between group"
+                className="rounded-2xl sm:rounded-3xl p-8 bg-white border border-slate-200/90 hover:border-blue-300 transition-all duration-300 shadow-sm hover:shadow-md flex flex-col justify-between group"
               >
                 <div>
-                  <span className="text-xs font-mono text-amber-400 font-bold tracking-widest block mb-4 group-hover:scale-105 transition-transform inline-block">
-                    {c.no}
-                  </span>
-                  <h3 className="text-xl font-bold text-white mb-3 tracking-tight leading-snug">
+                  <div className="flex items-center gap-2 mb-4">
+                    <span className="text-[11px] font-mono text-rose-600 font-bold tracking-wider bg-rose-50 border border-rose-200/80 px-2.5 py-1 rounded-md inline-block">
+                      Problem {c.no}
+                    </span>
+                  </div>
+                  <h3 className="text-xl font-bold text-[#0a122a] mb-3 tracking-tight leading-snug">
                     {c.title}
                   </h3>
                 </div>
-                <p className="text-sm text-slate-400 font-light leading-relaxed mt-4 pt-4 border-t border-white/5">
+                <p className="text-sm text-slate-600 font-normal leading-relaxed mt-3 pt-4 border-t border-slate-100">
                   {c.description}
                 </p>
               </li>
@@ -258,39 +302,52 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 5. OUR APPROACH: STICKY SCROLLYTELLING (Matching AW Media)      */}
+        {/* 5. OUR APPROACH: STICKY SCROLLYTELLING (Number Counter Follows) */}
         {/* ============================================================== */}
-        <section id="approach" className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start">
-          {/* Sticky Left Column: Title, Dynamic Step Reel & Animated Progress Bar */}
-          <div className="lg:col-span-5 lg:sticky lg:top-36 space-y-6">
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white leading-tight">
-              Our <span className="font-serif-italic text-blue-400 font-normal">approach.</span>
-            </h2>
+        <section id="approach" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
+          {/* Sticky Left Column: Stays Glued in Viewport as Right Column Scrolls */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-6">
+            <div className="space-y-3">
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a] leading-tight">
+                Our <span className="font-serif-italic text-blue-600 font-normal">approach.</span>
+              </h2>
 
-            <p className="text-sm sm:text-base text-slate-400 font-light leading-relaxed">
-              Every architectural decision was engineered to satisfy clinical safety, zero data loss, and sub-second regional coordination.
-            </p>
-
-            {/* Rolling Step Reel */}
-            <div className="flex items-center gap-4 pt-2">
-              <div className="px-4 py-2 rounded-xl bg-white/[0.06] border border-white/15 text-2xl font-mono font-bold text-blue-400">
-                0{activeStep + 1}
-              </div>
-              <span className="text-xs font-mono uppercase tracking-widest text-slate-500">
-                of 0{study.approachSteps.length} Key Architecture Steps
-              </span>
+              <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+                Every architectural decision was engineered to satisfy clinical safety, zero data loss, and sub-second regional coordination.
+              </p>
             </div>
 
-            {/* Animated Step Progress Bar */}
-            <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
-              <div
-                className="h-full bg-blue-500 transition-all duration-300 rounded-full"
-                style={{ width: `${progressPercent}%` }}
-              />
+            {/* Rolling Step Reel Card (Follows Throughout Entire Scroll) */}
+            <div className="p-5 rounded-2xl bg-white border border-slate-200/90 shadow-sm space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono uppercase tracking-widest text-slate-500 font-medium">
+                  Current Milestone
+                </span>
+                <span className="text-xs font-mono text-blue-600 font-bold">
+                  {Math.round(progressPercent)}%
+                </span>
+              </div>
+
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-mono font-bold text-blue-600 tracking-tight">
+                  {String(activeStep + 1).padStart(2, '0')}
+                </span>
+                <span className="text-xs font-mono uppercase tracking-widest text-slate-500">
+                  / {String(study.approachSteps.length).padStart(2, '0')} Architecture Steps
+                </span>
+              </div>
+
+              {/* Animated Step Progress Bar */}
+              <div className="w-full h-2 rounded-full bg-slate-100 overflow-hidden">
+                <div
+                  className="h-full bg-blue-600 transition-all duration-300 rounded-full"
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
             </div>
           </div>
 
-          {/* Right Column: Scrolling Glass Step Cards */}
+          {/* Right Column: Scrolling White Step Cards */}
           <ol className="lg:col-span-7 space-y-6 list-none m-0 p-0">
             {study.approachSteps.map((step, idx) => {
               const isActive = activeStep === idx;
@@ -303,30 +360,30 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                   }}
                   className={`rounded-2xl sm:rounded-3xl p-8 sm:p-10 border transition-all duration-500 ${
                     isActive
-                      ? 'bg-gradient-to-b from-white/[0.1] to-white/[0.04] border-blue-500/50 shadow-[0_24px_60px_-15px_rgba(46,79,199,0.3)] scale-[1.01]'
-                      : 'bg-gradient-to-b from-white/[0.05] to-white/[0.01] border-white/10 opacity-70 hover:opacity-95'
+                      ? 'bg-white border-blue-500 ring-4 ring-blue-500/10 shadow-lg scale-[1.01]'
+                      : 'bg-white/80 border-slate-200 hover:border-slate-300 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <span
                       className={`text-xs font-mono font-bold tracking-widest ${
-                        isActive ? 'text-blue-400' : 'text-slate-500'
+                        isActive ? 'text-blue-600' : 'text-slate-400'
                       }`}
                     >
                       STEP {step.no}
                     </span>
                     {step.tag && (
-                      <span className="px-2.5 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] font-mono text-slate-300 uppercase tracking-widest">
+                      <span className="px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-[10px] font-mono text-slate-600 uppercase tracking-widest font-medium">
                         {step.tag}
                       </span>
                     )}
                   </div>
 
-                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-3 tracking-tight">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#0a122a] mb-3 tracking-tight">
                     {step.title}
                   </h3>
 
-                  <p className="text-sm sm:text-base text-slate-300 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
                     {step.description}
                   </p>
                 </li>
@@ -336,132 +393,91 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 6. THE WORK: INTERACTIVE DEVICE SHOWCASE (Matching AW Media)    */}
+        {/* 6. THE WORK: DESKTOP SHOWCASE (Toggle Removed per User Request) */}
         {/* ============================================================== */}
         <section id="the-work" className="space-y-8">
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-6">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-slate-200 pb-6">
             <div>
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
-                The <span className="font-serif-italic text-blue-400 font-normal">work.</span>
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+                The <span className="font-serif-italic text-blue-600 font-normal">work.</span>
               </h2>
-              <p className="text-sm text-slate-400 font-light mt-1">
+              <p className="text-sm text-slate-500 font-light mt-1">
                 Explore the verified interface across production viewports.
               </p>
             </div>
 
-            {/* Segmented Control: [Desktop] [Mobile] + Live Link */}
-            <div className="flex items-center gap-3">
-              <div className="p-1 rounded-full bg-white/[0.06] border border-white/10 backdrop-blur-md flex items-center">
-                <button
-                  type="button"
-                  onClick={() => setDeviceMode('desktop')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
-                    deviceMode === 'desktop'
-                      ? 'bg-blue-600 text-white shadow-sm font-semibold'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <Monitor className="w-3.5 h-3.5" />
-                  <span>Desktop</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setDeviceMode('mobile')}
-                  className={`px-4 py-1.5 rounded-full text-xs font-mono uppercase tracking-wider flex items-center gap-1.5 transition-all cursor-pointer ${
-                    deviceMode === 'mobile'
-                      ? 'bg-blue-600 text-white shadow-sm font-semibold'
-                      : 'text-slate-400 hover:text-white'
-                  }`}
-                >
-                  <Smartphone className="w-3.5 h-3.5" />
-                  <span>Mobile</span>
-                </button>
-              </div>
-
-              {study.meta.liveUrl && study.meta.liveUrl !== '#' && (
-                <a
-                  href={study.meta.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-4 py-2 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/10 text-xs font-mono uppercase tracking-wider text-white transition-all flex items-center gap-1.5"
-                >
-                  <span>Live</span>
-                  <ExternalLink className="w-3 h-3 text-blue-400" />
-                </a>
-              )}
-            </div>
+            {study.meta.liveUrl && study.meta.liveUrl !== '#' && (
+              <a
+                href={study.meta.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 rounded-full border border-slate-200 bg-white hover:bg-slate-50 text-xs font-mono uppercase tracking-wider text-slate-700 transition-all flex items-center gap-1.5 shadow-2xs self-start sm:self-auto"
+              >
+                <span>Live Portal</span>
+                <ExternalLink className="w-3 h-3 text-blue-600" />
+              </a>
+            )}
           </div>
 
-          {/* Interactive macOS Device Frame with Natural Screenshot */}
-          <div className="w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-950 border border-white/15 shadow-[0_32px_80px_-20px_rgba(0,0,0,0.8)]">
+          {/* Clean macOS Device Frame (Desktop Only) */}
+          <div className="w-full rounded-2xl sm:rounded-3xl overflow-hidden bg-slate-100 border border-slate-300 shadow-xl">
             {/* Window Chrome Header Bar */}
-            <div className="px-5 py-3.5 bg-slate-900 border-b border-white/10 flex items-center justify-between">
+            <div className="px-5 py-3.5 bg-slate-200/80 border-b border-slate-300 flex items-center justify-between">
               {/* Traffic Lights */}
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-rose-500/80 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-amber-500/80 inline-block" />
-                <span className="w-3 h-3 rounded-full bg-emerald-500/80 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-rose-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-amber-500 inline-block" />
+                <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block" />
               </div>
 
               {/* URL Bar */}
-              <div className="px-4 py-1 rounded-md bg-white/[0.05] border border-white/10 text-xs font-mono text-slate-400 flex items-center gap-2 max-w-sm w-full justify-center">
-                <Lock className="w-3 h-3 text-emerald-400" />
+              <div className="px-4 py-1.5 rounded-md bg-white border border-slate-300/80 text-xs font-mono text-slate-600 flex items-center gap-2 max-w-sm w-full justify-center shadow-2xs">
+                <Lock className="w-3 h-3 text-emerald-600" />
                 <span className="truncate">{study.deviceShowcase.urlDisplay}</span>
               </div>
 
               <div className="w-12 text-right">
-                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest hidden sm:inline">
+                <span className="text-[10px] font-mono text-slate-500 uppercase tracking-widest hidden sm:inline font-semibold">
                   PROD
                 </span>
               </div>
             </div>
 
             {/* Device Screen View (Uncropped Natural Aspect Ratio) */}
-            <div className="p-3 sm:p-6 bg-slate-950 flex justify-center">
-              <div
-                className={`transition-all duration-500 overflow-hidden rounded-xl border border-white/10 shadow-2xl ${
-                  deviceMode === 'desktop'
-                    ? 'w-full max-w-5xl aspect-[21/10]'
-                    : 'w-full max-w-sm aspect-[9/16]'
-                }`}
-              >
+            <div className="p-3 sm:p-6 bg-slate-100 flex justify-center">
+              <div className="w-full max-w-5xl aspect-[21/10] overflow-hidden rounded-xl border border-slate-300 shadow-lg bg-white">
                 <img
-                  src={
-                    deviceMode === 'desktop'
-                      ? study.deviceShowcase.desktopImage
-                      : study.deviceShowcase.mobileImage || study.deviceShowcase.desktopImage
-                  }
-                  alt={`${study.name} ${deviceMode} interface`}
+                  src={study.deviceShowcase.desktopImage}
+                  alt={`${study.name} production interface`}
                   className="w-full h-full object-cover object-top"
                 />
               </div>
             </div>
 
-            <div className="px-6 py-3 bg-slate-900/50 border-t border-white/5 text-center text-xs font-mono text-slate-500">
+            <div className="px-6 py-3 bg-slate-200/60 border-t border-slate-300 text-center text-xs font-mono text-slate-500">
               Verified production deployment snapshot · Full uncropped viewport
             </div>
           </div>
         </section>
 
         {/* ============================================================== */}
-        {/* 7. WHAT WE BUILT: DELIVERABLE CHECKLIST (Matching AW Media)     */}
+        {/* 7. WHAT WE BUILT: DELIVERABLE CHECKLIST                        */}
         {/* ============================================================== */}
         <section id="built" className="space-y-10">
-          <div className="border-b border-white/10 pb-6">
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
-              What we <span className="font-serif-italic text-blue-400 font-normal">built.</span>
+          <div className="border-b border-slate-200 pb-6">
+            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+              What we <span className="font-serif-italic text-blue-600 font-normal">built.</span>
             </h2>
-            <p className="text-sm text-slate-400 font-light mt-1">
+            <p className="text-sm text-slate-500 font-light mt-1">
               Concrete architectural components, security layers, and client deliverables shipped.
             </p>
           </div>
 
-          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-gradient-to-b from-white/[0.05] to-white/[0.01] border border-white/10">
+          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-white border border-slate-200/90 shadow-sm">
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 list-none m-0 p-0">
               {study.whatWeBuilt.map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-slate-200 font-light">
-                  <span className="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
+                <li key={idx} className="flex items-start gap-3.5 text-sm sm:text-base text-slate-700 font-light">
+                  <span className="w-6 h-6 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 shrink-0 mt-0.5">
                     <Check className="w-3.5 h-3.5" />
                   </span>
                   <span className="leading-relaxed">{item}</span>
@@ -472,67 +488,32 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 8. THE NUMBERS: COLOSSAL METRIC STATS (Matching AW Media)       */}
-        {/* ============================================================== */}
-        <section id="numbers" className="space-y-10">
-          <div className="border-b border-white/10 pb-6">
-            <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
-              The <span className="font-serif-italic text-blue-400 font-normal">numbers.</span>
-            </h2>
-            <p className="text-sm text-slate-400 font-light mt-1">
-              Measurable technical latency, statutory compliance, and institutional traction.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {study.numbers.map((stat, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl sm:rounded-3xl p-8 bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/10 shadow-lg flex flex-col justify-between group hover:border-white/20 transition-all"
-              >
-                <div>
-                  <span className="text-4xl sm:text-5xl font-bold tracking-tight text-white block mb-2 group-hover:text-blue-400 transition-colors">
-                    {stat.value}
-                  </span>
-                  <span className="text-xs font-mono font-medium text-blue-400 uppercase tracking-widest block mb-3">
-                    {stat.label}
-                  </span>
-                </div>
-                <p className="text-xs sm:text-sm text-slate-400 font-light leading-relaxed pt-3 border-t border-white/5">
-                  {stat.detail}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ============================================================== */}
-        {/* 9. TESTIMONIAL & COLLABORATOR VALIDATION                        */}
+        {/* 8. TESTIMONIAL & COLLABORATOR VALIDATION                        */}
         {/* ============================================================== */}
         <section id="testimonial">
-          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-14 bg-gradient-to-b from-blue-950/40 via-white/[0.03] to-white/[0.01] border border-blue-500/20 shadow-2xl relative overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-14 bg-gradient-to-br from-blue-50/70 via-white to-slate-50 border border-blue-100 shadow-sm relative overflow-hidden">
             {/* Giant Watermark Quotation Mark */}
             <span
-              className="absolute -top-10 -left-6 text-[180px] font-serif text-blue-500/10 pointer-events-none select-none"
+              className="absolute -top-10 -left-6 text-[180px] font-serif text-blue-600/10 pointer-events-none select-none"
               aria-hidden="true"
             >
               “
             </span>
 
             <div className="relative z-10 max-w-4xl space-y-6">
-              <blockquote className="text-xl sm:text-3xl font-light text-slate-100 leading-relaxed font-serif-italic">
+              <blockquote className="text-xl sm:text-3xl font-light text-slate-800 leading-relaxed font-serif-italic">
                 &ldquo;{study.testimonial.quote}&rdquo;
               </blockquote>
 
               <div className="pt-4 flex items-center gap-3">
-                <span className="w-10 h-10 rounded-full bg-blue-600/30 border border-blue-400/40 flex items-center justify-center text-blue-400 font-bold">
+                <span className="w-10 h-10 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold">
                   {study.testimonial.author.charAt(0)}
                 </span>
                 <div>
-                  <p className="text-sm font-semibold text-white">
+                  <p className="text-sm font-semibold text-[#0a122a]">
                     {study.testimonial.author}
                   </p>
-                  <p className="text-xs font-mono text-slate-400">
+                  <p className="text-xs font-mono text-slate-500">
                     {study.testimonial.role} · {study.testimonial.organization}
                   </p>
                 </div>
@@ -542,15 +523,15 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 10. MILESTONES & CHAMPIONSHIP AWARDS BENTO                      */}
+        {/* 9. MILESTONES & CHAMPIONSHIP AWARDS BENTO                      */}
         {/* ============================================================== */}
         {study.milestones && study.milestones.length > 0 && (
           <section id="milestones" className="space-y-10">
-            <div className="border-b border-white/10 pb-6">
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-white">
-                Championships &amp; <span className="font-serif-italic text-blue-400 font-normal">validation.</span>
+            <div className="border-b border-slate-200 pb-6">
+              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+                Championships &amp; <span className="font-serif-italic text-blue-600 font-normal">validation.</span>
               </h2>
-              <p className="text-sm text-slate-400 font-light mt-1">
+              <p className="text-sm text-slate-500 font-light mt-1">
                 Authentic photographic proof from live hackathons, incubations, and institutional partnerships.
               </p>
             </div>
@@ -559,33 +540,33 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
               {study.milestones.map((m, idx) => (
                 <div
                   key={idx}
-                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white/[0.03] border border-white/10 hover:border-white/25 transition-all shadow-lg flex flex-col group"
+                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-sm hover:shadow-md flex flex-col group"
                 >
-                  <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden">
+                  <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                     <img
                       src={m.image}
                       alt={m.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     />
-                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-black/80 backdrop-blur-md text-[10px] font-mono text-white flex items-center gap-1.5 border border-white/10">
-                      <Trophy className="w-3 h-3 text-amber-400" />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/95 backdrop-blur-md text-[10px] font-mono text-slate-800 flex items-center gap-1.5 border border-slate-200 shadow-xs">
+                      <Trophy className="w-3 h-3 text-amber-500" />
                       <span>{m.honor}</span>
                     </div>
-                    <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-black/80 backdrop-blur-md text-[10px] font-mono text-slate-300 border border-white/10">
+                    <div className="absolute top-3 right-3 px-2 py-1 rounded-md bg-white/95 backdrop-blur-md text-[10px] font-mono text-slate-600 border border-slate-200 shadow-xs">
                       {m.year}
                     </div>
                   </div>
 
                   <div className="p-6 flex-1 flex flex-col justify-between">
                     <div>
-                      <span className="text-[10px] font-mono uppercase tracking-widest text-blue-400 block mb-1">
+                      <span className="text-[10px] font-mono uppercase tracking-widest text-blue-600 block mb-1 font-semibold">
                         {m.organization}
                       </span>
-                      <h4 className="text-base font-bold text-white mb-2 leading-snug">
+                      <h4 className="text-base font-bold text-[#0a122a] mb-2 leading-snug">
                         {m.title}
                       </h4>
                     </div>
-                    <p className="text-xs text-slate-400 font-light leading-relaxed pt-3 border-t border-white/5">
+                    <p className="text-xs text-slate-600 font-light leading-relaxed pt-3 border-t border-slate-100">
                       {m.caption}
                     </p>
                   </div>
@@ -596,10 +577,10 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         )}
 
         {/* ============================================================== */}
-        {/* 11. NEXT STORY BENTO FOOTER (Matching AW Media)                 */}
+        {/* 10. NEXT STORY BENTO FOOTER (Impactful Next Project Invitation) */}
         {/* ============================================================== */}
         <footer id="more" className="pt-8">
-          <div className="rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-blue-950/60 via-slate-900 to-[#060a18] border border-blue-500/30 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          <div className="rounded-3xl p-8 sm:p-14 bg-gradient-to-r from-slate-900 via-[#0a122a] to-blue-950 text-white shadow-xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
             <div className="space-y-3">
               <span className="text-xs font-mono uppercase tracking-widest text-blue-400 font-semibold">
                 Explore Next Case Study

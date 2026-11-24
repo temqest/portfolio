@@ -27,21 +27,21 @@ export const AP_SILANG_CASE_STUDY: CaseStudy = {
   challenges: [
     {
       no: '01',
-      title: 'Zero cellular connectivity in remote mountain barangays.',
+      title: 'No internet connection in remote mountain villages.',
       description:
-        'Midwives frequently hike hours into highland communities with complete network blackouts. Traditional cloud-only EMR systems freeze and drop consultation records, leaving high-risk pregnant mothers without medical oversight.',
+        'Midwives frequently hike hours into highland communities with complete network blackouts. Standard cloud-based health apps freeze and fail to save patient records.',
     },
     {
       no: '02',
-      title: 'Reconciling concurrent outbox mutations without data loss.',
+      title: 'Offline medical records clash and risk being lost.',
       description:
-        'When multiple field workers update maternal consultation records while disconnected, naive sync strategies cause conflicting data overwrites, dropping critical prenatal vitals and medication histories.',
+        'When multiple field workers update maternal consultation records while disconnected, reconnecting causes data overwrites that can erase critical prenatal vitals and care histories.',
     },
     {
       no: '03',
-      title: 'Statutory 28-year record retention and privacy compliance.',
+      title: 'Paper forms cause fatal delays in high-risk pregnancies.',
       description:
-        'Philippine Department of Health (DOH) clinical regulations mandate an unalterable 28-year retention policy for all maternal medical records alongside strict compliance with the Philippine Data Privacy Act (RA 10173).',
+        'Relying on handwritten paper charts causes weeks of delay before municipal doctors can review maternal complications and arrange timely emergency hospital transfers.',
     },
   ],
   approachSteps: [
