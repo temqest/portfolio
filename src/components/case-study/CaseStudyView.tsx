@@ -31,6 +31,7 @@ import {
 } from '@/components/v2/TechIcons';
 import { CaseStudy } from '@/data/case-studies';
 import { CursorGridCanvas } from '@/components/v2/CursorGridCanvas';
+import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
 import { useLenisScroll } from '@/hooks/useLenisScroll';
 
 interface CaseStudyViewProps {
@@ -105,6 +106,9 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
 
   return (
     <div className="min-h-screen bg-[#fafbfc] text-[#0a122a] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-clip">
+      {/* Precision Difference-Blend Cursor (Identical to Base Page) */}
+      <V2CustomCursor />
+
       {/* Interactive Cursor Grid Canvas (subtle blue reaction on light canvas) */}
       <CursorGridCanvas
         cellSize={70}
