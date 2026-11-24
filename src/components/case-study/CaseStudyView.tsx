@@ -473,7 +473,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         {/* 8. TESTIMONIAL & COLLABORATOR VALIDATION                        */}
         {/* ============================================================== */}
         <section id="testimonial">
-          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-14 bg-gradient-to-br from-blue-50/70 via-white to-slate-50 border border-blue-100 shadow-sm relative overflow-hidden">
+          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-blue-50/70 via-white to-slate-50 border border-blue-100 shadow-sm relative overflow-hidden">
             {/* Giant Watermark Quotation Mark */}
             <span
               className="absolute -top-10 -left-6 text-[180px] font-serif text-blue-600/10 pointer-events-none select-none"
@@ -482,24 +482,52 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
               “
             </span>
 
-            <div className="relative z-10 max-w-4xl space-y-6">
-              <blockquote className="text-xl sm:text-3xl font-light text-slate-800 leading-relaxed font-serif-italic">
-                &ldquo;{study.testimonial.quote}&rdquo;
-              </blockquote>
-
-              <div className="pt-4 flex items-center gap-3">
-                <span className="w-10 h-10 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold">
-                  {study.testimonial.author.charAt(0)}
+            <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+              {/* Quote & Speaker Info */}
+              <div className={study.testimonial.image ? 'lg:col-span-7 space-y-6' : 'lg:col-span-12 space-y-6 max-w-4xl'}>
+                <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-blue-600 font-semibold block">
+                  Institutional Partner Endorsement
                 </span>
-                <div>
-                  <p className="text-sm font-semibold text-[#0a122a]">
-                    {study.testimonial.author}
-                  </p>
-                  <p className="text-xs font-mono text-slate-500">
-                    {study.testimonial.role} · {study.testimonial.organization}
-                  </p>
+                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-light text-slate-800 leading-relaxed font-serif-italic">
+                  &ldquo;{study.testimonial.quote}&rdquo;
+                </blockquote>
+
+                <div className="pt-2 flex items-center gap-3.5">
+                  <span className="w-11 h-11 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold text-base shadow-2xs">
+                    {study.testimonial.author.charAt(0)}
+                  </span>
+                  <div>
+                    <p className="text-base font-semibold text-[#0a122a]">
+                      {study.testimonial.author}
+                    </p>
+                    <p className="text-xs font-mono text-slate-500">
+                      {study.testimonial.role} · {study.testimonial.organization}
+                    </p>
+                  </div>
                 </div>
               </div>
+
+              {/* Verified Clinical Collaboration Photo */}
+              {study.testimonial.image && (
+                <div className="lg:col-span-5 flex flex-col items-center">
+                  <div className="w-full aspect-[16/10] sm:aspect-[4/3] rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-slate-100 group relative">
+                    <img
+                      src={study.testimonial.image}
+                      alt="Clinical collaboration validation"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute top-3 left-3 px-2.5 py-1 rounded-md bg-white/95 backdrop-blur-md text-[10px] font-mono text-blue-700 border border-blue-100 font-semibold shadow-xs flex items-center gap-1.5">
+                      <ShieldCheck className="w-3 h-3 text-blue-600" />
+                      <span>Verified Clinical Collaboration</span>
+                    </div>
+                  </div>
+                  {study.testimonial.imageCaption && (
+                    <p className="text-xs text-slate-500 font-light text-center mt-2.5 px-2">
+                      {study.testimonial.imageCaption}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </section>

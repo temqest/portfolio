@@ -37,6 +37,8 @@ export interface Testimonial {
   author: string;
   role: string;
   organization: string;
+  image?: string;
+  imageCaption?: string;
 }
 
 export interface MilestoneEvidence {

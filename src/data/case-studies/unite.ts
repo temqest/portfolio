@@ -132,8 +132,18 @@ export const UNITE_CASE_STUDY: CaseStudy = {
     author: 'Transfusion Medicine Department',
     role: 'Clinical Collaboration Partners',
     organization: 'Bicol Medical Center (BMC)',
+    image: '/assets/projects/bmc-team.jpg',
+    imageCaption: 'On-site clinical co-design and workflow validation with Bicol Medical Center doctors and transfusion medicine staff',
   },
   milestones: [
+    {
+      title: 'Bicol Medical Center Clinical Partnership',
+      honor: 'Clinical Collaboration & Co-Design',
+      year: '2025 – Present',
+      organization: 'Bicol Medical Center (BMC) Transfusion Medicine Dept',
+      image: '/assets/projects/bmc-team.jpg',
+      caption: 'Direct on-site clinical consultation with hospital doctors and transfusion staff to validate emergency blood allocation workflows',
+    },
     {
       title: 'SparkLAB Hackathon 2025',
       honor: '1st Place Grand Champion',
