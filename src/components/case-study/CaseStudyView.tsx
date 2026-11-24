@@ -31,6 +31,7 @@ import {
 } from '@/components/v2/TechIcons';
 import { CaseStudy } from '@/data/case-studies';
 import { CursorGridCanvas } from '@/components/v2/CursorGridCanvas';
+import { useLenisScroll } from '@/hooks/useLenisScroll';
 
 interface CaseStudyViewProps {
   study: CaseStudy;
@@ -58,22 +59,38 @@ function getTechIcon(name: string) {
 }
 
 export function CaseStudyView({ study }: CaseStudyViewProps) {
-  const [activeStep, setActiveStep] = useState<number>(0);
-  const stepsRef = useRef<(HTMLLIElement | null)[]>([]);
+  // Initialize Lenis smooth inertia scrolling
+  useLenisScroll();
 
-  // Track active step during scroll for sticky Approach reel
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [visibleBuiltCount, setVisibleBuiltCount] = useState<number>(1);
+  const stepsRef = useRef<(HTMLLIElement | null)[]>([]);
+  const builtItemsRef = useRef<(HTMLLIElement | null)[]>([]);
+
+  // Track active steps & visible deliverables during scroll
   useEffect(() => {
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
 
+      // Track Approach steps
       stepsRef.current.forEach((el, index) => {
         if (!el) return;
         const rect = el.getBoundingClientRect();
-        // Step becomes active when its top enters the upper half of screen
         if (rect.top <= windowHeight * 0.45 && rect.bottom >= windowHeight * 0.15) {
           setActiveStep(index);
         }
       });
+
+      // Track What We Built deliverables smoothly
+      let reached = 0;
+      builtItemsRef.current.forEach((el, index) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        if (rect.top <= windowHeight * 0.72) {
+          reached = index + 1;
+        }
+      });
+      setVisibleBuiltCount(Math.max(1, reached));
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -435,29 +452,53 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         {/* ============================================================== */}
         <section id="built" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
           {/* Sticky Left Column: Title Stays Pinned in View as Reader Scrolls */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4">
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4 will-change-transform">
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0a122a] leading-tight">
               What we built.
             </h2>
             <p className="text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-sm">
               Concrete architectural components, security layers, and client deliverables shipped to production.
             </p>
+
+            <div className="pt-2">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs font-mono text-slate-600 shadow-2xs">
+                <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
+                <span>{visibleBuiltCount} of {study.whatWeBuilt.length} Components Shipped</span>
+              </span>
+            </div>
           </div>
 
           {/* Right Column: High-End Deliverables Checklist Card */}
           <div className="lg:col-span-7 rounded-2xl sm:rounded-3xl bg-white border border-slate-200/90 shadow-sm p-6 sm:p-10">
             <ul className="divide-y divide-slate-100 list-none m-0 p-0">
-              {study.whatWeBuilt.map((item, idx) => (
-                <li
-                  key={idx}
-                  className="py-4.5 first:pt-0 last:pb-0 flex items-start gap-4 text-sm sm:text-base text-slate-700 font-normal leading-relaxed group"
-                >
-                  <span className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-600 group-hover:bg-blue-50 group-hover:text-blue-600 group-hover:border-blue-200 transition-colors shrink-0 mt-0.5">
-                    <Check className="w-3.5 h-3.5" />
-                  </span>
-                  <span className="group-hover:text-[#0a122a] transition-colors">{item}</span>
-                </li>
-              ))}
+              {study.whatWeBuilt.map((item, idx) => {
+                const isReached = idx < visibleBuiltCount;
+
+                return (
+                  <li
+                    key={idx}
+                    ref={(el) => {
+                      builtItemsRef.current[idx] = el;
+                    }}
+                    className={`py-4.5 first:pt-0 last:pb-0 flex items-start gap-4 text-sm sm:text-base leading-relaxed transition-all duration-500 ease-out ${
+                      isReached
+                        ? 'text-[#0a122a] font-medium translate-x-1'
+                        : 'text-slate-400 font-light'
+                    }`}
+                  >
+                    <span
+                      className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 transition-all duration-500 ease-out ${
+                        isReached
+                          ? 'bg-blue-600 border border-blue-600 text-white shadow-xs scale-105'
+                          : 'bg-slate-100 border border-slate-200 text-slate-400'
+                      }`}
+                    >
+                      <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                    </span>
+                    <span className="transition-colors duration-500">{item}</span>
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </section>
