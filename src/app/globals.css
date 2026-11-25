@@ -89,20 +89,42 @@ html.lenis, html.lenis body {
   color: #ffffff;
 }
 
-/* Scrollbar styling */
+/* ==========================================================================
+   Custom Tactile Systems Scrollbar (Cross-Browser: Chrome, Safari, Edge, Firefox)
+   ========================================================================== */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 79, 199, 0.45) transparent;
+}
+
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
 }
+
 ::-webkit-scrollbar-track {
-  background: var(--ink);
+  background: rgba(10, 18, 42, 0.02);
+  border-left: 1px solid rgba(10, 18, 42, 0.06);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: rgba(238, 236, 232, 0.15);
+  background: rgba(46, 79, 199, 0.4);
   border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
+
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(238, 236, 232, 0.3);
+  background: #2e4fc7;
+  border: 1.5px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #0a122a;
+  border: 1px solid transparent;
+  background-clip: content-box;
 }
 
 /* Hide scrollbar utility */
