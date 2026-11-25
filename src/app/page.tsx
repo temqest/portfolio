@@ -1,35 +1,17 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
 import { V2TopNav } from '@/components/v2/V2TopNav';
 import { V2HeroSection } from '@/components/v2/V2HeroSection';
 import { V2AboutSection } from '@/components/v2/V2AboutSection';
+import { V2WorkSection } from '@/components/v2/V2WorkSection';
+import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
+import { V2ExperienceSection } from '@/components/v2/V2ExperienceSection';
+import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
+import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
+import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
+import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
+import { V2ContactSection } from '@/components/v2/V2ContactSection';
 import { ClientEnhancements } from '@/components/v2/ClientEnhancements';
 import { MobileViewModeProvider } from '@/components/v2/MobileViewModeContext';
-
-const V2WorkSection = dynamic(() =>
-  import('@/components/v2/V2WorkSection').then((m) => m.V2WorkSection)
-);
-const V2ToolkitSection = dynamic(() =>
-  import('@/components/v2/V2ToolkitSection').then((m) => m.V2ToolkitSection)
-);
-const V2ExperienceSection = dynamic(() =>
-  import('@/components/v2/V2ExperienceSection').then((m) => m.V2ExperienceSection)
-);
-const V2AchievementsSection = dynamic(() =>
-  import('@/components/v2/V2AchievementsSection').then((m) => m.V2AchievementsSection)
-);
-const V2CertificatesSection = dynamic(() =>
-  import('@/components/v2/V2CertificatesSection').then((m) => m.V2CertificatesSection)
-);
-const V2TechStackSection = dynamic(() =>
-  import('@/components/v2/V2TechStackSection').then((m) => m.V2TechStackSection)
-);
-const V2AvailabilitySection = dynamic(() =>
-  import('@/components/v2/V2AvailabilitySection').then((m) => m.V2AvailabilitySection)
-);
-const V2ContactSection = dynamic(() =>
-  import('@/components/v2/V2ContactSection').then((m) => m.V2ContactSection)
-);
 
 export default function PortfolioPage() {
   return (
