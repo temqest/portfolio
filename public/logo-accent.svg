@@ -1,8 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <desc>Patrick - Minimalist Geometric Logo with Brand Accent</desc>
-  <rect width="512" height="512" fill="#FFFFFF"/>
+  <desc>Patrick - Circular Logo with Brand Cobalt Accent</desc>
+  <!-- Pure White Circle Background -->
+  <circle cx="256" cy="256" r="256" fill="#FFFFFF"/>
   
-  <!-- Precision Scalable Vector 'P' Glyph in Deep Midnight Navy -->
+  <!-- Scalable Geometric 'P' Vector Glyph in Midnight Navy -->
   <path fill="#0A122A" fill-rule="evenodd" d="
     M 144 116
     H 296
@@ -20,6 +21,6 @@
     Z
   "/>
   
-  <!-- Subtle Signature Cobalt Blue Terminal Accent -->
+  <!-- Signature Cobalt Blue Terminal Accent -->
   <circle cx="396" cy="116" r="10" fill="#2E4FC7"/>
 </svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <desc>Patrick - Circular Logo</desc>
+  <!-- Crisp Pure White Circle Background -->
+  <circle cx="256" cy="256" r="256" fill="#FFFFFF"/>
+  
+  <!-- Scalable Geometric 'P' Vector Glyph in Midnight Navy -->
+  <path fill="#0A122A" fill-rule="evenodd" d="
+    M 144 116
+    H 296
+    C 351.23 116 396 160.77 396 216
+    C 396 271.23 351.23 316 296 316
+    H 208
+    V 396
+    H 144
+    Z
+    M 208 172
+    V 260
+    H 296
+    C 320.3 260 340 240.3 340 216
+    C 340 191.7 320.3 172 296 172
+    Z
+  "/>
+</svg>
