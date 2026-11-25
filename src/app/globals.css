@@ -195,7 +195,7 @@ html.lenis, html.lenis body {
   z-index: 50;
   border-bottom: 1px solid transparent;
   padding: 22px 0px;
-  transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s, color 0.4s;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.4s, backdrop-filter 0.4s, border-color 0.4s, color 0.4s;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -368,7 +368,9 @@ html.lenis, html.lenis body {
   html.has-cursor,
   html.has-cursor a,
   html.has-cursor button,
-  html.has-cursor [role="button"] {
+  html.has-cursor [role="button"],
+  html.has-cursor .cursor-pointer,
+  html.has-cursor [data-cursor-hover] {
     cursor: none !important;
   }
 

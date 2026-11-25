@@ -92,10 +92,10 @@ export function V2HeroSection() {
               See my work
             </a>
             <a
-              href="#contact"
+              href="#availability"
               className="btn primary"
             >
-              <span>Start a project</span>
+              <span>Get in touch / Hire me</span>
               <span className="arr text-lg leading-none">→</span>
             </a>
           </div>

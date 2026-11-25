@@ -4,20 +4,45 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FileText, ArrowUpRight, Download } from 'lucide-react';
 
-interface V2TopNavProps {
-  mode?: 'site' | 'story';
-  onSwitchMode?: (mode: 'site' | 'story') => void;
-}
-
-export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
+export function V2TopNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
 
   useEffect(() => {
+    const heroEl = document.getElementById('front');
+
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        setPastHero(rect.bottom <= 80);
+      } else {
+        setPastHero(window.scrollY > window.innerHeight * 0.75);
+      }
     };
+
+    handleScroll();
+
+    let observer: IntersectionObserver | null = null;
+    if (heroEl && typeof IntersectionObserver !== 'undefined') {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          setPastHero(!entry.isIntersecting);
+        },
+        {
+          root: null,
+          rootMargin: '-80px 0px 0px 0px',
+          threshold: 0,
+        }
+      );
+      observer.observe(heroEl);
+    }
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const scrollTo = (id: string) => {
@@ -27,16 +52,18 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
     }
   };
 
-  // When in story mode, V2StoryExperience provides its dedicated immersive header
-  if (mode === 'story') {
-    return null;
-  }
-
   return (
-    <header className={`topbar ${scrolled ? 'scrolled' : ''}`} data-on="light">
+    <header
+      aria-hidden={pastHero}
+      className={`topbar ${scrolled ? 'scrolled' : ''} ${
+        pastHero ? 'opacity-0 -translate-y-4 pointer-events-none' : 'opacity-100 translate-y-0 pointer-events-auto'
+      }`}
+      data-on="light"
+    >
       <div className="wrap">
         <Link
           href="/#front"
+          tabIndex={pastHero ? -1 : 0}
           className="brand text-[#0a122a] hover:opacity-85 transition-opacity"
         >
           PATRICK
@@ -47,6 +74,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li>
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('about')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
               >
@@ -56,6 +84,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li>
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('work')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
               >
@@ -65,6 +94,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li className="hidden md:inline-block">
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('skills')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >
@@ -74,6 +104,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li className="hidden sm:inline-block">
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('experience')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >
@@ -83,6 +114,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li className="hidden sm:inline-block">
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('achievements')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
               >
@@ -92,6 +124,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
             <li>
               <button
                 type="button"
+                tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('contact')}
                 className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
               >
@@ -104,6 +137,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
                   href="/cv.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
+                  tabIndex={pastHero ? -1 : 0}
                   className="mono inline-flex items-center gap-1.5 pl-3 pr-2 py-1 text-[11px] tracking-[0.12em] uppercase text-white hover:text-blue-300 transition-colors"
                   title="View CV in new tab"
                 >
@@ -115,6 +149,7 @@ export function V2TopNav({ mode = 'site' }: V2TopNavProps) {
                 <a
                   href="/cv.pdf"
                   download="Patrick_CV.pdf"
+                  tabIndex={pastHero ? -1 : 0}
                   className="p-1 pr-2.5 text-slate-300 hover:text-white transition-colors"
                   title="Download CV (PDF)"
                   aria-label="Download CV PDF"

@@ -282,6 +282,7 @@ export function V2TechStackSection() {
                 return (
                   <div
                     key={item.id}
+                    data-cursor-hover
                     onMouseEnter={() => setActiveItem(item)}
                     onMouseLeave={() => setActiveItem(null)}
                     className="group relative p-3 sm:p-4 rounded-2xl border border-black/8 bg-slate-50/70 hover:bg-white hover:border-black/20 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer flex flex-col items-center justify-center text-center"
@@ -346,6 +347,7 @@ export function V2TechStackSection() {
             return (
               <div
                 key={item.id}
+                data-cursor-hover
                 onMouseEnter={() => setActiveItem(item)}
                 onMouseLeave={() => setActiveItem(null)}
                 className="group relative p-4 rounded-2xl border border-black/8 bg-slate-50/70 hover:bg-white hover:border-black/20 hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-pointer flex items-center gap-4"

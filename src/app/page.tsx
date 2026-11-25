@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, Suspense, useCallback } from 'react';
-import { useSearchParams } from 'next/navigation';
+import React, { useState, Suspense } from 'react';
 import { V2TopNav } from '@/components/v2/V2TopNav';
+import { V2BottomNav } from '@/components/v2/V2BottomNav';
 import { V2HeroSection } from '@/components/v2/V2HeroSection';
 import { V2AboutSection } from '@/components/v2/V2AboutSection';
 import { V2WorkSection } from '@/components/v2/V2WorkSection';
@@ -14,143 +14,92 @@ import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
 import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
 import { V2ContactSection } from '@/components/v2/V2ContactSection';
 import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
-import { V2FloatingDock } from '@/components/v2/V2FloatingDock';
-import { V2TactileStoryExperience } from '@/components/v2/V2TactileStoryExperience';
 import { TelemetryDrawer } from '@/components/easter-eggs/TelemetryDrawer';
-import { useAudioSynth } from '@/hooks/useAudioSynth';
 import { useLenisScroll } from '@/hooks/useLenisScroll';
 
 function PortfolioContent() {
-  const searchParams = useSearchParams();
-  const paramMode = searchParams.get('v') || searchParams.get('mode');
-  const [mode, setMode] = useState<'site' | 'story'>(paramMode === 'story' ? 'story' : 'site');
   const [isTelemetryOpen, setIsTelemetryOpen] = useState(false);
 
-  const { isPlaying: isAudioPlaying, toggleAudio } = useAudioSynth();
-  const { stopScroll, startScroll } = useLenisScroll();
-
-  // Mode change handler with scroll lock for Story Mode
-  const handleModeChange = useCallback(
-    (newMode: 'site' | 'story') => {
-      setMode(newMode);
-      if (newMode === 'story') {
-        stopScroll();
-        if (typeof window !== 'undefined') {
-          window.history.replaceState(null, '', '/?v=story');
-        }
-      } else {
-        startScroll();
-        if (typeof window !== 'undefined') {
-          window.history.replaceState(null, '', '/');
-        }
-      }
-    },
-    [stopScroll, startScroll]
-  );
-
-  // Sync scroll on initial mount based on mode
-  useEffect(() => {
-    if (mode === 'story') {
-      stopScroll();
-    } else {
-      startScroll();
-    }
-  }, [mode, stopScroll, startScroll]);
+  const { scrollTo } = useLenisScroll();
 
   return (
     <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-white text-[#0a122a]">
       {/* Precision Difference-Blend Cursor */}
       <V2CustomCursor />
 
-      {/* Top Header (only visible in site mode; story mode has its monograph header) */}
-      <V2TopNav mode={mode} onSwitchMode={handleModeChange} />
+      {/* Hero Topbar (visible in hero, hides when scrolled past hero) */}
+      <V2TopNav />
 
-      {/* Modality A: Full-featured Tactile Editorial Site */}
-      {mode === 'site' && (
-        <>
-          <main>
-            {/* 1. Hero Section */}
-            <V2HeroSection />
+      <main>
+        {/* 1. Hero Section */}
+        <V2HeroSection />
 
-            {/* 2. About Me */}
-            <V2AboutSection />
+        {/* 2. About Me */}
+        <V2AboutSection />
 
-            {/* 3. Projects */}
-            <V2WorkSection />
+        {/* 3. Projects */}
+        <V2WorkSection />
 
-            {/* 4. Skills & Disciplines */}
-            <V2ToolkitSection />
+        {/* 4. Skills & Disciplines */}
+        <V2ToolkitSection />
 
-            {/* 5. Work Experience */}
-            <V2ExperienceSection />
+        {/* 5. Work Experience */}
+        <V2ExperienceSection />
 
-            {/* 6. Achievements & Milestones */}
-            <V2AchievementsSection />
+        {/* 6. Achievements & Milestones */}
+        <V2AchievementsSection />
 
-            {/* 7. Certifications */}
-            <V2CertificatesSection />
+        {/* 7. Certifications */}
+        <V2CertificatesSection />
 
-            {/* 8. Technical Arsenal & Stack */}
-            <V2TechStackSection />
+        {/* 8. Technical Arsenal & Stack */}
+        <V2TechStackSection />
 
-            {/* 9. Work & Internship Availability */}
-            <V2AvailabilitySection />
+        {/* 9. Work & Internship Availability */}
+        <V2AvailabilitySection />
 
-            {/* 10. Direct Contact */}
-            <V2ContactSection />
-          </main>
+        {/* 10. Direct Contact */}
+        <V2ContactSection />
+      </main>
 
-          {/* Minimal Editorial Footer */}
-          <footer className="site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
-            <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
-              <div className="flex gap-6">
-                <a
-                  href="https://github.com/temqest"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-black"
-                >
-                  GitHub
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-black"
-                >
-                  LinkedIn
-                </a>
-                <a
-                  href="https://www.facebook.com/patrick.kurt.127"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-black"
-                >
-                  Facebook
-                </a>
-                <a href="#front" className="hover:text-blue-600">
-                  Back to top ↑
-                </a>
-              </div>
-            </div>
-          </footer>
-        </>
-      )}
+      {/* Minimal Editorial Footer */}
+      <footer className="site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
+        <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
+          <div className="flex gap-6">
+            <a
+              href="https://github.com/temqest"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-black"
+            >
+              GitHub
+            </a>
+            <a
+              href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-black"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://www.facebook.com/patrick.kurt.127"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-black"
+            >
+              Facebook
+            </a>
+            <a href="#front" className="hover:text-blue-600">
+              Back to top ↑
+            </a>
+          </div>
+        </div>
+      </footer>
 
-      {/* Modality B: Tactile Monograph Story Experience */}
-      {mode === 'story' && (
-        <V2TactileStoryExperience onExit={() => handleModeChange('site')} />
-      )}
-
-      {/* Tactile Floating Navigation Dock */}
-      <V2FloatingDock
-        mode={mode}
-        onModeChange={handleModeChange}
-        isAudioPlaying={isAudioPlaying}
-        onToggleAudio={toggleAudio}
-        onOpenTelemetry={() => setIsTelemetryOpen(true)}
-      />
+      {/* Floating Bottom Navbar (reveals when scrolled past hero) */}
+      <V2BottomNav onScrollToTop={() => scrollTo(0)} />
 
       {/* Developer Architecture & Performance Telemetry Drawer */}
       <TelemetryDrawer
@@ -166,7 +115,7 @@ export default function PortfolioPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-white text-[#0a122a] flex items-center justify-center font-mono text-xs">
-          Loading tactile experience...
+          Loading portfolio...
         </div>
       }
     >

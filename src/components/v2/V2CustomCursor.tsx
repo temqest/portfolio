@@ -47,7 +47,8 @@ export function V2CustomCursor() {
           target.closest('button') ||
           target.closest('a') ||
           target.getAttribute('role') === 'button' ||
-          target.classList.contains('btn');
+          target.classList.contains('btn') ||
+          Boolean(target.closest('[data-cursor-hover]'));
 
         if (isClickable && !isInput) {
           dot.classList.add('is-hovering');
