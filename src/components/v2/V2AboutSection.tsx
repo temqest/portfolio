@@ -23,7 +23,7 @@ const SOCIAL_LINKS = [
   },
   {
     label: 'CV / Resume',
-    href: '/cv.pdf',
+    href: '/Patrick_Kurt_Villamer_Resume.pdf',
     icon: FaFilePdf,
   },
   {

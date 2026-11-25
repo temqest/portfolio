@@ -169,6 +169,14 @@ export const UNITE_CASE_STUDY: CaseStudy = {
       caption: 'Completed incubation, venture acceleration, customer discovery, and legal governance',
     },
     {
+      title: 'ADNU Lideratos PairUp Project Grant',
+      honor: 'Official Project Grantee',
+      year: '2025',
+      organization: 'Liderato kan Nueva Atenista · Ateneo de Naga University',
+      image: '/assets/projects/adnu-lideratos.jpg',
+      caption: 'Institutional innovation grant funding UNITE development and on-site clinical pilot validation at Bicol Medical Center',
+    },
+    {
       title: 'CEELI UNC FLIP Startup Competition',
       honor: 'Top 8 Finalist',
       year: '2026',

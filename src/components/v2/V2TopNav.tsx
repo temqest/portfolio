@@ -143,7 +143,7 @@ export function V2TopNav() {
             <li>
               <div className="flex items-center rounded-full border border-slate-900/15 bg-[#0a122a] text-white shadow-xs hover:border-blue-600 transition-colors">
                 <a
-                  href="/cv.pdf"
+                  href="/Patrick_Kurt_Villamer_Resume.pdf"
                   target="_blank"
                   rel="noopener noreferrer"
                   tabIndex={pastHero ? -1 : 0}
@@ -156,8 +156,8 @@ export function V2TopNav() {
                 </a>
                 <span className="w-px h-4 bg-white/20" aria-hidden="true" />
                 <a
-                  href="/cv.pdf"
-                  download="Patrick_CV.pdf"
+                  href="/Patrick_Kurt_Villamer_Resume.pdf"
+                  download="Patrick_Kurt_Villamer_Resume.pdf"
                   tabIndex={pastHero ? -1 : 0}
                   className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] text-slate-300 hover:text-white transition-colors"
                   title="Download CV (PDF)"
@@ -173,7 +173,7 @@ export function V2TopNav() {
         {/* Mobile Compact Actions (>=44x44px touch targets, >=8px gap) */}
         <div className="flex md:hidden items-center gap-2">
           <a
-            href="/cv.pdf"
+            href="/Patrick_Kurt_Villamer_Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             tabIndex={pastHero ? -1 : 0}
@@ -214,8 +214,8 @@ export function V2TopNav() {
               </button>
             ))}
             <a
-              href="/cv.pdf"
-              download="Patrick_CV.pdf"
+              href="/Patrick_Kurt_Villamer_Resume.pdf"
+              download="Patrick_Kurt_Villamer_Resume.pdf"
               className="mono min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-blue-700 bg-blue-50/80 hover:bg-blue-100 transition-colors"
             >
               <Download className="w-3.5 h-3.5" />

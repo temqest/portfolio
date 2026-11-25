@@ -112,8 +112,28 @@ const ACHIEVEMENTS: Achievement[] = [
     icon: Landmark,
   },
   {
-    id: 'ceeli-unc',
+    id: 'lideratos-grant',
     num: '05',
+    year: '2025',
+    honor: 'Project Grantee',
+    honorColor: 'text-sky-600',
+    title: 'ADNU Lideratos PairUp Project Grant',
+    organization: 'Liderato kan Nueva Atenista · Ateneo de Naga University',
+    description:
+      'Selected as an official innovation project grantee, receiving institutional university funding to finance UNITE cloud infrastructure and deploy the live pilot phase at Bicol Medical Center.',
+    project: 'UNITE',
+    projectLink: '/detail/1',
+    primaryImage: '/assets/projects/adnu-lideratos.jpg',
+    fallbackSvg: '/images/achievements/magis.svg',
+    imageHint: 'public/assets/projects/adnu-lideratos.jpg',
+    impactQuote:
+      'Awarded university startup grant funding to accelerate real-time transfusion logistics and support live hospital pilot deployment.',
+    quoteAuthor: 'Liderato kan Nueva Atenista Directorate',
+    icon: Award,
+  },
+  {
+    id: 'ceeli-unc',
+    num: '06',
     year: '2026',
     honor: 'Top 8 Finalist',
     honorColor: 'text-purple-600',
@@ -133,7 +153,7 @@ const ACHIEVEMENTS: Achievement[] = [
   },
   {
     id: 'idea2startup',
-    num: '06',
+    num: '07',
     year: '2026',
     honor: 'Semi-Finalist',
     honorColor: 'text-indigo-600',

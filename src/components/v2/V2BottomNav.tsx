@@ -144,7 +144,7 @@ export function V2BottomNav({ onScrollToTop }: V2BottomNavProps) {
 
           <div className="flex items-center rounded-full border border-slate-900/15 bg-[#0a122a] text-white shadow-xs hover:border-blue-600 transition-colors shrink-0">
             <a
-              href="/cv.pdf"
+              href="/Patrick_Kurt_Villamer_Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               tabIndex={isVisible ? 0 : -1}
@@ -157,8 +157,8 @@ export function V2BottomNav({ onScrollToTop }: V2BottomNavProps) {
             </a>
             <span className="hidden sm:inline-block w-px h-4 bg-white/20" aria-hidden="true" />
             <a
-              href="/cv.pdf"
-              download="Patrick_CV.pdf"
+              href="/Patrick_Kurt_Villamer_Resume.pdf"
+              download="Patrick_Kurt_Villamer_Resume.pdf"
               tabIndex={isVisible ? 0 : -1}
               className="hidden sm:inline-flex items-center justify-center min-w-[44px] min-h-[44px] text-slate-300 hover:text-white transition-colors"
               title="Download CV (PDF)"

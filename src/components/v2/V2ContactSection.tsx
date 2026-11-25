@@ -97,7 +97,7 @@ export function V2ContactSection() {
               <ArrowUpRight className="w-3 h-3" />
             </a>
             <a
-              href="/cv.pdf"
+              href="/Patrick_Kurt_Villamer_Resume.pdf"
               target="_blank"
               rel="noreferrer"
               className="min-h-[42px] px-3 rounded-full border border-blue-200 bg-blue-50/70 text-blue-700 hover:text-blue-900 inline-flex items-center gap-1.5 font-medium"

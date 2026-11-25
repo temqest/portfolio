@@ -20,7 +20,7 @@ interface CareerMilestone {
 const MILESTONES: CareerMilestone[] = [
   {
     id: 'adnu-it',
-    year: '2021',
+    year: '2023',
     role: 'B.S. in Information Technology Candidate',
     company: 'Ateneo de Naga University',
     companyType: 'Undergraduate Program (4th Year)',
@@ -226,7 +226,7 @@ export function V2ExperienceSection() {
             <span className="text-blue-400">(04)</span>
             <span>EXPERIENCE &amp; MILESTONES</span>
           </div>
-          <span className="text-slate-500">Since 2021</span>
+          <span className="text-slate-500">Since 2023</span>
         </div>
 
         {/* Entrance Two-Column: Statement on Left + 3D Wave Mesh Canvas on Right */}
@@ -234,7 +234,7 @@ export function V2ExperienceSection() {
           {/* Left Column: Big Editorial Thesis Statement */}
           <div className="lg:col-span-7">
             <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.2] md:leading-[1.14] mb-4 md:mb-6">
-              Since <strong className="font-bold text-white">2021</strong> at{' '}
+              Since <strong className="font-bold text-white">2023</strong> at{' '}
               <strong className="font-bold text-white">Ateneo de Naga University</strong>, I&apos;ve been engineering{' '}
               <strong className="font-bold text-white">resilient web systems</strong>, offline-first clinical EMRs,
               and emergency blood logistics platforms backed by startup incubation and regional awards.
