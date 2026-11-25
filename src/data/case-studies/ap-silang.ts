@@ -3,7 +3,7 @@ import { CaseStudy } from './types';
 export const AP_SILANG_CASE_STUDY: CaseStudy = {
   id: 'apsilang',
   routeId: '2',
-  num: '02 / 02',
+  num: '02 / 03',
   name: 'ap-silang',
   tagline: 'Offline-First Municipal Maternal Healthcare & Clinical EMR Platform',
   category: 'Clinical EMR · Distributed Edge Computing',
@@ -142,6 +142,6 @@ export const AP_SILANG_CASE_STUDY: CaseStudy = {
       description: 'Offline-first municipal electronic medical record interface designed for midwives to log prenatal consultations and vitals without active internet connectivity.',
     },
   ],
-  nextStudyId: '1',
-  nextStudyName: 'UNITE (Blood Logistics Platform)',
+  nextStudyId: '3',
+  nextStudyName: 'RTC Clearance Express (Iriga Hall of Justice)',
 };

@@ -29,6 +29,8 @@ export async function generateStaticParams() {
     { id: 'unite' },
     { id: 'ap-silang' },
     { id: 'apsilang' },
+    { id: 'rtc-clearance' },
+    { id: 'rtc-clearance-express' },
   ];
 }
 

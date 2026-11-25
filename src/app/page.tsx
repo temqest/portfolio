@@ -14,6 +14,7 @@ import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
 import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
 import { V2ContactSection } from '@/components/v2/V2ContactSection';
 import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
+import { CursorGridCanvas } from '@/components/v2/CursorGridCanvas';
 import { TelemetryDrawer } from '@/components/easter-eggs/TelemetryDrawer';
 import { useLenisScroll } from '@/hooks/useLenisScroll';
 
@@ -23,14 +24,28 @@ function PortfolioContent() {
   const { scrollTo } = useLenisScroll();
 
   return (
-    <div className="min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-white text-[#0a122a]">
+    <div className="relative min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-white text-[#0a122a]">
+      {/* Global Interactive Square Grid Canvas across all light sections */}
+      <CursorGridCanvas
+        className="!fixed inset-0 z-0 pointer-events-none"
+        cellSize={70}
+        color="#0A122A"
+        radius={140}
+        gridOpacity={0.06}
+        fillOpacity={0}
+        clickPulse={true}
+        pulseSpeed={600}
+        holdTime={400}
+        fadeDuration={800}
+      />
+
       {/* Precision Difference-Blend Cursor */}
       <V2CustomCursor />
 
       {/* Hero Topbar (visible in hero, hides when scrolled past hero) */}
       <V2TopNav />
 
-      <main>
+      <main className="relative z-10">
         {/* 1. Hero Section */}
         <V2HeroSection />
 
@@ -63,7 +78,7 @@ function PortfolioContent() {
       </main>
 
       {/* Minimal Editorial Footer */}
-      <footer className="site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
+      <footer className="relative z-10 site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
         <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
           <div className="flex gap-6">

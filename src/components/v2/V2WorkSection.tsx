@@ -42,6 +42,17 @@ const FLAGSHIP_PROJECTS: FlagshipProject[] = [
     link: '/detail/2',
   },
   {
+    id: 'rtc-clearance',
+    num: '03',
+    name: 'RTC Clearance Express',
+    tag: 'PROTOTYPE ARCHITECT · IRIGA HALL OF JUSTICE',
+    desc: 'Digital court clearance and citizen self-registration system prototyped for the Regional Trial Court (Iriga City). Replaces manual paper-based logbooks with a 4-step online intake, instant QR pass lookup, priority staff queue, and live 8.5" × 13" certificate printing.',
+    badge: 'PROTOTYPE',
+    stack: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'QR Pass Engine'],
+    image: '/assets/projects/rtc-clearance-hero.png',
+    link: '/detail/3',
+  },
+  {
     id: 'klinikaos',
     num: '03',
     name: 'KlinikaOS',
@@ -61,7 +72,7 @@ export function V2WorkSection() {
   return (
     <section
       id="work"
-      className="relative w-full bg-white text-[#0a122a] py-24 md:py-32 px-6 md:px-12 lg:px-16"
+      className="relative w-full bg-transparent text-[#0a122a] py-24 md:py-32 px-6 md:px-12 lg:px-16"
     >
       {/* Anchor targets for smooth scrolling navigation */}
       <div id="projects" className="absolute -top-24 pointer-events-none" />

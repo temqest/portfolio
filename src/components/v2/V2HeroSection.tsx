@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { CursorGridCanvas } from './CursorGridCanvas';
 
 export function V2HeroSection() {
   const [timeStr, setTimeStr] = useState<string>('MNL --:--:--');
@@ -31,22 +30,9 @@ export function V2HeroSection() {
   return (
     <section
       id="front"
-      className="front relative min-h-[100svh] min-h-screen flex flex-col justify-end pb-32 sm:pb-36 md:pb-40 lg:pb-44 overflow-hidden bg-white text-[#0a122a]"
+      className="front relative min-h-[100svh] min-h-screen flex flex-col justify-end pb-32 sm:pb-36 md:pb-40 lg:pb-44 overflow-hidden bg-transparent text-[#0a122a]"
       data-theme="light"
     >
-      {/* Interactive Cursor Grid Canvas (Follows mouse, lights up squares, responds to clicks) */}
-      <CursorGridCanvas
-        cellSize={70}
-        color="#0A122A"
-        radius={140}
-        gridOpacity={0.06}
-        fillOpacity={0}
-        clickPulse={true}
-        pulseSpeed={600}
-        holdTime={400}
-        fadeDuration={800}
-      />
-
       {/* Atmospheric Cold Sky Aura */}
       <div className="front-aura" aria-hidden="true" />
 
