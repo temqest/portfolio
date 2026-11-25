@@ -13,8 +13,7 @@ export function V2ContactSection() {
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
 
   const email = 'patrickkurtv@gmail.com';
-  const accessKey =
-    process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '1bf4d55c-232e-46f1-8641-91532d3f4841';
+  const accessKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(email);
@@ -25,6 +24,11 @@ export function V2ContactSection() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
+
+    if (!accessKey) {
+      setErrorMessage('Contact form is temporarily unavailable. Please click the email button above.');
+      return;
+    }
 
     setIsSubmitting(true);
     setErrorMessage(null);
