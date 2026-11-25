@@ -26,13 +26,16 @@ const interTight = Inter_Tight({
 });
 
 export const metadata: Metadata = {
-  title: "Patrick — Founder & Systems Engineer",
+  title: {
+    default: "Patrick Kurt Villamer — Portfolio",
+    template: "%s | Patrick Kurt Villamer",
+  },
   description:
-    "Co-founder of UNITE (blood bank logistics startup) and architect of ap-silang (municipal maternal health platform). Engineering high-consequence systems that hold up.",
+    "Founder and systems engineer. Co-founder of UNITE (blood bank logistics startup) and lead architect of ap-silang (municipal maternal health platform). Engineering high-consequence systems that hold up.",
   keywords: [
+    "Patrick Kurt Villamer",
     "Systems Engineer",
     "Full-Stack Developer",
-    "Patrick",
     "Next.js",
     "React",
     "TypeScript",
@@ -40,7 +43,15 @@ export const metadata: Metadata = {
     "Healthcare Tech",
     "Philippines",
   ],
-  authors: [{ name: "Patrick" }],
+  authors: [{ name: "Patrick Kurt Villamer" }],
+  icons: {
+    icon: [
+      { url: "/logo.svg", type: "image/svg+xml" },
+      { url: "/icon.svg", type: "image/svg+xml" },
+    ],
+    shortcut: "/logo.svg",
+    apple: "/logo-squircle.svg",
+  },
 };
 
 export const viewport: Viewport = {
