@@ -8,9 +8,13 @@ export function V2ContactSection() {
   const [copied, setCopied] = useState(false);
   const [selectedRoleType, setSelectedRoleType] = useState('SWE Internship');
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({ name: '', email: '', company: '', message: '' });
 
   const email = 'patrickkurtv@gmail.com';
+  const accessKey =
+    process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY || '1bf4d55c-232e-46f1-8641-91532d3f4841';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(email);
@@ -18,10 +22,42 @@ export function V2ContactSection() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) return;
-    setSubmitted(true);
+    if (!formData.name || !formData.email || !formData.message) return;
+
+    setIsSubmitting(true);
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: accessKey,
+          name: formData.name,
+          email: formData.email,
+          company: formData.company || 'Not specified',
+          subject: `Portfolio Inquiry [${selectedRoleType}]: ${formData.name}`,
+          message: formData.message,
+          from_name: `${formData.name} via Portfolio`,
+        }),
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        setSubmitted(true);
+      } else {
+        setErrorMessage(result.message || 'Something went wrong. Please try again or email directly.');
+      }
+    } catch {
+      setErrorMessage('Network error. Please check your connection or email directly.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -244,13 +280,34 @@ export function V2ContactSection() {
                   />
                 </div>
 
+                {/* Error Banner */}
+                {errorMessage && (
+                  <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-xs font-mono text-rose-700">
+                    {errorMessage}
+                  </div>
+                )}
+
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-2xl bg-[#ff7a45] text-white font-medium text-sm hover:bg-[#ff6426] shadow-lg shadow-orange-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isSubmitting}
+                  className={`w-full py-4 rounded-2xl text-white font-medium text-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-orange-500/25 ${
+                    isSubmitting
+                      ? 'bg-slate-400 cursor-not-allowed'
+                      : 'bg-[#ff7a45] hover:bg-[#ff6426] active:scale-[0.99]'
+                  }`}
                 >
-                  <span>Send Message</span>
-                  <span>→</span>
+                  {isSubmitting ? (
+                    <>
+                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span>Sending message...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <span>→</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}
