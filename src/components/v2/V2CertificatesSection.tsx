@@ -9,6 +9,7 @@ interface Certificate {
   name: string;
   issuer: string;
   image: string;
+  pdfUrl?: string;
 }
 
 export function V2CertificatesSection() {
@@ -19,44 +20,34 @@ export function V2CertificatesSection() {
     {
       id: 1,
       num: '01',
-      name: 'Front-End Developer (React)',
-      issuer: 'HackerRank',
-      image: 'https://images.unsplash.com/photo-1523289333742-be1143f6b766?q=80&w=800&auto=format&fit=crop',
+      name: 'Cybersecurity Essentials (Junior Cybersecurity Analyst)',
+      issuer: 'Cisco Networking Academy · Ateneo de Naga University',
+      image: '/certifications/cisco-junior-cybersecurity-analyst.png',
+      pdfUrl: '/certifications/cisco-junior-cybersecurity-analyst.png',
     },
     {
       id: 2,
       num: '02',
-      name: 'Google Analytics',
-      issuer: 'Google',
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop',
+      name: 'IT Essentials: PC Hardware and Software',
+      issuer: 'Cisco Networking Academy · Ateneo de Naga University',
+      image: '/certifications/cisco-it-essentials.png',
+      pdfUrl: '/certifications/cisco-it-essentials.png',
     },
     {
       id: 3,
       num: '03',
-      name: 'HubSpot Digital Marketing',
-      issuer: 'HubSpot Academy',
-      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop',
+      name: 'Operating Systems Support',
+      issuer: 'Cisco Networking Academy',
+      image: '/certifications/cisco-operating-systems-support.png',
+      pdfUrl: '/certifications/OperatingSystemsSupportv120261125-20-shk4pq.pdf',
     },
     {
       id: 4,
       num: '04',
-      name: 'Make Advanced Automation',
-      issuer: 'Make',
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=800&auto=format&fit=crop',
-    },
-    {
-      id: 5,
-      num: '05',
-      name: 'FrontEnd Development',
-      issuer: 'freeCodeCamp',
-      image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?q=80&w=800&auto=format&fit=crop',
-    },
-    {
-      id: 6,
-      num: '06',
-      name: 'Make Basics',
-      issuer: 'Make',
-      image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=800&auto=format&fit=crop',
+      name: 'IT Customer Support Basics',
+      issuer: 'Cisco Networking Academy',
+      image: '/certifications/cisco-it-customer-support-basics.png',
+      pdfUrl: '/certifications/ITCustomerSupportBasicsv120261125-20-5zn7f1.pdf',
     },
   ];
 
@@ -77,7 +68,7 @@ export function V2CertificatesSection() {
             Always <em className="font-serif-italic text-blue-400 font-normal">learning.</em>
           </h2>
           <p className="text-sm md:text-base text-slate-300 font-light mt-2 max-w-2xl leading-relaxed">
-            Continuous industry upskilling across frontend architecture, digital automation, and analytical measurement.
+            Verified industry credentials spanning cybersecurity operations, operating systems support, hardware diagnostics, and IT essentials.
           </p>
         </div>
         <span className="text-xs font-mono text-slate-400 uppercase shrink-0">
@@ -137,37 +128,47 @@ export function V2CertificatesSection() {
       )}
 
       {/* ============================================================== */}
-      {/* LIGHTBOX MODAL (Dark Theme)                                    */}
+      {/* LIGHTBOX MODAL (Dark Theme - Full Uncropped View)               */}
       {/* ============================================================== */}
       {selected && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-6"
+          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-y-auto"
           onClick={() => setSelected(null)}
           role="dialog"
           aria-label={selected.name}
         >
           <div
-            className="max-w-2xl w-full bg-[#0a122a] rounded-3xl overflow-hidden shadow-2xl p-6 relative border border-white/20 text-white"
+            className="max-w-4xl w-full bg-[#0a122a] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl p-5 sm:p-7 relative border border-white/20 text-white my-auto max-h-[92vh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex flex-wrap justify-between items-center gap-3 mb-4 shrink-0 border-b border-white/10 pb-4">
               <div>
-                <span className="text-xs font-mono text-blue-400 uppercase">{selected.issuer}</span>
-                <h3 className="text-xl font-bold text-white">{selected.name}</h3>
+                <span className="text-xs font-mono text-blue-400 uppercase tracking-widest block mb-0.5">
+                  {selected.issuer}
+                </span>
+                <h3 className="text-lg sm:text-2xl font-bold text-white tracking-tight">
+                  {selected.name}
+                </h3>
               </div>
-              <button
-                type="button"
-                onClick={() => setSelected(null)}
-                className="px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer"
-              >
-                Close ✕
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSelected(null)}
+                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer"
+                >
+                  Close ✕
+                </button>
+              </div>
             </div>
-            <img
-              src={selected.image}
-              alt={selected.name}
-              className="w-full h-80 object-cover rounded-2xl border border-white/10"
-            />
+
+            {/* Full uncropped image container with contain sizing */}
+            <div className="w-full flex-1 overflow-auto rounded-xl sm:rounded-2xl border border-white/10 bg-black/40 p-2 sm:p-3 flex items-center justify-center">
+              <img
+                src={selected.image}
+                alt={selected.name}
+                className="w-full h-auto max-h-[70vh] object-contain rounded-lg shadow-lg"
+              />
+            </div>
           </div>
         </div>
       )}

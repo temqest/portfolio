@@ -13,6 +13,7 @@ export interface SecondaryProject {
   image: string;
   badge?: string;
   link?: string;
+  hidden?: boolean;
 }
 
 const SECONDARY_PROJECTS: SecondaryProject[] = [
@@ -25,6 +26,7 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=1000&auto=format&fit=crop',
     badge: 'LIVE',
     link: '/detail/1',
+    hidden: true,
   },
   {
     id: 'bmc-blood-portal',
@@ -35,6 +37,7 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     image: '/assets/projects/unite.png',
     badge: 'LIVE',
     link: '/detail/1',
+    hidden: true,
   },
   {
     id: 'naga-rapid-triage',
@@ -45,6 +48,7 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=1000&auto=format&fit=crop',
     badge: 'PILOT',
     link: '/detail/2',
+    hidden: true,
   },
   {
     id: 'ruralrx-sync',
@@ -55,6 +59,7 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     image: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=1000&auto=format&fit=crop',
     badge: 'LIVE',
     link: '/detail/2',
+    hidden: true,
   },
   {
     id: 'sparklab-platform',
@@ -65,8 +70,11 @@ const SECONDARY_PROJECTS: SecondaryProject[] = [
     image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1000&auto=format&fit=crop',
     badge: 'CHAMPION',
     link: '/detail/1',
+    hidden: true,
   },
 ];
+
+const VISIBLE_SECONDARY_PROJECTS = SECONDARY_PROJECTS.filter((project) => !project.hidden);
 
 export function WorkCarousel() {
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -101,6 +109,10 @@ export function WorkCarousel() {
       behavior: 'smooth',
     });
   };
+
+  if (VISIBLE_SECONDARY_PROJECTS.length === 0) {
+    return null;
+  }
 
   return (
     <div className="w-full pt-20 border-t border-black/10">
@@ -152,7 +164,7 @@ export function WorkCarousel() {
         className="flex gap-6 overflow-x-auto scrollbar-none pb-4 snap-x snap-mandatory cursor-grab active:cursor-grabbing"
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-        {SECONDARY_PROJECTS.map((item) => (
+        {VISIBLE_SECONDARY_PROJECTS.map((item) => (
           <Link
             key={item.id}
             href={item.link || `/detail/1`}

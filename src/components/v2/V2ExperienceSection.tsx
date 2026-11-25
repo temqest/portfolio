@@ -18,45 +18,46 @@ interface CareerMilestone {
 
 const MILESTONES: CareerMilestone[] = [
   {
-    id: 'research',
-    year: '2022',
-    role: 'Systems Developer & Technical Researcher',
-    company: 'Academic & Open-Source Research',
-    companyType: 'Applied Systems Engineering',
-    location: 'Philippines',
-  },
-  {
-    id: 'freelance',
-    year: '2023',
-    role: 'Freelance Full-Stack Engineer & Consultant',
-    company: 'Independent Client Engagements',
-    companyType: 'Small Business Tooling',
-    location: 'Remote · Regional Clients',
+    id: 'adnu-it',
+    year: '2021',
+    role: 'B.S. in Information Technology Candidate',
+    company: 'Ateneo de Naga University',
+    companyType: 'Undergraduate Program (4th Year)',
+    location: 'Naga City, Philippines',
   },
   {
     id: 'ap-silang',
     year: '2024',
     role: 'Lead Systems Architect & Full-Stack Developer',
     company: 'ap-silang (Municipal Maternal EMR)',
-    companyType: 'Municipal Healthcare Platform (Capstone Flagship)',
+    companyType: 'Capstone Flagship · Offline-First Sync',
     location: 'Rural Health Units & Health Stations',
     link: '/detail/2',
   },
   {
     id: 'unite-sparklab',
     year: '2025',
-    role: 'Startup Co-Founder & Lead Systems Architect',
+    role: 'Technical Co-Founder & Systems Lead',
     company: 'UNITE',
-    companyType: 'Regional Blood Logistics Network',
+    companyType: 'Health-Tech Startup · SparkLAB Champion',
     location: 'Naga City & Provincial Bicol',
+    link: '/detail/1',
+  },
+  {
+    id: 'unite-magis',
+    year: '2025',
+    role: 'Incubation Fellow & Founder',
+    company: 'ADNU MAGIS TBI',
+    companyType: 'Venture Incubation & DICT PSC 3rd Runner Up',
+    location: 'Ateneo de Naga University',
     link: '/detail/1',
   },
   {
     id: 'unite-bmc',
     year: '2026',
     role: 'Lead Systems Architect & Co-Founder',
-    company: 'UNITE & Bicol Medical Center (BMC)',
-    companyType: 'Institutional Clinical Transfusion Partnership',
+    company: 'UNITE & Regional Transfusion Network',
+    companyType: 'Clinical Transfusion Workflow Validation',
     location: 'Camarines Sur & Camarines Norte',
     link: '/detail/1',
   },
@@ -223,9 +224,9 @@ export function V2ExperienceSection() {
         <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-slate-400 border-b border-white/10 pb-4 mb-10">
           <div className="flex items-center gap-3">
             <span className="text-blue-400">(04)</span>
-            <span>EXPERIENCE</span>
+            <span>EXPERIENCE &amp; MILESTONES</span>
           </div>
-          <span className="text-slate-500">Since 2022</span>
+          <span className="text-slate-500">Since 2021</span>
         </div>
 
         {/* Entrance Two-Column: Statement on Left + 3D Wave Mesh Canvas on Right */}
@@ -233,10 +234,10 @@ export function V2ExperienceSection() {
           {/* Left Column: Big Editorial Thesis Statement */}
           <div className="lg:col-span-7">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.14] mb-6">
-              Since <strong className="font-bold text-white">2022</strong> I&apos;ve been engineering{' '}
-              <strong className="font-bold text-white">resilient web systems</strong>, clinical healthcare
-              platforms, and offline-first architectures for institutions and startups across the
-              Philippines and beyond.
+              Since <strong className="font-bold text-white">2021</strong> at{' '}
+              <strong className="font-bold text-white">Ateneo de Naga University</strong>, I&apos;ve been engineering{' '}
+              <strong className="font-bold text-white">resilient web systems</strong>, offline-first clinical EMRs,
+              and emergency blood logistics platforms backed by startup incubation and regional awards.
             </h2>
 
             {/* Direct Action Links */}

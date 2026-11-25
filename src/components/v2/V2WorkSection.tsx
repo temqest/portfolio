@@ -15,6 +15,7 @@ interface FlagshipProject {
   stack: string[];
   image: string;
   link: string;
+  hidden?: boolean;
 }
 
 const FLAGSHIP_PROJECTS: FlagshipProject[] = [
@@ -50,8 +51,11 @@ const FLAGSHIP_PROJECTS: FlagshipProject[] = [
     stack: ['Next.js 16', 'WebRTC', 'Node.js', 'PostgreSQL', 'Redis'],
     image: 'https://images.unsplash.com/photo-1505751172876-fa1923c5c528?q=80&w=1600&auto=format&fit=crop',
     link: '/detail/1',
+    hidden: true,
   },
 ];
+
+const VISIBLE_FLAGSHIP_PROJECTS = FLAGSHIP_PROJECTS.filter((project) => !project.hidden);
 
 export function V2WorkSection() {
   return (
@@ -89,10 +93,10 @@ export function V2WorkSection() {
         </div>
 
         {/* ============================================================== */}
-        {/* PART A: STICKY STACKING FLAGSHIPS (3 Cards)                    */}
+        {/* PART A: STICKY STACKING FLAGSHIPS                              */}
         {/* ============================================================== */}
         <div className="relative space-y-24 md:space-y-36 pb-20">
-          {FLAGSHIP_PROJECTS.map((project, idx) => {
+          {VISIBLE_FLAGSHIP_PROJECTS.map((project, idx) => {
             // Sequential sticky offsets so cards stack cleanly under the topbar
             const stickyTop = 100 + idx * 28;
 
