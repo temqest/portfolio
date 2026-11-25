@@ -158,72 +158,129 @@ export function V2AchievementsSection() {
   const [selected, setSelected] = useState<Achievement | null>(null);
 
   return (
-    <section id="achievements" className="py-24 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a] relative">
+    <section id="achievements" className="py-12 md:py-24 px-5 sm:px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a] relative">
       <div id="milestones" className="relative -top-24" />
 
       {/* ============================================================== */}
       {/* SECTION HEADER (Clean Editorial Light Theme)                   */}
       {/* ============================================================== */}
-      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-3 md:mb-4">
         <span>(05) — ACHIEVEMENTS &amp; MILESTONES</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14 border-b border-black/10 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 md:gap-4 mb-8 md:mb-14 border-b border-black/10 pb-6 md:pb-8">
         <div>
           <h2 className="text-3xl md:text-5xl font-light tracking-tight text-[#0a122a] leading-tight">
             Validated by <em className="font-serif-italic text-blue-600 font-normal">institutions</em> and competition.
           </h2>
           <p className="text-sm md:text-base text-slate-600 font-light mt-2 max-w-2xl leading-relaxed">
-            Real startup traction, clinical partnerships, and hackathon championships backing UNITE. Hover to preview proof; click to view details.
+            Real startup traction, clinical partnerships, and hackathon championships backing UNITE.{' '}
+            <span className="hidden md:inline">Hover to preview proof; click to view details.</span>
+            <span className="md:hidden">Swipe cards and tap to inspect verified proof.</span>
           </p>
         </div>
         <div className="text-xs font-mono text-slate-500 uppercase shrink-0 flex items-center gap-2">
-          <span>{ACHIEVEMENTS.length} Verified Milestones · hover to preview</span>
+          <span>
+            {ACHIEVEMENTS.length} Verified Milestones
+            <span className="hidden md:inline"> · hover to preview</span>
+            <span className="sm:hidden"> · swipe →</span>
+          </span>
         </div>
       </div>
 
       {/* ============================================================== */}
-      {/* TABLE FORMAT (Clean Editorial Lines, Matching Certifications)  */}
+      {/* MOBILE (< 640px): HORIZONTAL SNAP-SCROLL PROOF CARDS           */}
       {/* ============================================================== */}
-      <div className="divide-y divide-black/10 border-t border-b border-black/10">
+      <div className="sm:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 no-scrollbar -mx-5 px-6 pb-2">
         {ACHIEVEMENTS.map((item) => (
           <button
             key={item.id}
             type="button"
-            className="w-full py-8 text-left grid grid-cols-12 items-center gap-4 group transition-all duration-300 hover:px-6 hover:bg-slate-50 relative cursor-pointer"
+            onClick={() => setSelected(item)}
+            className="snap-start shrink-0 w-[80vw] text-left rounded-2xl border border-black/10 bg-white overflow-hidden shadow-sm active:scale-[0.99] transition-transform cursor-pointer flex flex-col"
+          >
+            <div className="relative aspect-[16/9] w-full bg-slate-100 border-b border-black/10 overflow-hidden">
+              <img
+                src={item.primaryImage}
+                alt={item.title}
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).src = item.fallbackSvg;
+                }}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full bg-white/95 text-[10px] font-mono border border-black/10">
+                <span className={`${item.honorColor} font-semibold`}>{item.honor}</span>
+              </div>
+              <div className="absolute top-2.5 right-2.5 px-2 py-1 rounded-full bg-black/75 text-[10px] font-mono text-white">
+                {item.year}
+              </div>
+            </div>
+            <div className="p-4 flex-1 flex flex-col justify-between gap-2">
+              <div>
+                <div className="text-[11px] font-mono text-slate-400 mb-0.5">{item.num}</div>
+                <div className="text-base font-semibold text-[#0a122a] leading-snug line-clamp-2">
+                  {item.title}
+                </div>
+                <div className="text-xs font-mono text-slate-500 mt-1 line-clamp-1">
+                  {item.organization}
+                </div>
+              </div>
+              <span className="inline-flex items-center min-h-[40px] text-xs font-mono text-blue-600 font-medium">
+                Inspect proof ↗
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* ============================================================== */}
+      {/* DESKTOP / TABLET (sm+): EDITORIAL TABLE ROWS                   */}
+      {/* ============================================================== */}
+      <div className="hidden sm:block divide-y divide-black/10 border-t border-b border-black/10">
+        {ACHIEVEMENTS.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            className="w-full py-5 sm:py-8 px-1 sm:px-2 text-left flex items-center justify-between gap-3 sm:grid sm:grid-cols-12 sm:gap-4 group transition-colors duration-200 hover:bg-slate-50 active:bg-slate-100 relative cursor-pointer"
             onMouseEnter={() => setHovered(item)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setSelected(item)}
           >
-            {/* Column 1: Number */}
-            <span className="col-span-2 sm:col-span-1 font-mono text-slate-400 text-sm">
+            {/* Column 1: Number (Desktop) */}
+            <span className="hidden sm:block sm:col-span-1 font-mono text-slate-400 text-sm">
               {item.num}
             </span>
 
             {/* Column 2: Title & Editorial Subtitle */}
-            <div className="col-span-8 sm:col-span-8 md:col-span-8 min-w-0 pr-4">
-              <div className="text-xl sm:text-2xl md:text-3xl font-normal tracking-tight text-[#0a122a] group-hover:text-blue-600 transition-colors truncate">
+            <div className="flex-1 sm:col-span-8 min-w-0 pr-2 sm:pr-4">
+              <div className="flex items-center gap-2 mb-1 sm:hidden font-mono text-[11px] text-slate-400">
+                <span>{item.num}</span>
+                <span>·</span>
+                <span>{item.year}</span>
+              </div>
+              <div className="text-lg sm:text-2xl md:text-3xl font-normal tracking-tight text-[#0a122a] group-hover:text-blue-600 transition-colors sm:truncate">
                 {item.title}
               </div>
-              <div className="flex items-center gap-2 mt-1.5 text-xs font-mono">
-                <span className={`${item.honorColor} font-medium`}>
+              <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-2 gap-y-0.5 mt-1.5 text-xs font-mono">
+                <span className={`${item.honorColor} font-medium shrink-0`}>
                   {item.honor}
                 </span>
-                <span className="text-slate-300">·</span>
-                <span className="text-slate-500 truncate">
+                <span className="text-slate-300 hidden sm:inline">·</span>
+                <span className="text-slate-500 sm:truncate">
                   {item.organization}
                 </span>
               </div>
             </div>
 
             {/* Column 3: Year */}
-            <div className="hidden sm:block sm:col-span-2 md:col-span-2 text-right font-mono text-xs text-slate-400">
+            <div className="hidden sm:block sm:col-span-2 text-right font-mono text-xs text-slate-400">
               {item.year}
             </div>
 
-            {/* Column 4: Arrow Action Button */}
-            <span className="col-span-2 sm:col-span-1 text-right flex justify-end">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-black/10 group-hover:bg-[#0a122a] group-hover:text-white group-hover:rotate-45 transition-all text-xs text-[#0a122a]">
+            {/* Column 4: Arrow Action Button (>= 44x44px) */}
+            <span className="shrink-0 sm:col-span-1 text-right flex justify-end">
+              <span className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-black/10 group-hover:bg-[#0a122a] group-hover:text-white md:group-hover:rotate-45 transition-all text-xs text-[#0a122a]">
                 ↗
               </span>
             </span>
@@ -270,22 +327,23 @@ export function V2AchievementsSection() {
       )}
 
       {/* ============================================================== */}
-      {/* LIGHTBOX MODAL (Light Theme, Matching Certifications)          */}
+      {/* LIGHTBOX MODAL (Scrollable Bottom Sheet on Mobile)             */}
       {/* ============================================================== */}
       {selected && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 sm:p-6"
+          className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-end sm:items-center justify-center p-2 sm:p-6"
           onClick={() => setSelected(null)}
           role="dialog"
+          aria-modal="true"
           aria-label={selected.title}
         >
           <div
-            className="max-w-2xl w-full bg-white rounded-3xl overflow-hidden shadow-2xl p-6 sm:p-8 relative border border-white/20 text-[#0a122a]"
+            className="max-w-2xl w-full max-h-[90dvh] overflow-y-auto bg-white rounded-3xl shadow-2xl p-5 sm:p-8 relative border border-white/20 text-[#0a122a]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
             <div className="flex justify-between items-start gap-4 mb-4">
-              <div>
+              <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-1.5 font-mono text-xs">
                   <span className={`${selected.honorColor} font-semibold`}>
                     {selected.honor}
@@ -299,7 +357,7 @@ export function V2AchievementsSection() {
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-mono text-slate-700 transition-colors cursor-pointer"
+                className="min-h-[44px] min-w-[44px] px-3.5 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-mono text-slate-700 transition-colors cursor-pointer shrink-0 inline-flex items-center justify-center"
               >
                 Close ✕
               </button>

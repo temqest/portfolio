@@ -326,14 +326,21 @@ export function CursorGridCanvas({
     resize();
     wakeLoop();
 
-    window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (isFinePointer && !prefersReducedMotion) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true });
+      window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    }
 
     return () => {
       cancelAnimationFrame(animId);
       ro.disconnect();
-      window.removeEventListener('pointermove', onPointerMove);
-      window.removeEventListener('pointerdown', onPointerDown);
+      if (isFinePointer && !prefersReducedMotion) {
+        window.removeEventListener('pointermove', onPointerMove);
+        window.removeEventListener('pointerdown', onPointerDown);
+      }
     };
   }, []);
 

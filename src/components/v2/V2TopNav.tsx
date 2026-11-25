@@ -2,23 +2,28 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { FileText, ArrowUpRight, Download } from 'lucide-react';
+import { FileText, ArrowUpRight, Download, Menu, X } from 'lucide-react';
+
+const MOBILE_SECTIONS = [
+  { id: 'about', label: 'About' },
+  { id: 'work', label: 'Projects' },
+  { id: 'skills', label: 'Skills' },
+  { id: 'experience', label: 'Experience' },
+  { id: 'achievements', label: 'Milestones' },
+  { id: 'certificates', label: 'Certifications' },
+  { id: 'contact', label: 'Contact' },
+];
 
 export function V2TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const [pastHero, setPastHero] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const heroEl = document.getElementById('front');
 
     const handleScroll = () => {
       setScrolled(window.scrollY > 40);
-      if (heroEl) {
-        const rect = heroEl.getBoundingClientRect();
-        setPastHero(rect.bottom <= 80);
-      } else {
-        setPastHero(window.scrollY > window.innerHeight * 0.75);
-      }
     };
 
     handleScroll();
@@ -27,7 +32,9 @@ export function V2TopNav() {
     if (heroEl && typeof IntersectionObserver !== 'undefined') {
       observer = new IntersectionObserver(
         ([entry]) => {
-          setPastHero(!entry.isIntersecting);
+          const isPast = !entry.isIntersecting;
+          setPastHero(isPast);
+          if (isPast) setMobileMenuOpen(false);
         },
         {
           root: null,
@@ -46,6 +53,7 @@ export function V2TopNav() {
   }, []);
 
   const scrollTo = (id: string) => {
+    setMobileMenuOpen(false);
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
@@ -64,19 +72,20 @@ export function V2TopNav() {
         <Link
           href="/#front"
           tabIndex={pastHero ? -1 : 0}
-          className="brand text-[#0a122a] hover:opacity-85 transition-opacity"
+          className="brand inline-flex items-center min-h-[44px] text-[#0a122a] hover:opacity-85 transition-opacity"
         >
           PATRICK
         </Link>
 
-        <nav aria-label="Sections">
-          <ul className="flex items-center gap-2.5 sm:gap-5 md:gap-6 lg:gap-8 list-none m-0 p-0">
+        {/* Desktop & Tablet Inline Nav */}
+        <nav aria-label="Sections" className="hidden md:block">
+          <ul className="flex items-center gap-5 lg:gap-7 list-none m-0 p-0">
             <li>
               <button
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('about')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 About
               </button>
@@ -86,37 +95,37 @@ export function V2TopNav() {
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('work')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 Projects
               </button>
             </li>
-            <li className="hidden md:inline-block">
+            <li>
               <button
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('skills')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 Skills
               </button>
             </li>
-            <li className="hidden sm:inline-block">
+            <li>
               <button
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('experience')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 Experience
               </button>
             </li>
-            <li className="hidden sm:inline-block">
+            <li>
               <button
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('achievements')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 Milestones
               </button>
@@ -126,7 +135,7 @@ export function V2TopNav() {
                 type="button"
                 tabIndex={pastHero ? -1 : 0}
                 onClick={() => scrollTo('contact')}
-                className="mono hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[11px] sm:text-[12px] tracking-[0.14em] uppercase"
+                className="mono inline-flex items-center min-h-[44px] px-1 hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[12px] tracking-[0.14em] uppercase"
               >
                 Contact
               </button>
@@ -138,19 +147,19 @@ export function V2TopNav() {
                   target="_blank"
                   rel="noopener noreferrer"
                   tabIndex={pastHero ? -1 : 0}
-                  className="mono inline-flex items-center gap-1.5 pl-3 pr-2 py-1 text-[11px] tracking-[0.12em] uppercase text-white hover:text-blue-300 transition-colors"
+                  className="mono inline-flex items-center gap-1.5 pl-3.5 pr-2.5 min-h-[44px] text-[11px] tracking-[0.12em] uppercase text-white hover:text-blue-300 transition-colors"
                   title="View CV in new tab"
                 >
                   <FileText className="w-3.5 h-3.5 text-slate-300" />
                   <span className="font-medium">CV</span>
                   <ArrowUpRight className="w-3.5 h-3.5 text-slate-400" />
                 </a>
-                <span className="w-px h-3.5 bg-white/20 -ml-0.5" aria-hidden="true" />
+                <span className="w-px h-4 bg-white/20" aria-hidden="true" />
                 <a
                   href="/cv.pdf"
                   download="Patrick_CV.pdf"
                   tabIndex={pastHero ? -1 : 0}
-                  className="p-1 pr-2.5 text-slate-300 hover:text-white transition-colors"
+                  className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] text-slate-300 hover:text-white transition-colors"
                   title="Download CV (PDF)"
                   aria-label="Download CV PDF"
                 >
@@ -160,7 +169,61 @@ export function V2TopNav() {
             </li>
           </ul>
         </nav>
+
+        {/* Mobile Compact Actions (>=44x44px touch targets, >=8px gap) */}
+        <div className="flex md:hidden items-center gap-2">
+          <a
+            href="/cv.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            tabIndex={pastHero ? -1 : 0}
+            className="mono inline-flex items-center gap-1.5 px-3.5 min-h-[44px] rounded-full bg-[#0a122a] text-white text-[11px] tracking-[0.12em] uppercase shadow-xs"
+            title="View CV in new tab"
+          >
+            <FileText className="w-3.5 h-3.5 text-slate-300" />
+            <span className="font-medium">CV</span>
+          </a>
+          <button
+            type="button"
+            tabIndex={pastHero ? -1 : 0}
+            onClick={() => setMobileMenuOpen((prev) => !prev)}
+            aria-expanded={mobileMenuOpen}
+            aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+            className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-black/15 bg-white/85 backdrop-blur-md text-[#0a122a] cursor-pointer"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
+
+      {/* Mobile Dropdown Navigation Sheet */}
+      {mobileMenuOpen && !pastHero && (
+        <div className="md:hidden wrap mt-2">
+          <nav
+            aria-label="Mobile Sections"
+            className="rounded-2xl border border-black/10 bg-white/95 backdrop-blur-xl shadow-xl p-2 grid grid-cols-2 gap-2"
+          >
+            {MOBILE_SECTIONS.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => scrollTo(item.id)}
+                className="mono min-h-[44px] px-3 rounded-xl text-left text-[11px] tracking-[0.12em] uppercase text-[#0a122a] hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer"
+              >
+                {item.label}
+              </button>
+            ))}
+            <a
+              href="/cv.pdf"
+              download="Patrick_CV.pdf"
+              className="mono min-h-[44px] px-3 rounded-xl flex items-center gap-2 text-[11px] tracking-[0.12em] uppercase text-blue-700 bg-blue-50/80 hover:bg-blue-100 transition-colors"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Save CV</span>
+            </a>
+          </nav>
+        </div>
+      )}
     </header>
   );
 }

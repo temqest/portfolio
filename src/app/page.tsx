@@ -1,52 +1,45 @@
-'use client';
-
-import React, { useState, Suspense } from 'react';
+import React from 'react';
+import dynamic from 'next/dynamic';
 import { V2TopNav } from '@/components/v2/V2TopNav';
-import { V2BottomNav } from '@/components/v2/V2BottomNav';
 import { V2HeroSection } from '@/components/v2/V2HeroSection';
 import { V2AboutSection } from '@/components/v2/V2AboutSection';
-import { V2WorkSection } from '@/components/v2/V2WorkSection';
-import { V2AchievementsSection } from '@/components/v2/V2AchievementsSection';
-import { V2ToolkitSection } from '@/components/v2/V2ToolkitSection';
-import { V2ExperienceSection } from '@/components/v2/V2ExperienceSection';
-import { V2CertificatesSection } from '@/components/v2/V2CertificatesSection';
-import { V2TechStackSection } from '@/components/v2/V2TechStackSection';
-import { V2AvailabilitySection } from '@/components/v2/V2AvailabilitySection';
-import { V2ContactSection } from '@/components/v2/V2ContactSection';
-import { V2CustomCursor } from '@/components/v2/V2CustomCursor';
-import { CursorGridCanvas } from '@/components/v2/CursorGridCanvas';
-import { TelemetryDrawer } from '@/components/easter-eggs/TelemetryDrawer';
-import { useLenisScroll } from '@/hooks/useLenisScroll';
+import { ClientEnhancements } from '@/components/v2/ClientEnhancements';
+import { MobileViewModeProvider } from '@/components/v2/MobileViewModeContext';
 
-function PortfolioContent() {
-  const [isTelemetryOpen, setIsTelemetryOpen] = useState(false);
+const V2WorkSection = dynamic(() =>
+  import('@/components/v2/V2WorkSection').then((m) => m.V2WorkSection)
+);
+const V2ToolkitSection = dynamic(() =>
+  import('@/components/v2/V2ToolkitSection').then((m) => m.V2ToolkitSection)
+);
+const V2ExperienceSection = dynamic(() =>
+  import('@/components/v2/V2ExperienceSection').then((m) => m.V2ExperienceSection)
+);
+const V2AchievementsSection = dynamic(() =>
+  import('@/components/v2/V2AchievementsSection').then((m) => m.V2AchievementsSection)
+);
+const V2CertificatesSection = dynamic(() =>
+  import('@/components/v2/V2CertificatesSection').then((m) => m.V2CertificatesSection)
+);
+const V2TechStackSection = dynamic(() =>
+  import('@/components/v2/V2TechStackSection').then((m) => m.V2TechStackSection)
+);
+const V2AvailabilitySection = dynamic(() =>
+  import('@/components/v2/V2AvailabilitySection').then((m) => m.V2AvailabilitySection)
+);
+const V2ContactSection = dynamic(() =>
+  import('@/components/v2/V2ContactSection').then((m) => m.V2ContactSection)
+);
 
-  const { scrollTo } = useLenisScroll();
-
+export default function PortfolioPage() {
   return (
+    <MobileViewModeProvider>
     <div className="relative min-h-screen font-sans selection:bg-blue-100 selection:text-blue-900 bg-white text-[#0a122a]">
-      {/* Global Interactive Square Grid Canvas across all light sections */}
-      <CursorGridCanvas
-        className="!fixed inset-0 z-0 pointer-events-none"
-        cellSize={70}
-        color="#0A122A"
-        radius={140}
-        gridOpacity={0.06}
-        fillOpacity={0}
-        clickPulse={true}
-        pulseSpeed={600}
-        holdTime={400}
-        fadeDuration={800}
-      />
-
-      {/* Precision Difference-Blend Cursor */}
-      <V2CustomCursor />
-
       {/* Hero Topbar (visible in hero, hides when scrolled past hero) */}
       <V2TopNav />
 
       <main className="relative z-10">
-        {/* 1. Hero Section */}
+        {/* 1. Hero Section (Immediate SSR HTML for LCP) */}
         <V2HeroSection />
 
         {/* 2. About Me */}
@@ -78,15 +71,15 @@ function PortfolioContent() {
       </main>
 
       {/* Minimal Editorial Footer */}
-      <footer className="relative z-10 site-footer border-t border-[rgba(10,18,42,0.1)] py-12 px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-28">
+      <footer className="relative z-10 site-footer border-t border-[rgba(10,18,42,0.1)] pt-10 px-4 sm:px-6 md:px-12 text-center text-xs font-mono text-slate-500 pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
         <div className="wrap flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>© 2026 Patrick · Built with Next.js 16 &amp; Tailwind CSS</div>
-          <div className="flex gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <a
               href="https://github.com/temqest"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-black"
+              className="inline-flex items-center min-h-[44px] px-2.5 hover:text-black transition-colors"
             >
               GitHub
             </a>
@@ -94,7 +87,7 @@ function PortfolioContent() {
               href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-black"
+              className="inline-flex items-center min-h-[44px] px-2.5 hover:text-black transition-colors"
             >
               LinkedIn
             </a>
@@ -102,39 +95,23 @@ function PortfolioContent() {
               href="https://www.facebook.com/patrick.kurt.127"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-black"
+              className="inline-flex items-center min-h-[44px] px-2.5 hover:text-black transition-colors"
             >
               Facebook
             </a>
-            <a href="#front" className="hover:text-blue-600">
+            <a
+              href="#front"
+              className="inline-flex items-center min-h-[44px] px-2.5 hover:text-blue-600 transition-colors"
+            >
               Back to top ↑
             </a>
           </div>
         </div>
       </footer>
 
-      {/* Floating Bottom Navbar (reveals when scrolled past hero) */}
-      <V2BottomNav onScrollToTop={() => scrollTo(0)} />
-
-      {/* Developer Architecture & Performance Telemetry Drawer */}
-      <TelemetryDrawer
-        isOpen={isTelemetryOpen}
-        onClose={() => setIsTelemetryOpen(false)}
-      />
+      {/* Client-only interactive enhancements (Grid Canvas, Custom Cursor, Bottom Dock, Lenis) */}
+      <ClientEnhancements />
     </div>
-  );
-}
-
-export default function PortfolioPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-white text-[#0a122a] flex items-center justify-center font-mono text-xs">
-          Loading portfolio...
-        </div>
-      }
-    >
-      <PortfolioContent />
-    </Suspense>
+    </MobileViewModeProvider>
   );
 }

@@ -72,6 +72,8 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
   useLenisScroll();
 
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [readingMode, setReadingMode] = useState<'brief' | 'story'>('brief');
+  const [selectedTech, setSelectedTech] = useState<string | null>(null);
   const [visibleBuiltCount, setVisibleBuiltCount] = useState<number>(1);
   const [scrolled, setScrolled] = useState<boolean>(false);
   const [pastHero, setPastHero] = useState<boolean>(false);
@@ -133,25 +135,28 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         setPastHero(scrollY > windowHeight * 0.75);
       }
 
-      // Track Approach steps
-      stepsRef.current.forEach((el, index) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= windowHeight * 0.45 && rect.bottom >= windowHeight * 0.15) {
-          setActiveStep(index);
-        }
-      });
+      // Track Approach steps & deliverables on desktop only (mobile uses tap-tabs)
+      if (window.innerWidth >= 1024) {
+        stepsRef.current.forEach((el, index) => {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= windowHeight * 0.45 && rect.bottom >= windowHeight * 0.15) {
+            setActiveStep(index);
+          }
+        });
 
-      // Track What We Built deliverables smoothly
-      let reached = 0;
-      builtItemsRef.current.forEach((el, index) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= windowHeight * 0.72) {
-          reached = index + 1;
-        }
-      });
-      setVisibleBuiltCount(Math.max(1, reached));
+        let reached = 0;
+        builtItemsRef.current.forEach((el, index) => {
+          if (!el) return;
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= windowHeight * 0.72) {
+            reached = index + 1;
+          }
+        });
+        setVisibleBuiltCount(Math.max(1, reached));
+      } else {
+        setVisibleBuiltCount(study.whatWeBuilt.length);
+      }
     };
 
     let observer: IntersectionObserver | null = null;
@@ -183,7 +188,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
   );
 
   return (
-    <div className="min-h-screen bg-[#fafbfc] text-[#0a122a] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-clip">
+    <div className="min-h-screen bg-[#fafbfc] text-[#0a122a] selection:bg-blue-100 selection:text-blue-900 font-sans relative overflow-x-clip pb-16 sm:pb-20">
       {/* Precision Difference-Blend Cursor (Identical to Base Page) */}
       <V2CustomCursor />
 
@@ -225,7 +230,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
           <div className="flex items-center gap-3 sm:gap-4 min-w-0">
             <Link
               href="/#front"
-              className="brand text-[#0a122a] hover:opacity-80 transition-opacity shrink-0"
+              className="brand inline-flex items-center min-h-[44px] text-[#0a122a] hover:opacity-80 transition-opacity shrink-0"
             >
               PATRICK
             </Link>
@@ -260,11 +265,11 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
             ))}
           </nav>
 
-          {/* Right: Return to Work & Signature Dark Next Pill */}
-          <div className="flex items-center gap-3 sm:gap-5 shrink-0">
+          {/* Right: Return to Work & Signature Dark Next Pill (>= 44px) */}
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <Link
               href="/#work"
-              className="mono inline-flex items-center gap-1.5 text-[11px] tracking-[0.14em] uppercase text-slate-600 hover:text-[#0a122a] transition-colors group"
+              className="mono inline-flex items-center gap-1.5 min-h-[44px] px-2 text-[11px] tracking-[0.14em] uppercase text-slate-600 hover:text-[#0a122a] transition-colors group"
             >
               <ArrowLeft className="w-3.5 h-3.5 text-blue-600 group-hover:-translate-x-0.5 transition-transform" />
               <span>Work</span>
@@ -272,7 +277,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
 
             <Link
               href={`/detail/${study.nextStudyId}`}
-              className="mono inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-slate-900/15 bg-[#0a122a] hover:bg-blue-600 text-white text-[11px] tracking-[0.12em] uppercase transition-colors shadow-xs group"
+              className="mono inline-flex items-center gap-1.5 px-4 min-h-[44px] rounded-full border border-slate-900/15 bg-[#0a122a] hover:bg-blue-600 text-white text-[11px] tracking-[0.12em] uppercase transition-colors shadow-xs group"
               title={`Next: ${study.nextStudyName}`}
             >
               <span className="hidden sm:inline">Next Case</span>
@@ -291,17 +296,48 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
       </header>
 
       {/* Main Content Wrap */}
-      <main className="relative z-10 pt-20 sm:pt-24 pb-24 max-w-[1320px] mx-auto px-4 sm:px-6 md:px-10 lg:px-12 space-y-20 sm:space-y-28">
+      <main className="relative z-10 pt-20 sm:pt-24 pb-12 sm:pb-20 max-w-[1320px] mx-auto px-5 sm:px-6 md:px-10 lg:px-12 space-y-16 sm:space-y-24">
         {/* ============================================================== */}
         {/* 2. HERO SECTION (Title, Summary, Tech & Scope)                 */}
         {/* ============================================================== */}
-        <section id="hero" className="min-h-[calc(100svh-6rem)] flex flex-col justify-center gap-8 sm:gap-10 py-6">
-          <div className="space-y-5 sm:space-y-6">
-            {/* Case Study Eyebrow */}
-            <div className="flex items-center gap-3 text-[11px] font-mono uppercase tracking-[0.18em] text-slate-500">
-              <span className="text-blue-600 font-semibold">{study.num}</span>
-              <span className="text-slate-300">·</span>
-              <span>{study.category}</span>
+        <section id="hero" className="lg:min-h-[calc(100svh-6rem)] flex flex-col justify-center gap-6 sm:gap-10 py-4 sm:py-6">
+          <div className="space-y-4 sm:space-y-6">
+            {/* Case Study Eyebrow + Static/Story Mode Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2.5 text-[11px] font-mono uppercase tracking-[0.16em] text-slate-500">
+                <span className="text-blue-600 font-semibold whitespace-nowrap">{study.num}</span>
+                <span className="text-slate-300">·</span>
+                <span className="truncate max-w-[230px] sm:max-w-none">{study.category}</span>
+              </div>
+
+              <div
+                role="group"
+                aria-label="Case study reading mode"
+                className="inline-flex items-center rounded-full bg-slate-100 p-0.5 border border-slate-200"
+              >
+                <button
+                  type="button"
+                  onClick={() => setReadingMode('brief')}
+                  className={`min-h-[38px] px-3 rounded-full font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+                    readingMode === 'brief'
+                      ? 'bg-[#0a122a] text-white font-semibold'
+                      : 'text-slate-600 hover:text-[#0a122a]'
+                  }`}
+                >
+                  Brief (Static)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setReadingMode('story')}
+                  className={`min-h-[38px] px-3 rounded-full font-mono text-[10px] uppercase tracking-wider transition-colors cursor-pointer ${
+                    readingMode === 'story'
+                      ? 'bg-blue-600 text-white font-semibold'
+                      : 'text-slate-600 hover:text-[#0a122a]'
+                  }`}
+                >
+                  Full Story
+                </button>
+              </div>
             </div>
 
             {/* Hero Title & Tagline */}
@@ -319,24 +355,35 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
               {study.executiveSummary}
             </p>
 
-            {/* Technology Icons Stack (Icons Only, Tooltip on Hover) */}
+            {/* Technology Icons Stack (Tap or Hover to Inspect) */}
             <div className="pt-1">
-              <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400 mb-2.5 font-semibold">
-                Engineered With
-              </p>
+              <div className="flex items-center justify-between gap-2 mb-2.5">
+                <p className="text-[11px] font-mono uppercase tracking-[0.2em] text-slate-400 font-semibold">
+                  Engineered With
+                </p>
+                {selectedTech && (
+                  <span className="text-[11px] font-mono text-blue-600 font-medium">
+                    {selectedTech}
+                  </span>
+                )}
+              </div>
               <div className="flex flex-wrap items-center gap-2.5">
                 {study.meta.stack.map((tech) => (
-                  <div
+                  <button
+                    type="button"
                     key={tech}
-                    className="group relative flex items-center justify-center w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white border border-slate-200 shadow-2xs hover:border-blue-400 hover:shadow-md hover:scale-105 transition-all p-2 cursor-default"
+                    onClick={() => setSelectedTech((prev) => (prev === tech ? null : tech))}
+                    className={`group relative flex items-center justify-center w-11 h-11 rounded-xl bg-white border shadow-2xs hover:border-blue-400 hover:shadow-md transition-all p-2 cursor-pointer ${
+                      selectedTech === tech ? 'border-blue-600 ring-2 ring-blue-500/20' : 'border-slate-200'
+                    }`}
                     title={tech}
+                    aria-label={tech}
                   >
                     {getTechIcon(tech)}
-                    {/* Tooltip on hover */}
-                    <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-slate-900 text-[10px] font-mono text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-sm">
+                    <span className="hidden sm:block pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded bg-slate-900 text-[10px] font-mono text-white whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-sm">
                       {tech}
                     </span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
@@ -385,10 +432,10 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 4. THE CHALLENGE (Clean High-Contrast Problem Cards)           */}
+        {/* 4. THE CHALLENGE (Horizontal Carousel on Mobile, 3-Col Desktop)*/}
         {/* ============================================================== */}
-        <section id="challenge" className="space-y-10">
-          <div className="flex items-end justify-between border-b border-slate-200 pb-6">
+        <section id="challenge" className="space-y-6 sm:space-y-10 pt-4 sm:pt-0">
+          <div className="flex items-end justify-between border-b border-slate-200 pb-5 sm:pb-6 gap-4">
             <div>
               <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
                 The <span className="font-serif-italic text-blue-600 font-normal">challenge.</span>
@@ -397,16 +444,17 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                 The core operational friction points we set out to eliminate.
               </p>
             </div>
-            <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
-              0{study.challenges.length} Core Problems
+            <span className="text-[11px] font-mono text-slate-400 uppercase tracking-widest shrink-0">
+              <span className="md:hidden">Swipe →</span>
+              <span className="hidden md:inline">0{study.challenges.length} Core Problems</span>
             </span>
           </div>
 
-          <ol className="grid grid-cols-1 md:grid-cols-3 gap-6 list-none m-0 p-0">
+          <ol className="flex md:grid md:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-px-5 no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-2 list-none m-0">
             {study.challenges.map((c) => (
               <li
                 key={c.no}
-                className="relative rounded-2xl sm:rounded-3xl p-7 sm:p-8 bg-white border border-slate-200/90 shadow-xs hover:border-[#0a122a]/25 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 flex flex-col justify-between group"
+                className="shrink-0 w-[82vw] sm:w-[68vw] md:w-auto snap-start relative rounded-2xl sm:rounded-3xl p-6 sm:p-8 bg-white border border-slate-200/90 shadow-xs hover:border-[#0a122a]/25 hover:shadow-md transition-all duration-300 flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-start justify-between mb-4">
@@ -432,35 +480,40 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         </section>
 
         {/* ============================================================== */}
-        {/* 5. OUR APPROACH: STICKY SCROLLYTELLING (Colossal Number Style)  */}
+        {/* 5. OUR APPROACH: HORIZONTAL CAROUSEL (MOBILE) / STICKY (LG+)   */}
         {/* ============================================================== */}
-        <section id="approach" className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 relative items-start">
-          {/* Sticky Left Column: Stays Glued in Viewport as Right Column Scrolls */}
-          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-4">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0a122a] leading-tight">
-              Our approach.
-            </h2>
+        <section id="approach" className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-14 relative items-start">
+          {/* Sticky Left Column: Stays Glued in Viewport on lg+ */}
+          <div className="lg:col-span-5 lg:sticky lg:top-28 self-start space-y-3 sm:space-y-4">
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-[#0a122a] leading-tight">
+                Our approach.
+              </h2>
+              <span className="lg:hidden text-[11px] font-mono text-slate-400 uppercase tracking-widest shrink-0">
+                Swipe {study.approachSteps.length} steps →
+              </span>
+            </div>
 
-            {/* Colossal Dynamic Number (Matching User Reference) */}
-            <div className="text-[100px] sm:text-[140px] md:text-[170px] lg:text-[190px] font-bold font-sans tracking-tighter leading-none text-[#0a122a] select-none py-1 sm:py-2">
+            {/* Colossal Dynamic Number (Desktop lg+ scrollytelling) */}
+            <div className="hidden lg:block text-[170px] xl:text-[190px] font-bold font-sans tracking-tighter leading-none text-[#0a122a] select-none py-1">
               {String(activeStep + 1).padStart(2, '0')}
             </div>
 
-            {/* Minimalist Progress Track Line (Matching Reference) */}
-            <div className="w-48 sm:w-60 h-[3px] bg-slate-200 rounded-full overflow-hidden">
+            {/* Minimalist Progress Track Line (Desktop lg+) */}
+            <div className="hidden lg:block w-60 h-[3px] bg-slate-200 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-600 transition-all duration-300 rounded-full"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
 
-            <p className="text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-xs pt-2">
+            <p className="text-sm sm:text-base text-slate-500 font-light leading-relaxed max-w-md pt-1">
               Key engineering decisions engineered for clinical reliability, zero data loss, and sub-second regional sync.
             </p>
           </div>
 
-          {/* Right Column: Scrolling White Step Cards */}
-          <ol className="lg:col-span-7 space-y-6 list-none m-0 p-0">
+          {/* Right Column: Horizontal Snap Carousel (Mobile) / Vertical Steps (lg+) */}
+          <ol className="lg:col-span-7 flex lg:block gap-4 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scroll-px-5 no-scrollbar -mx-5 px-5 lg:mx-0 lg:px-0 lg:space-y-6 pb-2 list-none m-0">
             {study.approachSteps.map((step, idx) => {
               const isActive = activeStep === idx;
 
@@ -470,10 +523,10 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                   ref={(el) => {
                     stepsRef.current[idx] = el;
                   }}
-                  className={`rounded-2xl sm:rounded-3xl p-8 sm:p-10 border transition-all duration-500 ${
+                  className={`shrink-0 w-[82vw] sm:w-[68vw] lg:w-auto snap-start rounded-2xl sm:rounded-3xl p-6 sm:p-10 border transition-all duration-500 ${
                     isActive
-                      ? 'bg-white border-blue-500 ring-4 ring-blue-500/10 shadow-lg scale-[1.01]'
-                      : 'bg-white/80 border-slate-200 hover:border-slate-300 shadow-xs'
+                      ? 'bg-white border-blue-500 lg:ring-4 lg:ring-blue-500/10 shadow-md lg:shadow-lg'
+                      : 'bg-white border-slate-200 hover:border-slate-300 shadow-xs'
                   }`}
                 >
                   <div className="flex items-center justify-between mb-4">
@@ -586,16 +639,17 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                   Core operational modules engineered for hospital transfusion technicians, municipal coordinators, and mobile donors.
                 </p>
               </div>
-              <span className="text-xs font-mono text-slate-400 uppercase tracking-widest hidden sm:inline">
-                0{study.systemViews.length} Production Views
+              <span className="text-xs font-mono text-slate-400 uppercase tracking-widest shrink-0">
+                <span className="lg:hidden">Swipe {study.systemViews.length} views →</span>
+                <span className="hidden lg:inline">0{study.systemViews.length} Production Views</span>
               </span>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="flex lg:grid lg:grid-cols-2 gap-4 lg:gap-8 overflow-x-auto lg:overflow-visible snap-x snap-mandatory scroll-px-5 no-scrollbar -mx-5 px-5 lg:mx-0 lg:px-0 pb-2">
               {study.systemViews.map((view, idx) => (
                 <div
                   key={idx}
-                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col group"
+                  className="shrink-0 w-[84vw] sm:w-[70vw] lg:w-auto snap-start rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-sm hover:shadow-lg hover:border-blue-300 transition-all duration-300 flex flex-col group"
                 >
                   {/* macOS Chrome Header */}
                   <div className="px-5 py-3 bg-slate-100 border-b border-slate-200 flex items-center justify-between">
@@ -702,8 +756,8 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         {/* ============================================================== */}
         {/* 8. TESTIMONIAL & COLLABORATOR VALIDATION                        */}
         {/* ============================================================== */}
-        <section id="testimonial">
-          <div className="rounded-2xl sm:rounded-3xl p-8 sm:p-12 bg-gradient-to-br from-blue-50/70 via-white to-slate-50 border border-blue-100 shadow-sm relative overflow-hidden">
+        <section id="testimonial" className="pt-2 sm:pt-4">
+          <div className="rounded-2xl sm:rounded-3xl p-6 sm:p-12 bg-gradient-to-br from-blue-50/70 via-white to-slate-50 border border-blue-100 shadow-sm relative overflow-hidden">
             {/* Giant Watermark Quotation Mark */}
             <span
               className="absolute -top-10 -left-6 text-[180px] font-serif text-blue-600/10 pointer-events-none select-none"
@@ -714,16 +768,16 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Quote & Speaker Info */}
-              <div className={study.testimonial.image ? 'lg:col-span-7 space-y-6' : 'lg:col-span-12 space-y-6 max-w-4xl'}>
+              <div className={study.testimonial.image ? 'lg:col-span-7 space-y-5 sm:space-y-6' : 'lg:col-span-12 space-y-5 sm:space-y-6 max-w-4xl'}>
                 <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-blue-600 font-semibold block">
                   Institutional Partner Endorsement
                 </span>
-                <blockquote className="text-xl sm:text-2xl lg:text-3xl font-light text-slate-800 leading-relaxed font-serif-italic">
+                <blockquote className="text-lg sm:text-2xl lg:text-3xl font-light text-slate-800 leading-relaxed font-serif-italic">
                   &ldquo;{study.testimonial.quote}&rdquo;
                 </blockquote>
 
                 <div className="pt-2 flex items-center gap-3.5">
-                  <span className="w-11 h-11 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold text-base shadow-2xs">
+                  <span className="w-11 h-11 shrink-0 rounded-full bg-blue-100 border border-blue-200 flex items-center justify-center text-blue-700 font-bold text-base shadow-2xs">
                     {study.testimonial.author.charAt(0)}
                   </span>
                   <div>
@@ -762,21 +816,26 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         {/* 9. MILESTONES & CHAMPIONSHIP AWARDS BENTO                      */}
         {/* ============================================================== */}
         {study.milestones && study.milestones.length > 0 && (
-          <section id="milestones" className="space-y-10">
-            <div className="border-b border-slate-200 pb-6">
-              <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
-                Championships &amp; <span className="font-serif-italic text-blue-600 font-normal">validation.</span>
-              </h2>
-              <p className="text-sm text-slate-500 font-light mt-1">
-                Authentic photographic proof from live hackathons, incubations, and institutional partnerships.
-              </p>
+          <section id="milestones" className="space-y-6 sm:space-y-10">
+            <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-5 sm:pb-6">
+              <div>
+                <h2 className="text-3xl sm:text-5xl font-bold tracking-tight text-[#0a122a]">
+                  Championships &amp; <span className="font-serif-italic text-blue-600 font-normal">validation.</span>
+                </h2>
+                <p className="text-sm text-slate-500 font-light mt-1">
+                  Authentic photographic proof from live hackathons, incubations, and institutional partnerships.
+                </p>
+              </div>
+              <span className="md:hidden text-[11px] font-mono text-slate-400 uppercase tracking-widest shrink-0">
+                Swipe {study.milestones.length} →
+              </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-px-5 no-scrollbar -mx-5 px-5 md:mx-0 md:px-0 pb-2">
               {study.milestones.map((m, idx) => (
                 <div
                   key={idx}
-                  className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-sm hover:shadow-md flex flex-col group"
+                  className="shrink-0 w-[80vw] sm:w-[65vw] md:w-auto snap-start rounded-2xl sm:rounded-3xl overflow-hidden bg-white border border-slate-200/90 hover:border-blue-300 transition-all shadow-sm hover:shadow-md flex flex-col group"
                 >
                   <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                     <img
@@ -817,7 +876,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
         {/* ============================================================== */}
       </main>
 
-      <V2IslandPanel id="more" className="my-8 mb-12 relative z-10">
+      <V2IslandPanel id="more" className="my-8 mb-20 sm:mb-24 relative z-10">
         <div className="space-y-10 sm:space-y-12">
           {/* Header & Controls */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 border-b border-white/10 pb-6">
@@ -834,7 +893,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
             <div className="flex flex-wrap items-center gap-3">
               <Link
                 href="/#work"
-                className="px-5 py-2.5 rounded-full border border-white/15 text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition-colors"
+                className="min-h-[44px] px-5 py-2.5 rounded-full border border-white/15 text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white hover:bg-white/10 transition-colors inline-flex items-center"
               >
                 ← Return to Portfolio
               </Link>
@@ -846,7 +905,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                     onClick={() => scrollCarousel('left')}
                     disabled={!canScrollCarouselLeft}
                     aria-label="Previous project"
-                    className={`w-10 h-10 rounded-full border border-white/15 flex items-center justify-center transition-all ${
+                    className={`w-11 h-11 rounded-full border border-white/15 flex items-center justify-center transition-all ${
                       canScrollCarouselLeft
                         ? 'bg-white/10 text-white hover:bg-blue-600 hover:border-blue-500 cursor-pointer'
                         : 'bg-white/5 text-white/25 cursor-not-allowed'
@@ -859,7 +918,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                     onClick={() => scrollCarousel('right')}
                     disabled={!canScrollCarouselRight}
                     aria-label="Next project"
-                    className={`w-10 h-10 rounded-full border border-white/15 flex items-center justify-center transition-all ${
+                    className={`w-11 h-11 rounded-full border border-white/15 flex items-center justify-center transition-all ${
                       canScrollCarouselRight
                         ? 'bg-white/10 text-white hover:bg-blue-600 hover:border-blue-500 cursor-pointer'
                         : 'bg-white/5 text-white/25 cursor-not-allowed'
@@ -918,19 +977,19 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
       <aside
         aria-label="Floating Case Study Navigation"
         aria-hidden={!pastHero}
-        className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-max max-w-[95vw] select-none transition-all duration-300 ease-out ${
+        className={`fixed bottom-[max(12px,env(safe-area-inset-bottom))] left-1/2 -translate-x-1/2 z-50 w-max max-w-[calc(100vw-24px)] select-none transition-all duration-300 ease-out ${
           pastHero
             ? 'opacity-100 translate-y-0 pointer-events-auto'
             : 'opacity-0 translate-y-4 pointer-events-none'
         }`}
       >
-        <div className="flex items-center gap-2.5 sm:gap-4 bg-white/88 backdrop-blur-xl border border-black/10 px-3.5 sm:px-4 py-1.5 rounded-full shadow-[0_12px_36px_rgba(10,18,42,0.12)] text-[#0a122a]">
+        <div className="flex items-center gap-1.5 sm:gap-3 bg-white/92 backdrop-blur-xl border border-black/10 px-2.5 sm:px-4 py-1 rounded-full shadow-[0_12px_36px_rgba(10,18,42,0.14)] text-[#0a122a] overflow-hidden">
           <Link
             href="/#work"
             tabIndex={pastHero ? 0 : -1}
-            className="mono inline-flex items-center gap-1 text-[#5b6684] hover:text-[#0a122a] transition-colors text-[10px] sm:text-[11px] tracking-[0.14em] uppercase whitespace-nowrap"
+            className="mono inline-flex items-center gap-1 min-h-[44px] px-1.5 text-[#5b6684] hover:text-[#0a122a] transition-colors text-[11px] tracking-[0.12em] uppercase whitespace-nowrap"
           >
-            <ArrowLeft className="w-3 h-3 text-blue-600" />
+            <ArrowLeft className="w-3.5 h-3.5 text-blue-600" />
             <span>Work</span>
           </Link>
 
@@ -949,7 +1008,7 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
                     type="button"
                     tabIndex={pastHero ? 0 : -1}
                     onClick={() => document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth' })}
-                    className="mono text-[#5b6684] hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none p-0 text-[10px] sm:text-[11px] tracking-[0.14em] uppercase whitespace-nowrap"
+                    className="mono min-h-[44px] px-1 text-[#5b6684] hover:text-[#0a122a] transition-colors cursor-pointer bg-transparent border-none text-[11px] tracking-[0.12em] uppercase whitespace-nowrap"
                   >
                     {item.label}
                   </button>
@@ -964,11 +1023,12 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
             <Link
               href={`/detail/${study.nextStudyId}`}
               tabIndex={pastHero ? 0 : -1}
-              className="mono inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-slate-900/15 bg-[#0a122a] hover:bg-blue-600 text-white text-[10px] sm:text-[11px] tracking-[0.12em] uppercase transition-colors shadow-xs"
+              className="mono inline-flex items-center gap-1.5 px-3.5 min-h-[40px] sm:min-h-[44px] rounded-full border border-slate-900/15 bg-[#0a122a] hover:bg-blue-600 text-white text-[11px] tracking-[0.12em] uppercase transition-colors shadow-xs whitespace-nowrap"
               title={`Next: ${study.nextStudyName}`}
             >
-              <span>Next Case</span>
-              <ArrowRight className="w-3 h-3 text-slate-300" />
+              <span className="hidden sm:inline">Next Case</span>
+              <span className="sm:hidden">Next</span>
+              <ArrowRight className="w-3.5 h-3.5 text-slate-300" />
             </Link>
 
             <button
@@ -977,9 +1037,9 @@ export function CaseStudyView({ study }: CaseStudyViewProps) {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               title="Back to top"
               aria-label="Back to top"
-              className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-slate-500 hover:text-[#0a122a] hover:bg-black/5 transition-colors cursor-pointer"
+              className="w-11 h-11 rounded-full flex items-center justify-center text-slate-600 hover:text-[#0a122a] hover:bg-black/5 transition-colors cursor-pointer shrink-0"
             >
-              <ArrowUp className="w-3.5 h-3.5" />
+              <ArrowUp className="w-4 h-4" />
             </button>
           </div>
         </div>

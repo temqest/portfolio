@@ -7,6 +7,14 @@ export function useLenisScroll() {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    const isCoarsePointer = window.matchMedia('(pointer: coarse)').matches;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Preserve native hardware-accelerated momentum scrolling on mobile touchscreens
+    if (isCoarsePointer || prefersReducedMotion) {
+      return;
+    }
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -19,12 +27,13 @@ export function useLenisScroll() {
 
     lenisRef.current = lenis;
 
+    let animId = 0;
     function raf(time: number) {
       lenis.raf(time);
-      requestAnimationFrame(raf);
+      animId = requestAnimationFrame(raf);
     }
 
-    const animId = requestAnimationFrame(raf);
+    animId = requestAnimationFrame(raf);
 
     return () => {
       cancelAnimationFrame(animId);
@@ -44,7 +53,18 @@ export function useLenisScroll() {
   }, []);
 
   const scrollTo = useCallback((target: string | number | HTMLElement, offset: number = 0) => {
-    lenisRef.current?.scrollTo(target, { offset });
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(target, { offset });
+      return;
+    }
+
+    if (typeof target === "number") {
+      window.scrollTo({ top: target, behavior: "smooth" });
+    } else if (typeof target === "string") {
+      document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      target.scrollIntoView({ behavior: "smooth" });
+    }
   }, []);
 
   return { stopScroll, startScroll, scrollTo };

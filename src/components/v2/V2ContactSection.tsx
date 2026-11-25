@@ -25,87 +25,95 @@ export function V2ContactSection() {
   };
 
   return (
-    <section id="contact" className="relative py-28 px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a]">
+    <section id="contact" className="relative overflow-hidden py-14 md:py-28 px-4 sm:px-6 md:px-12 max-w-6xl mx-auto text-[#0a122a]">
       {/* Warm peach/coral radial glow aura */}
       <div
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] pointer-events-none opacity-50"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(800px,100vw)] h-[500px] pointer-events-none opacity-50"
         style={{
           background: 'radial-gradient(closest-side, rgba(255, 122, 69, 0.12), transparent)',
         }}
       />
 
-      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-4">
+      <div className="flex items-center gap-2 text-xs font-mono text-slate-500 uppercase tracking-widest mb-3 md:mb-4">
         <span>(09) — CONTACT &amp; HIRING</span>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
         {/* Left Column: Direct Intent, Email & Engineering Competencies */}
         <div className="lg:col-span-5">
-          <h2 className="text-4xl md:text-6xl font-light tracking-tight text-[#0a122a] mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-6xl font-light tracking-tight text-[#0a122a] mb-4 md:mb-6">
             Let&apos;s start a <em className="font-serif-italic text-blue-600 font-normal">conversation.</em>
           </h2>
 
-          <p className="text-base text-slate-600 font-light leading-relaxed mb-8">
+          <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed mb-6 md:mb-8">
             Whether you&apos;re hiring for an internship, open developer role, or want to discuss an engineering challenge, my inbox is open.
           </p>
 
-          {/* Email Box with One-Click Copy */}
-          <div className="inline-flex items-center gap-2 p-1.5 pl-4 rounded-full border border-black/10 bg-slate-50 mb-8 shadow-sm">
-            <span className="text-xs sm:text-sm font-mono text-[#0a122a]">{email}</span>
-            <button
-              type="button"
-              onClick={handleCopy}
-              className={`px-3 py-1.5 rounded-full text-xs font-mono transition-all cursor-pointer ${
-                copied
-                  ? 'bg-emerald-600 text-white font-semibold'
-                  : 'bg-[#0a122a] text-white hover:bg-blue-600'
-              }`}
+          {/* Email Box with One-Click Copy + Direct Mailto */}
+          <div className="flex flex-wrap items-center gap-2.5 mb-5 md:mb-8">
+            <div className="inline-flex items-center gap-2 p-1 pl-4 rounded-full border border-black/10 bg-slate-50 shadow-sm max-w-full">
+              <span className="text-xs sm:text-sm font-mono text-[#0a122a] truncate">{email}</span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className={`min-h-[40px] px-4 rounded-full text-xs font-mono transition-all cursor-pointer shrink-0 ${
+                  copied
+                    ? 'bg-emerald-600 text-white font-semibold'
+                    : 'bg-[#0a122a] text-white hover:bg-blue-600'
+                }`}
+              >
+                {copied ? 'Copied! ✓' : 'Copy'}
+              </button>
+            </div>
+            <a
+              href={`mailto:${email}`}
+              className="lg:hidden min-h-[42px] px-4 rounded-full bg-blue-600 text-white text-xs font-mono inline-flex items-center gap-1.5 shadow-sm"
             >
-              {copied ? 'Copied! ✓' : 'Copy'}
-            </button>
+              <span>Email App</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
           </div>
 
-          {/* Social Profiles & Resume Access */}
-          <div className="flex flex-wrap items-center gap-3 mb-10 text-xs font-mono">
+          {/* Social Profiles & Resume Access (>= 44px touch targets) */}
+          <div className="flex flex-wrap items-center gap-2 mb-2 lg:mb-10 text-xs font-mono">
             <a
               href="https://github.com/temqest"
               target="_blank"
               rel="noreferrer"
-              className="text-slate-600 hover:text-black flex items-center gap-1.5 underline underline-offset-4"
+              className="min-h-[42px] px-3 rounded-full border border-black/10 bg-white text-slate-700 hover:text-black inline-flex items-center gap-1.5"
             >
               <FaGithub className="w-3.5 h-3.5" />
-              <span>GitHub Codebase</span>
+              <span>GitHub</span>
               <ArrowUpRight className="w-3 h-3" />
             </a>
-            <span className="text-slate-300">·</span>
             <a
               href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
               target="_blank"
               rel="noreferrer"
-              className="text-slate-600 hover:text-black flex items-center gap-1.5 underline underline-offset-4"
+              className="min-h-[42px] px-3 rounded-full border border-black/10 bg-white text-slate-700 hover:text-black inline-flex items-center gap-1.5"
             >
               <FaLinkedin className="w-3.5 h-3.5" />
-              <span>LinkedIn Profile</span>
+              <span>LinkedIn</span>
               <ArrowUpRight className="w-3 h-3" />
             </a>
-            <span className="text-slate-300">·</span>
             <a
               href="/cv.pdf"
               target="_blank"
               rel="noreferrer"
-              className="text-blue-600 hover:text-blue-800 flex items-center gap-1.5 underline underline-offset-4 font-medium"
+              className="min-h-[42px] px-3 rounded-full border border-blue-200 bg-blue-50/70 text-blue-700 hover:text-blue-900 inline-flex items-center gap-1.5 font-medium"
             >
               <FaFilePdf className="w-3.5 h-3.5" />
-              <span>View &amp; Download CV</span>
+              <span>CV PDF</span>
               <ArrowUpRight className="w-3 h-3" />
             </a>
           </div>
 
-          <div>
+          {/* Competencies shown on Desktop lg+ only (keeps mobile form immediately reachable) */}
+          <div className="hidden lg:block">
             <h3 className="text-xs font-mono uppercase tracking-widest text-slate-400 mb-4">
               Core Technical Competencies
             </h3>
-            <ul className="space-y-2.5 text-sm font-normal text-slate-700">
+            <ul className="space-y-2 text-sm font-normal text-slate-700">
               {[
                 'Offline-first synchronization & local SQLite outboxes',
                 'Strict full-stack TypeScript & Next.js 16 App Router',
@@ -124,7 +132,7 @@ export function V2ContactSection() {
 
         {/* Right Column: Hiring Inquiry Form */}
         <div className="lg:col-span-7">
-          <div className="p-8 md:p-12 rounded-3xl border border-black/10 bg-white shadow-2xl relative">
+          <div className="p-5 sm:p-8 md:p-12 rounded-3xl border border-black/10 bg-white shadow-2xl relative">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400 mb-6 pb-4 border-b border-black/5">
               <span>GET IN TOUCH</span>
               <span className="text-emerald-600">REPLY WITHIN ~24H</span>
@@ -151,7 +159,7 @@ export function V2ContactSection() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* Role / Opportunity Selector */}
                 <div>
                   <label className="text-xs font-mono uppercase tracking-wider text-slate-500 block mb-3">
@@ -164,7 +172,7 @@ export function V2ContactSection() {
                           key={roleType}
                           type="button"
                           onClick={() => setSelectedRoleType(roleType)}
-                          className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all cursor-pointer ${
+                          className={`min-h-[40px] px-3.5 py-2 rounded-full text-xs font-mono transition-all cursor-pointer ${
                             selectedRoleType === roleType
                               ? 'bg-[#0a122a] text-white font-medium shadow-sm'
                               : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
@@ -227,7 +235,7 @@ export function V2ContactSection() {
                     Opportunity or inquiry details
                   </label>
                   <textarea
-                    rows={4}
+                    rows={3}
                     required
                     placeholder="Tell me about your team, tech stack, or the role you are looking to fill..."
                     value={formData.message}

@@ -86,9 +86,9 @@ export function V2ToolkitSection() {
 
   const activeTab = DISCIPLINES[activeTabIdx];
 
-  // Continuous Native Scroll with Sequential Step-Gating and Auto-Snap Centering
+  // Continuous Native Scroll with Sequential Step-Gating (Desktop lg+ only)
   const handleScroll = useCallback(() => {
-    if (!outerTrackRef.current) return;
+    if (window.innerWidth < 1024 || !outerTrackRef.current) return;
     const rect = outerTrackRef.current.getBoundingClientRect();
     const windowH = window.innerHeight;
     const totalDist = rect.height - windowH;
@@ -182,16 +182,89 @@ export function V2ToolkitSection() {
   };
 
   return (
-    // Outer scroll track: 420vh creates generous scroll travel distance for 6 disciplines
     <section
       id="skills"
-      ref={outerTrackRef}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       className="relative w-full outline-none select-none bg-white"
-      style={{ height: '420vh' }}
     >
       <div id="stack" className="absolute top-0 pointer-events-none" />
+
+      {/* ============================================================== */}
+      {/* MOBILE / TABLET (< 1024px): COMPACT INTERACTIVE TAB BLUEPRINTS */}
+      {/* ============================================================== */}
+      <div className="lg:hidden py-10 px-4 sm:px-6 text-[#0a122a] border-t border-black/10">
+        <div className="max-w-2xl mx-auto space-y-5">
+          {/* Eyebrow */}
+          <div className="flex items-center justify-between text-[11px] font-mono tracking-widest uppercase text-black/50 border-b border-black/10 pb-3">
+            <span>(03) SKILLS &amp; DISCIPLINES</span>
+            <span className="text-blue-600 font-semibold">0{activeTabIdx + 1} / 06</span>
+          </div>
+
+          {/* Horizontal Snap Tab Rail (>= 44px touch targets) */}
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1 snap-x">
+            {DISCIPLINES.map((tab, idx) => {
+              const isActive = idx === activeTabIdx;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTabIdx(idx)}
+                  className={`snap-start shrink-0 min-h-[44px] px-3.5 rounded-full font-mono text-xs transition-all cursor-pointer border flex items-center gap-2 ${
+                    isActive
+                      ? 'bg-[#0a122a] text-white border-[#0a122a] font-semibold shadow-xs'
+                      : 'bg-slate-50 text-slate-600 border-black/10 hover:bg-slate-100'
+                  }`}
+                >
+                  <span className={isActive ? 'text-blue-300' : 'text-slate-400'}>{tab.num}</span>
+                  <span>{tab.shortName}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Compact Active Blueprint Card */}
+          <div className="rounded-2xl border border-black/10 bg-slate-50/70 p-4 sm:p-5 space-y-3">
+            <div className="text-xs font-mono text-black/60 tracking-tight">
+              {activeTab.subtitle}
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-black text-[#0a122a] tracking-tight leading-none">
+              {activeTab.title}
+            </h2>
+            <p className="text-sm text-black/75 leading-relaxed">
+              {activeTab.description}
+            </p>
+            <div className="pt-1 flex items-center gap-2 text-xs font-mono text-black/60">
+              <span className="w-2 h-2 rounded-full bg-blue-600 shrink-0" />
+              <span>{activeTab.proof}</span>
+            </div>
+          </div>
+
+          {/* Kinetic Particle Field (Hidden on mobile <768px) */}
+          <div className="hidden md:block w-full rounded-2xl border border-black/8 bg-white p-2 overflow-hidden">
+            <div className="flex items-center justify-between px-2 pb-1 text-[10px] font-mono uppercase tracking-widest text-black/40">
+              <span>Interactive Field</span>
+              <span>Tap tabs above to morph</span>
+            </div>
+            <div className="h-[190px] w-full flex items-center justify-center overflow-hidden">
+              <KineticGridCanvas
+                activeTab={activeTabIdx}
+                accentColor="#5b5fe0"
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ============================================================== */}
+      {/* DESKTOP (lg+): 420vh STICKY SCROLLYTELLING STAGE                */}
+      {/* ============================================================== */}
+      <div
+        ref={outerTrackRef}
+        className="hidden lg:block relative w-full"
+        style={{ height: '420vh' }}
+      >
       {/* Pinned Sticky Viewport: Remains locked to the screen while scrolling */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-white text-[#0a122a] px-6 md:px-12 lg:px-16 border-t border-black/10">
         <div className="max-w-7xl mx-auto w-full py-6 sm:py-8 space-y-8 sm:space-y-12">
@@ -320,6 +393,7 @@ export function V2ToolkitSection() {
             </div>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );

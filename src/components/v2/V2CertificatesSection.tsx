@@ -54,6 +54,7 @@ export function V2CertificatesSection() {
   return (
     <V2IslandPanel id="certs" className="my-8">
       <div id="certifications" className="relative -top-24" />
+      <div id="certificates" className="relative -top-24" />
 
       {/* ============================================================== */}
       {/* SECTION HEADER (Dark Island Theme)                             */}
@@ -62,7 +63,7 @@ export function V2CertificatesSection() {
         <span>(06) — CERTIFICATIONS</span>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-14 border-b border-white/10 pb-8">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-3 md:gap-4 mb-8 md:mb-14 border-b border-white/10 pb-6 md:pb-8">
         <div>
           <h2 className="text-3xl md:text-5xl font-light tracking-tight text-white leading-tight">
             Always <em className="font-serif-italic text-blue-400 font-normal">learning.</em>
@@ -72,34 +73,80 @@ export function V2CertificatesSection() {
           </p>
         </div>
         <span className="text-xs font-mono text-slate-400 uppercase shrink-0">
-          {certificates.length} certificates · hover to preview
+          {certificates.length} certificates
+          <span className="hidden md:inline"> · hover to preview</span>
+          <span className="sm:hidden"> · swipe →</span>
         </span>
       </div>
 
       {/* ============================================================== */}
-      {/* TABLE FORMAT (Dark Theme Editorial Rows)                       */}
+      {/* MOBILE (< 640px): HORIZONTAL SNAP-SCROLL CREDENTIAL CARDS      */}
       {/* ============================================================== */}
-      <div className="divide-y divide-white/10 border-t border-b border-white/10">
+      <div className="sm:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-4 no-scrollbar -mx-4 px-4 pb-2">
         {certificates.map((cert) => (
           <button
             key={cert.id}
             type="button"
-            className="w-full py-8 text-left grid grid-cols-12 items-center gap-4 group transition-all duration-300 hover:px-6 hover:bg-white/[0.04] relative cursor-pointer"
+            onClick={() => setSelected(cert)}
+            className="snap-start shrink-0 w-[78vw] text-left rounded-2xl border border-white/15 bg-white/[0.04] overflow-hidden active:scale-[0.99] transition-transform cursor-pointer flex flex-col"
+          >
+            <div className="relative aspect-[16/10] w-full bg-[#060a18] border-b border-white/10 overflow-hidden">
+              <img
+                src={cert.image}
+                alt={cert.name}
+                loading="lazy"
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full bg-black/75 text-[10px] font-mono text-blue-300">
+                {cert.num}
+              </span>
+            </div>
+            <div className="p-4 flex-1 flex flex-col justify-between gap-2">
+              <div>
+                <div className="text-base font-semibold text-white leading-snug line-clamp-2">
+                  {cert.name}
+                </div>
+                <div className="text-xs font-mono text-slate-400 mt-1 line-clamp-1">
+                  {cert.issuer}
+                </div>
+              </div>
+              <span className="inline-flex items-center min-h-[40px] text-xs font-mono text-blue-400 font-medium">
+                View certificate ↗
+              </span>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* ============================================================== */}
+      {/* DESKTOP / TABLET (sm+): EDITORIAL TABLE ROWS                   */}
+      {/* ============================================================== */}
+      <div className="hidden sm:block divide-y divide-white/10 border-t border-b border-white/10">
+        {certificates.map((cert) => (
+          <button
+            key={cert.id}
+            type="button"
+            className="w-full py-5 sm:py-8 px-1 sm:px-2 text-left flex items-center justify-between gap-3 sm:grid sm:grid-cols-12 sm:gap-4 group transition-colors duration-200 hover:bg-white/[0.04] active:bg-white/[0.08] relative cursor-pointer"
             onMouseEnter={() => setHovered(cert)}
             onMouseLeave={() => setHovered(null)}
             onClick={() => setSelected(cert)}
           >
-            <span className="col-span-2 sm:col-span-1 font-mono text-slate-400 text-sm">
+            <span className="hidden sm:block sm:col-span-1 font-mono text-slate-400 text-sm">
               {cert.num}
             </span>
-            <span className="col-span-6 sm:col-span-7 text-xl sm:text-2xl md:text-3xl font-normal tracking-tight text-white group-hover:text-blue-400 transition-colors">
-              {cert.name}
-            </span>
-            <span className="col-span-2 sm:col-span-3 text-slate-400 text-xs sm:text-sm font-mono text-right sm:text-left">
-              {cert.issuer}
-            </span>
-            <span className="col-span-2 sm:col-span-1 text-right">
-              <span className="inline-flex items-center justify-center w-9 h-9 rounded-full border border-white/10 group-hover:bg-white group-hover:text-[#060a18] group-hover:rotate-45 transition-all text-xs text-white">
+            <div className="flex-1 sm:col-span-10 sm:grid sm:grid-cols-10 sm:items-center sm:gap-4 min-w-0 pr-2 sm:pr-0">
+              <span className="block sm:hidden font-mono text-[11px] text-slate-400 mb-1">
+                {cert.num}
+              </span>
+              <span className="block sm:col-span-7 text-lg sm:text-2xl md:text-3xl font-normal tracking-tight text-white group-hover:text-blue-400 transition-colors">
+                {cert.name}
+              </span>
+              <span className="block sm:col-span-3 text-slate-400 text-xs sm:text-sm font-mono mt-1 sm:mt-0 sm:text-left">
+                {cert.issuer}
+              </span>
+            </div>
+            <span className="shrink-0 sm:col-span-1 text-right flex justify-end">
+              <span className="inline-flex items-center justify-center w-11 h-11 rounded-full border border-white/10 group-hover:bg-white group-hover:text-[#060a18] md:group-hover:rotate-45 transition-all text-xs text-white">
                 ↗
               </span>
             </span>
@@ -132,17 +179,18 @@ export function V2CertificatesSection() {
       {/* ============================================================== */}
       {selected && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 md:p-8 overflow-y-auto"
+          className="fixed inset-0 z-[9999] bg-black/85 backdrop-blur-md flex items-end sm:items-center justify-center p-2 sm:p-6 md:p-8 overflow-y-auto"
           onClick={() => setSelected(null)}
           role="dialog"
+          aria-modal="true"
           aria-label={selected.name}
         >
           <div
-            className="max-w-4xl w-full bg-[#0a122a] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl p-5 sm:p-7 relative border border-white/20 text-white my-auto max-h-[92vh] flex flex-col"
+            className="max-w-4xl w-full bg-[#0a122a] rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl p-4 sm:p-7 relative border border-white/20 text-white my-auto max-h-[90dvh] flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-wrap justify-between items-center gap-3 mb-4 shrink-0 border-b border-white/10 pb-4">
-              <div>
+              <div className="min-w-0 flex-1">
                 <span className="text-xs font-mono text-blue-400 uppercase tracking-widest block mb-0.5">
                   {selected.issuer}
                 </span>
@@ -150,11 +198,11 @@ export function V2CertificatesSection() {
                   {selected.name}
                 </h3>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => setSelected(null)}
-                  className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer"
+                  className="min-h-[44px] min-w-[44px] px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-xs font-mono text-white transition-colors cursor-pointer inline-flex items-center justify-center"
                 >
                   Close ✕
                 </button>

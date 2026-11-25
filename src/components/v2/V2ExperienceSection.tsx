@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { WaveMeshCanvas } from '@/components/canvas/WaveMeshCanvas';
 import { V2IslandPanel } from './V2IslandPanel';
+import { useMobileViewMode } from './MobileViewModeContext';
 import { ChevronRight } from 'lucide-react';
 
 interface CareerMilestone {
@@ -71,6 +72,7 @@ const INITIAL_TOP_PADDING = 36;
 const SETTLE_THRESHOLD = 0.10;
 
 export function V2ExperienceSection() {
+  const { mode } = useMobileViewMode();
   const [activeIdx, setActiveIdx] = useState<number>(0);
   const [scrollProgress, setScrollProgress] = useState<number>(0);
   const [settleFactor, setSettleFactor] = useState<number>(0);
@@ -90,10 +92,9 @@ export function V2ExperienceSection() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Map scroll progress through the track to active milestone index (0 to 4)
-  // and calculate smooth settleFactor (0 -> 1) as entrance section scrolls away
+  // Map scroll progress through the track to active milestone index (Desktop lg+ only)
   const handleScroll = useCallback(() => {
-    if (!outerTrackRef.current) return;
+    if (window.innerWidth < 1024 || !outerTrackRef.current) return;
     const rect = outerTrackRef.current.getBoundingClientRect();
     const windowH = window.innerHeight;
     const totalDist = rect.height - windowH;
@@ -214,14 +215,13 @@ export function V2ExperienceSection() {
     FOCAL_HEIGHT / 2 - (activeIdx * SLOT_HEIGHT + SLOT_HEIGHT / 2);
 
   return (
-    <V2IslandPanel id="experience" className="my-8">
+    <V2IslandPanel id="experience" className="my-5 sm:my-8">
       {/* =========================================================================
-          PHASE 1: THE EDITORIAL ENTRANCE SUBSECTION (Matching Image 1)
-          Compact bottom padding to seamlessly connect with History below
+          PHASE 1: THE EDITORIAL ENTRANCE SUBSECTION
           ========================================================================= */}
-      <div className="pb-8 md:pb-10 border-b border-white/10 mb-6">
+      <div className="pb-6 md:pb-10 border-b border-white/10 mb-5 md:mb-6">
         {/* Top Header Eyebrow Bar */}
-        <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-slate-400 border-b border-white/10 pb-4 mb-10">
+        <div className="flex items-center justify-between text-xs font-mono tracking-widest uppercase text-slate-400 border-b border-white/10 pb-3.5 mb-6 md:mb-10">
           <div className="flex items-center gap-3">
             <span className="text-blue-400">(04)</span>
             <span>EXPERIENCE &amp; MILESTONES</span>
@@ -230,39 +230,37 @@ export function V2ExperienceSection() {
         </div>
 
         {/* Entrance Two-Column: Statement on Left + 3D Wave Mesh Canvas on Right */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center">
           {/* Left Column: Big Editorial Thesis Statement */}
           <div className="lg:col-span-7">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.14] mb-6">
+            <h2 className="text-xl sm:text-3xl md:text-5xl lg:text-6xl font-light tracking-tight text-white leading-[1.2] md:leading-[1.14] mb-4 md:mb-6">
               Since <strong className="font-bold text-white">2021</strong> at{' '}
               <strong className="font-bold text-white">Ateneo de Naga University</strong>, I&apos;ve been engineering{' '}
               <strong className="font-bold text-white">resilient web systems</strong>, offline-first clinical EMRs,
               and emergency blood logistics platforms backed by startup incubation and regional awards.
             </h2>
 
-            {/* Direct Action Links */}
-            <div className="flex flex-wrap items-center gap-4">
+            {/* Direct Action Links (>= 44px touch target) */}
+            <div className="flex flex-wrap items-center gap-3">
               <a
                 href="https://www.linkedin.com/in/patrick-villamer-15267b36a"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white transition-colors border-b border-white/20 hover:border-white pb-0.5"
+                className="inline-flex items-center gap-2 min-h-[44px] px-4 rounded-full border border-white/15 bg-white/[0.04] hover:bg-white/10 text-xs font-mono uppercase tracking-wider text-slate-200 hover:text-white transition-colors"
               >
                 <span>Full CV on LinkedIn</span>
                 <span>↗</span>
               </a>
 
-              <span className="text-white/20 text-xs font-mono">·</span>
-
-              <span className="text-xs font-mono text-slate-400">
+              <span className="hidden lg:inline text-xs font-mono text-slate-400">
                 Scroll down to inspect history ↓
               </span>
             </div>
           </div>
 
-          {/* Right Column: 3D Undulating Particle Wave Mesh */}
-          <div className="lg:col-span-5 flex justify-center items-center">
-            <div className="relative w-full max-w-[400px] aspect-[4/3] flex items-center justify-center">
+          {/* Right Column: 3D Undulating Particle Wave Mesh (Desktop lg+ only) */}
+          <div className="hidden lg:flex lg:col-span-5 justify-center items-center">
+            <div className="relative w-full max-w-[320px] lg:max-w-[400px] aspect-[4/3] flex items-center justify-center">
               <WaveMeshCanvas width={400} height={300} className="w-full h-full object-contain" />
               <div
                 className="absolute inset-0 pointer-events-none opacity-40"
@@ -276,18 +274,84 @@ export function V2ExperienceSection() {
       </div>
 
       {/* =========================================================================
-          PHASE 2: THE SCROLL-DRIVEN YEAR ODOMETER & HISTORY TIMELINE
-          - Starts at top close to entrance statement (no massive void)
-          - On scroll down, glides from top to center and settles in vertical center
-          - Colossal Year size in sans-serif with tight tracking (never clipped)
-          - Generous distance between experiences (SLOT_HEIGHT = 260px)
-          - Zero pill badges, zero tech pills (pure clean typography)
+          MOBILE / TABLET (< 1024px): HORIZONTAL SNAP-SCROLL CAROUSEL
+          ========================================================================= */}
+      <div className="lg:hidden space-y-4">
+        <div className="flex items-center justify-between text-[11px] font-mono tracking-widest uppercase text-slate-400">
+          <span>TIMELINE</span>
+          <span className="text-blue-400 font-semibold">
+            {MILESTONES.length} MILESTONES · SWIPE →
+          </span>
+        </div>
+
+        {mode === 'story' ? (
+          <div className="space-y-3">
+            {MILESTONES.map((item, idx) => (
+              <div
+                key={item.id}
+                className="p-4 rounded-2xl border border-white/15 bg-white/[0.04]"
+              >
+                <div className="flex items-center justify-between text-xs font-mono text-blue-400 mb-1">
+                  <span>{item.year} · 0{idx + 1}</span>
+                  <span className="text-slate-400">{item.location}</span>
+                </div>
+                <h3 className="text-lg font-bold text-white mb-1">{item.role}</h3>
+                <div className="text-xs font-mono text-slate-300">
+                  {item.company} · <span className="text-blue-300">{item.companyType}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="flex gap-3.5 overflow-x-auto snap-x snap-mandatory scroll-px-4 no-scrollbar -mx-4 px-4 pb-1">
+            {MILESTONES.map((item, idx) => (
+              <div
+                key={item.id}
+                className="snap-start shrink-0 w-[80vw] sm:w-[66vw] rounded-2xl border border-white/15 bg-white/[0.04] p-5 flex flex-col justify-between gap-4"
+              >
+                <div className="space-y-2.5">
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="text-4xl font-black tracking-tighter text-white leading-none">
+                      {item.year}
+                    </span>
+                    <span className="text-[11px] font-mono text-slate-400">
+                      0{idx + 1} / 0{MILESTONES.length}
+                    </span>
+                  </div>
+                  <h3 className="text-lg font-bold tracking-tight text-white leading-snug">
+                    {item.role}
+                  </h3>
+                  <div className="text-xs font-mono text-slate-300 flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <span className="text-white">{item.company}</span>
+                    <span className="text-white/25">·</span>
+                    <span className="text-slate-400">{item.location}</span>
+                  </div>
+                  <div className="text-xs font-mono text-blue-400">{item.companyType}</div>
+                </div>
+
+                {item.link && (
+                  <Link
+                    href={item.link}
+                    className="inline-flex items-center gap-1.5 min-h-[42px] px-4 rounded-full bg-white/10 hover:bg-blue-600 text-xs font-mono text-white transition-colors self-start"
+                  >
+                    <span>View case study</span>
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* =========================================================================
+          DESKTOP (lg+): 420vh SCROLL-DRIVEN YEAR ODOMETER & HISTORY TIMELINE
           ========================================================================= */}
       <div
         ref={outerTrackRef}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        className="relative w-full outline-none select-none"
+        className="hidden lg:block relative w-full outline-none select-none"
         style={{ height: '420vh' }}
       >
         {/* Sticky 100vh Viewport Stage */}

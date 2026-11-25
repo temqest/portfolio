@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { WorkCarousel } from './work/WorkCarousel';
 
@@ -72,7 +73,7 @@ export function V2WorkSection() {
   return (
     <section
       id="work"
-      className="relative w-full bg-transparent text-[#0a122a] py-24 md:py-32 px-6 md:px-12 lg:px-16"
+      className="relative w-full bg-transparent text-[#0a122a] py-12 md:py-28 px-4 sm:px-6 md:px-12 lg:px-16"
     >
       {/* Anchor targets for smooth scrolling navigation */}
       <div id="projects" className="absolute -top-24 pointer-events-none" />
@@ -81,95 +82,108 @@ export function V2WorkSection() {
         {/* ============================================================== */}
         {/* SECTION HEADER (Clean Editorial Light Theme)                  */}
         {/* ============================================================== */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-black/10 pb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 md:gap-6 mb-8 md:mb-16 border-b border-black/10 pb-6 md:pb-8">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-500 mb-4">
+            <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-slate-500 mb-3 md:mb-4">
               <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
               <span>(02) — RECENT WORK</span>
             </div>
-            <h2 className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-[#0a122a] leading-[1.04]">
+            <h2 className="text-3xl sm:text-5xl md:text-7xl font-bold tracking-tight text-[#0a122a] leading-[1.06]">
               From idea to live.
               <br />
               <span className="font-serif-italic text-blue-600 font-normal">Sites that ship.</span>
             </h2>
           </div>
 
-          <Link
-            href="/detail/1"
-            className="text-sm font-mono text-slate-500 hover:text-[#0a122a] transition-colors flex items-center gap-1.5 group cursor-pointer pb-2"
-          >
-            <span>See all</span>
-            <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </Link>
+          <div className="flex items-center justify-between w-full md:w-auto gap-4">
+            <span className="md:hidden text-[11px] font-mono uppercase tracking-wider text-slate-500">
+              Swipe {VISIBLE_FLAGSHIP_PROJECTS.length} flagships →
+            </span>
+            <Link
+              href="/detail/1"
+              className="min-h-[44px] text-sm font-mono text-slate-500 hover:text-[#0a122a] transition-colors inline-flex items-center gap-1.5 group cursor-pointer"
+            >
+              <span>See all</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
         </div>
 
         {/* ============================================================== */}
-        {/* PART A: STICKY STACKING FLAGSHIPS                              */}
+        {/* PART A: HORIZONTAL SNAP RAIL (MOBILE) / STICKY STACK (DESKTOP) */}
         {/* ============================================================== */}
-        <div className="relative space-y-24 md:space-y-36 pb-20">
+        <div className="relative flex md:block gap-4 overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-px-5 sm:scroll-px-6 no-scrollbar -mx-4 px-5 sm:-mx-6 sm:px-6 md:mx-0 md:px-0 md:space-y-36 pb-4 md:pb-20">
           {VISIBLE_FLAGSHIP_PROJECTS.map((project, idx) => {
-            // Sequential sticky offsets so cards stack cleanly under the topbar
+            // Sequential sticky offsets on md+ so cards stack cleanly under the topbar
             const stickyTop = 100 + idx * 28;
 
             return (
               <div
                 key={project.id}
-                className="sticky transition-all duration-300"
-                style={{
-                  top: `${stickyTop}px`,
-                  zIndex: 10 + idx,
-                }}
+                className="shrink-0 w-[83vw] sm:w-[74vw] md:w-full snap-start md:sticky transition-all duration-300 md:top-[var(--sticky-top)]"
+                style={
+                  {
+                    '--sticky-top': `${stickyTop}px`,
+                    zIndex: 10 + idx,
+                  } as React.CSSProperties
+                }
               >
-                <div className="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/10] w-full rounded-[28px] sm:rounded-[36px] md:rounded-[44px] overflow-hidden border border-black/15 bg-slate-900 shadow-[0_24px_55px_rgba(10,18,42,0.18)] group">
+                <div className="relative w-full rounded-[24px] sm:rounded-[32px] md:rounded-[44px] overflow-hidden border border-black/15 bg-[#0b1120] shadow-[0_18px_42px_rgba(10,18,42,0.16)] group md:aspect-[21/10]">
                   {/* Full-Bleed UI Screenshot / Visual Preview */}
-                  <img
-                    src={project.image}
-                    alt={project.name}
-                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-700 brightness-[0.88] group-hover:brightness-95"
-                  />
+                  <div className="relative aspect-[16/10] sm:aspect-[16/9] md:aspect-auto md:absolute md:inset-0 w-full overflow-hidden">
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      sizes="(max-width: 768px) 84vw, 1200px"
+                      loading="lazy"
+                      className="object-cover md:group-hover:scale-102 transition-transform duration-700 brightness-[0.9] md:group-hover:brightness-95"
+                    />
 
-                  {/* Atmospheric Vignette & Contrast Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-black/20 pointer-events-none" />
+                    {/* Atmospheric Vignette & Contrast Overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/10 md:from-black/90 md:via-black/35 md:to-black/20 pointer-events-none" />
 
-                  {/* Top-Right Badge matching Image 1 & Image 2 */}
-                  <div className="absolute top-4 sm:top-6 right-4 sm:right-6 px-3.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-xs font-mono font-medium text-white flex items-center gap-2 shadow-lg">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>{project.badge}</span>
+                    {/* Top-Right Badge */}
+                    <div className="absolute top-3 right-3 sm:top-6 sm:right-6 px-3 py-1 rounded-full bg-black/80 backdrop-blur-md border border-white/20 text-[11px] sm:text-xs font-mono font-medium text-white flex items-center gap-1.5 shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{project.badge}</span>
+                    </div>
                   </div>
 
-                  {/* Bottom-Left Floating Glassmorphic Info Card matching Reference Images */}
-                  <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 left-4 sm:left-6 md:left-8 max-w-xl p-5 sm:p-6 md:p-7 rounded-2xl sm:rounded-3xl bg-black/85 backdrop-blur-xl border border-white/15 text-white shadow-2xl">
-                    <span className="text-[10px] sm:text-xs font-mono text-blue-400 uppercase tracking-widest block mb-1.5 font-semibold">
+                  {/* Mobile Solid Body / Desktop Floating Glassmorphic Info Card */}
+                  <div className="relative md:absolute md:bottom-8 md:left-8 md:max-w-xl p-5 sm:p-6 md:p-7 md:rounded-3xl bg-[#0b1120] md:bg-black/85 md:backdrop-blur-xl md:border md:border-white/15 text-white md:shadow-2xl">
+                    <span className="text-[10px] sm:text-xs font-mono text-blue-400 uppercase tracking-widest block mb-1 font-semibold truncate">
                       {project.tag}
                     </span>
 
-                    <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2.5 flex items-center justify-between group-hover:text-blue-300 transition-colors">
+                    <h3 className="text-xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-2 flex items-center justify-between md:group-hover:text-blue-300 transition-colors">
                       <span>{project.name}</span>
                       <Link
                         href={project.link}
-                        className="text-lg sm:text-xl p-2 rounded-full bg-white/10 hover:bg-blue-600 hover:text-white transition-all ml-3"
+                        className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] rounded-full bg-white/10 hover:bg-blue-600 hover:text-white transition-all ml-3 shrink-0"
                         title="View Case Study"
+                        aria-label={`View ${project.name} case study`}
                       >
-                        <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <ArrowUpRight className="w-5 h-5" />
                       </Link>
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed mb-4 line-clamp-2 sm:line-clamp-3">
+                    <p className="text-xs sm:text-sm text-slate-300 font-light leading-relaxed mb-3.5 line-clamp-2 md:line-clamp-3">
                       {project.desc}
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-white/10">
-                      {project.stack.map((t) => (
+                    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-2.5 border-t border-white/10">
+                      {project.stack.map((t, stackIdx) => (
                         <span
                           key={t}
-                          className="px-2.5 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] sm:text-[11px] font-mono text-slate-200"
+                          className={`${stackIdx >= 3 ? 'hidden md:inline-flex' : 'inline-flex'} px-2.5 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] sm:text-[11px] font-mono text-slate-200`}
                         >
                           {t}
                         </span>
                       ))}
                       <Link
                         href={project.link}
-                        className="ml-auto text-xs font-mono text-blue-400 hover:text-white transition-colors flex items-center gap-1 font-medium"
+                        className="ml-auto min-h-[44px] px-2 text-xs font-mono text-blue-400 hover:text-white transition-colors inline-flex items-center gap-1 font-medium"
                       >
                         <span>Case study</span>
                         <span>↗</span>
