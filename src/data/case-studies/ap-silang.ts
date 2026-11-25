@@ -135,11 +135,36 @@ export const AP_SILANG_CASE_STUDY: CaseStudy = {
   },
   systemViews: [
     {
-      title: 'Maternal Clinical EMR Consultation Portal',
-      category: 'Clinical EMR',
-      urlDisplay: 'https://apsilang-emr.ph/patients',
-      image: '/assets/projects/silang.png',
-      description: 'Offline-first municipal electronic medical record interface designed for midwives to log prenatal consultations and vitals without active internet connectivity.',
+      title: 'Maternal Patient Record & TEWS Clinical Triage',
+      category: 'Clinical Decision Support',
+      urlDisplay: 'https://apsilang-emr.ph/clinical/maternal-records',
+      image: '/assets/projects/silang-maternal-record.png',
+      description:
+        'Patient-level consultation dashboard featuring deterministic client-side Targeted Early Warning Score (TEWS) risk triage, vital signs trajectory, and gestational timeline tracking with zero server latency.',
+    },
+    {
+      title: 'Inter-Clinic Referral Queue & Handover Codes',
+      category: 'Referral Gateway',
+      urlDisplay: 'https://apsilang-emr.ph/operations/referrals',
+      image: '/assets/projects/silang-referrals-queue.png',
+      description:
+        'Central referral coordination table managing high-risk pregnancy transfers, secure one-click transfer codes, and verified routing between municipal health stations and tertiary facilities like Bicol Medical Center.',
+    },
+    {
+      title: 'Emergency Clinical Handover & Vitals Dossier',
+      category: 'Hospital Integration',
+      urlDisplay: 'https://apsilang-emr.ph/referrals/detail',
+      image: '/assets/projects/silang-referral-detail.png',
+      description:
+        'Structured patient transfer view bundling real-time maternal vitals, chief complaints, and PIN-gated acceptance workflows for receiving hospital doctors and emergency teams.',
+    },
+    {
+      title: 'Municipal Clinic Operations & Prenatal Calendar',
+      category: 'Schedule & Operations',
+      urlDisplay: 'https://apsilang-emr.ph/operations/appointments',
+      image: '/assets/projects/silang-appointments-calendar.png',
+      description:
+        'Synchronized municipal scheduling grid coordinating routine prenatal visits, midwife field schedules, and patient follow-ups across decentralized rural barangays.',
     },
   ],
   nextStudyId: '3',
