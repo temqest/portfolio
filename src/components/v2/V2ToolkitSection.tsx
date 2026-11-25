@@ -105,35 +105,6 @@ export function V2ToolkitSection() {
     const targetIdx = Math.min(numTabs - 1, Math.max(0, Math.floor(progress * numTabs)));
 
     setActiveTabIdx((current) => (current !== targetIdx ? targetIdx : current));
-
-    // Debounced Snap-to-Step:
-    // When the user pauses scrolling, smoothly center on the active step so human scroll speed
-    // (weak or strong) never leaves the user stranded at 25% or 75%
-    if (!isAutoSnappingRef.current && progress > 0.02 && progress < 0.98) {
-      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
-      snapTimeoutRef.current = setTimeout(() => {
-        if (!outerTrackRef.current) return;
-        const currentRect = outerTrackRef.current.getBoundingClientRect();
-        const currentTotalDist = currentRect.height - window.innerHeight;
-        const currentScrollY = window.scrollY || window.pageYOffset;
-        const containerTop = currentScrollY + currentRect.top;
-
-        // Exact center of the active tab segment
-        const tabCenterProgress = (targetIdx + 0.5) / numTabs;
-        const targetScrollY = containerTop + tabCenterProgress * currentTotalDist;
-
-        if (Math.abs(currentScrollY - targetScrollY) > 25) {
-          isAutoSnappingRef.current = true;
-          window.scrollTo({
-            top: targetScrollY,
-            behavior: 'smooth',
-          });
-          setTimeout(() => {
-            isAutoSnappingRef.current = false;
-          }, 450);
-        }
-      }, 220);
-    }
   }, []);
 
   useEffect(() => {
@@ -258,12 +229,12 @@ export function V2ToolkitSection() {
       </div>
 
       {/* ============================================================== */}
-      {/* DESKTOP (lg+): 420vh STICKY SCROLLYTELLING STAGE                */}
+      {/* DESKTOP (lg+): 260vh STICKY SCROLLYTELLING STAGE                */}
       {/* ============================================================== */}
       <div
         ref={outerTrackRef}
         className="hidden lg:block relative w-full"
-        style={{ height: '420vh' }}
+        style={{ height: '260vh' }}
       >
       {/* Pinned Sticky Viewport: Remains locked to the screen while scrolling */}
       <div className="sticky top-0 h-screen w-full flex flex-col justify-center overflow-hidden bg-white text-[#0a122a] px-6 md:px-12 lg:px-16 border-t border-black/10">

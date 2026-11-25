@@ -128,33 +128,6 @@ export function V2ExperienceSection() {
     }
 
     setActiveIdx((current) => (current !== targetIdx ? targetIdx : current));
-
-    // Debounced auto-snap to center on active milestone segment when user pauses
-    if (!isAutoSnappingRef.current && progress > 0.04 && progress < 0.98) {
-      if (snapTimeoutRef.current) clearTimeout(snapTimeoutRef.current);
-      snapTimeoutRef.current = setTimeout(() => {
-        if (!outerTrackRef.current) return;
-        const currentRect = outerTrackRef.current.getBoundingClientRect();
-        const currentTotalDist = currentRect.height - window.innerHeight;
-        const currentScrollY = window.scrollY || window.pageYOffset;
-        const containerTop = currentScrollY + currentRect.top;
-
-        const segmentProgress =
-          SETTLE_THRESHOLD + (targetIdx + 0.5) * ((1 - SETTLE_THRESHOLD) / count);
-        const targetScrollY = containerTop + segmentProgress * currentTotalDist;
-
-        if (Math.abs(currentScrollY - targetScrollY) > 30) {
-          isAutoSnappingRef.current = true;
-          window.scrollTo({
-            top: targetScrollY,
-            behavior: 'smooth',
-          });
-          setTimeout(() => {
-            isAutoSnappingRef.current = false;
-          }, 450);
-        }
-      }, 240);
-    }
   }, []);
 
   useEffect(() => {
@@ -345,14 +318,14 @@ export function V2ExperienceSection() {
       </div>
 
       {/* =========================================================================
-          DESKTOP (lg+): 420vh SCROLL-DRIVEN YEAR ODOMETER & HISTORY TIMELINE
+          DESKTOP (lg+): 260vh SCROLL-DRIVEN YEAR ODOMETER & HISTORY TIMELINE
           ========================================================================= */}
       <div
         ref={outerTrackRef}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         className="hidden lg:block relative w-full outline-none select-none"
-        style={{ height: '420vh' }}
+        style={{ height: '260vh' }}
       >
         {/* Sticky 100vh Viewport Stage */}
         <div
